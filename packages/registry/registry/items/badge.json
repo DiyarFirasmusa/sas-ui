@@ -1,0 +1,10 @@
+{
+  "name": "badge",
+  "type": "ui",
+  "category": "display",
+  "title": "Badge",
+  "description": "Status and tag pills driven by the preset tag hues.",
+  "files": [
+    "ui/badge.tsx"
+  ]
+}

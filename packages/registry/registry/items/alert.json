@@ -1,0 +1,10 @@
+{
+  "name": "alert",
+  "type": "ui",
+  "category": "feedback",
+  "title": "Alert",
+  "description": "Inline info, success, warning and danger message with title, description, action and a localised dismiss button.",
+  "files": [
+    "ui/alert.tsx"
+  ]
+}

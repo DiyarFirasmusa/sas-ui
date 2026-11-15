@@ -1,0 +1,10 @@
+{
+  "name": "radio-group",
+  "type": "ui",
+  "category": "form",
+  "title": "Radio group",
+  "description": "Single-choice radio options with labels, descriptions and RTL-aware arrow keys.",
+  "files": [
+    "ui/radio-group.tsx"
+  ]
+}

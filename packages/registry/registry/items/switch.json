@@ -1,0 +1,10 @@
+{
+  "name": "switch",
+  "type": "ui",
+  "category": "form",
+  "title": "Switch",
+  "description": "On/off toggle with an optional label; the thumb mirrors in right-to-left layouts.",
+  "files": [
+    "ui/switch.tsx"
+  ]
+}

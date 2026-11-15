@@ -1,0 +1,10 @@
+{
+  "name": "card",
+  "type": "ui",
+  "category": "layout",
+  "title": "Card",
+  "description": "Surface container with header, title, description, action, content and footer slots.",
+  "files": [
+    "ui/card.tsx"
+  ]
+}

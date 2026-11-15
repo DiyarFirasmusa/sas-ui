@@ -1,0 +1,10 @@
+{
+  "name": "avatar",
+  "type": "ui",
+  "category": "display",
+  "title": "Avatar",
+  "description": "Image avatar with Arabic-safe initials fallback, name-derived tag colour, sizes and an overflow group.",
+  "files": [
+    "ui/avatar.tsx"
+  ]
+}

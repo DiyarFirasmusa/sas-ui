@@ -1,0 +1,20 @@
+{
+  "name": "@sas-ui/cli",
+  "version": "0.1.0",
+  "description": "CLI for SAS UI: init a project, add components (copied as source), diff against the registry, switch theme presets.",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "sas-ui": "./dist/bin.js" },
+  "files": ["dist", "registry"],
+  "engines": { "node": ">=20.19" },
+  "scripts": {
+    "prebuild": "node --experimental-strip-types scripts/bundle-registry.ts",
+    "build": "tsc -p tsconfig.build.json && node --experimental-strip-types scripts/finish-build.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "vitest": "^5.1.0"
+  }
+}

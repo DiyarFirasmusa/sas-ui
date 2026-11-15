@@ -1,0 +1,10 @@
+{
+  "name": "progress",
+  "type": "ui",
+  "category": "feedback",
+  "title": "Progress",
+  "description": "Progress bar with label, Latin-digit value text, indeterminate state and status tones.",
+  "files": [
+    "ui/progress.tsx"
+  ]
+}
