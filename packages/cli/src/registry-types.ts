@@ -18,6 +18,7 @@ export interface RegistryItem {
   dependencies: Record<string, string>;
   devDependencies: Record<string, string>;
   registryDependencies: string[];
+  testRegistryDependencies: string[];
   files: RegistryFile[];
 }
 
@@ -28,7 +29,11 @@ export interface RegistryIndexEntry extends Omit<RegistryItem, 'files'> {
 export interface RegistryIndex {
   version: string;
   items: RegistryIndexEntry[];
-  presets: { name: string; label: { en: string; ar: string }; description: string }[];
+  presets: {
+    name: string;
+    label: { en: string; ar: string };
+    description: string;
+  }[];
 }
 
 export class RegistryReadError extends Error {}
@@ -48,6 +53,12 @@ function stringMap(value: unknown): Record<string, string> {
     }
   }
   return result;
+}
+
+function stringList(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((entry): entry is string => typeof entry === 'string')
+    : [];
 }
 
 function itemType(value: unknown): ItemType {
@@ -88,9 +99,8 @@ function parseEntry(raw: unknown): Omit<RegistryItem, 'files'> {
     tier: raw.tier === 'extra' ? 'extra' : 'core',
     dependencies: stringMap(raw.dependencies),
     devDependencies: stringMap(raw.devDependencies),
-    registryDependencies: Array.isArray(raw.registryDependencies)
-      ? raw.registryDependencies.filter((entry): entry is string => typeof entry === 'string')
-      : [],
+    registryDependencies: stringList(raw.registryDependencies),
+    testRegistryDependencies: stringList(raw.testRegistryDependencies),
   };
 }
 

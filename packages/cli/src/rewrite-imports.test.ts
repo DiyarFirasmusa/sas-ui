@@ -16,7 +16,12 @@ describe('rewriteImports', () => {
   it('maps the alias and folders to the project layout', () => {
     const result = rewriteImports(source, {
       alias: '~',
-      directories: { ui: 'shared/ui', lib: 'utils', hooks: 'hooks', test: 'testing' },
+      directories: {
+        ui: 'shared/ui',
+        lib: 'utils',
+        hooks: 'hooks',
+        test: 'testing',
+      },
     });
     expect(result).toContain(`from '~/utils/utils'`);
     expect(result).toContain(`from "~/shared/ui/button"`);

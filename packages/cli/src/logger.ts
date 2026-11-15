@@ -19,7 +19,9 @@ export interface Logger {
   line(message?: string): void;
 }
 
-export function createLogger(write: (text: string) => void = (text) => process.stdout.write(text)): Logger {
+export function createLogger(
+  write: (text: string) => void = (text) => process.stdout.write(text),
+): Logger {
   return {
     info: (message) => write(`${color.cyan('i')} ${message}\n`),
     success: (message) => write(`${color.green('✔')} ${message}\n`),

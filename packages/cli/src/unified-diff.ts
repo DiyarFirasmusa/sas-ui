@@ -58,7 +58,11 @@ export function unifiedDiff(before: string, after: string): DiffResult {
   const keep = Array.from({ length: steps.length }, () => false);
   steps.forEach((step, index) => {
     if (step.kind !== ' ') {
-      for (let near = Math.max(0, index - CONTEXT); near <= Math.min(steps.length - 1, index + CONTEXT); near += 1) {
+      for (
+        let near = Math.max(0, index - CONTEXT);
+        near <= Math.min(steps.length - 1, index + CONTEXT);
+        near += 1
+      ) {
         keep[near] = true;
       }
     }

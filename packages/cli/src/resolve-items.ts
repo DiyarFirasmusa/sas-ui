@@ -5,7 +5,9 @@ export class UnknownItemError extends Error {
   names: string[];
 
   constructor(names: string[]) {
-    super(`Unknown component${names.length > 1 ? 's' : ''}: ${names.join(', ')}. Run "sas-ui list" to see what exists.`);
+    super(
+      `Unknown component${names.length > 1 ? 's' : ''}: ${names.join(', ')}. Run "sas-ui list" to see what exists.`,
+    );
     this.names = names;
   }
 }
@@ -18,6 +20,7 @@ export class UnknownItemError extends Error {
 export async function resolveItems(
   source: RegistrySource,
   requested: readonly string[],
+  options: { includeTests?: boolean } = {},
 ): Promise<RegistryItem[]> {
   const index = await source.getIndex();
   const known = new Set(index.items.map((item) => item.name));
@@ -36,7 +39,11 @@ export async function resolveItems(
       throw new Error(`Circular registry dependency: ${[...trail, name].join(' → ')}`);
     }
     const item = await source.getItem(name);
-    for (const dependency of item.registryDependencies) {
+    const dependencies =
+      options.includeTests === true
+        ? [...item.registryDependencies, ...item.testRegistryDependencies]
+        : item.registryDependencies;
+    for (const dependency of dependencies) {
       await visit(dependency, [...trail, name]);
     }
     done.add(name);

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { PRESETS } from './all-presets.ts';
 import { presetToCss, presetsToSwitchableCss } from './generate-css.ts';
-import { ALIAS_TOKENS, CORE_TOKEN_NAMES } from './token-names.ts';
 import { themeColorBlock } from './theme-css.ts';
+import { ALIAS_TOKENS, CORE_TOKEN_NAMES } from './token-names.ts';
 
 const preset = PRESETS[0];
 

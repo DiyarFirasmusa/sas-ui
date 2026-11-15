@@ -21,7 +21,9 @@ describe('alias setup', () => {
   });
 
   it('leaves a tsconfig with other paths alone', () => {
-    expect(patchTsconfigPaths('{"compilerOptions":{"paths":{"~/*":["x"]}}}', '@', 'src')).toBeUndefined();
+    expect(
+      patchTsconfigPaths('{"compilerOptions":{"paths":{"~/*":["x"]}}}', '@', 'src'),
+    ).toBeUndefined();
   });
 
   it('adds tsconfigPaths to a vite config exactly once', () => {
@@ -37,8 +39,16 @@ describe('alias setup', () => {
     writeFileSync(join(dir, 'tsconfig.app.json'), TSCONFIG);
     writeFileSync(join(dir, 'vite.config.ts'), `export default defineConfig({\n  plugins: [],\n})`);
     const result = setupAlias(dir, '@', 'src');
-    expect(result).toEqual({ tsconfig: 'patched', vite: 'patched', patchedFiles: ['tsconfig.app.json', 'vite.config.ts'] });
+    expect(result).toEqual({
+      tsconfig: 'patched',
+      vite: 'patched',
+      patchedFiles: ['tsconfig.app.json', 'vite.config.ts'],
+    });
     expect(readFileSync(join(dir, 'tsconfig.app.json'), 'utf8')).toContain('"@/*"');
-    expect(setupAlias(dir, '@', 'src')).toMatchObject({ tsconfig: 'configured', vite: 'configured', patchedFiles: [] });
+    expect(setupAlias(dir, '@', 'src')).toMatchObject({
+      tsconfig: 'configured',
+      vite: 'configured',
+      patchedFiles: [],
+    });
   });
 });

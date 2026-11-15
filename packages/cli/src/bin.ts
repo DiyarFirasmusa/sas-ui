@@ -29,10 +29,18 @@ Global options
 
 function version(): string {
   const root = dirname(fileURLToPath(import.meta.url));
-  for (const candidate of [join(root, '..', 'package.json'), join(root, '..', '..', 'package.json')]) {
+  for (const candidate of [
+    join(root, '..', 'package.json'),
+    join(root, '..', '..', 'package.json'),
+  ]) {
     try {
       const parsed: unknown = JSON.parse(readFileSync(candidate, 'utf8'));
-      if (typeof parsed === 'object' && parsed !== null && 'version' in parsed && typeof parsed.version === 'string') {
+      if (
+        typeof parsed === 'object' &&
+        parsed !== null &&
+        'version' in parsed &&
+        typeof parsed.version === 'string'
+      ) {
         return parsed.version;
       }
     } catch {
@@ -110,11 +118,18 @@ export async function main(argv: string[]): Promise<number> {
         });
         return 0;
       case 'diff': {
-        const results = await runDiff(context, { names: rest, verbose: values.verbose });
+        const results = await runDiff(context, {
+          names: rest,
+          verbose: values.verbose,
+        });
         return results.some((result) => result.status === 'modified') ? 1 : 0;
       }
       case 'list':
-        await runList(context, { category: values.category, installed: values.installed, json: values.json });
+        await runList(context, {
+          category: values.category,
+          installed: values.installed,
+          json: values.json,
+        });
         return 0;
       case 'theme': {
         const [action, preset] = rest;

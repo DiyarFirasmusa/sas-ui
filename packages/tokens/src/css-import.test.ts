@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { parseTokenCss, resolveVariable } from './css-parse.ts';
-import { importPresetFromCss, MissingTokenError } from './import-css.ts';
 import { PRESETS } from './all-presets.ts';
-import { presetToCss } from './generate-css.ts';
 import { checkPreset } from './contrast-checks.ts';
+import { parseTokenCss, resolveVariable } from './css-parse.ts';
+import { presetToCss } from './generate-css.ts';
+import { importPresetFromCss, MissingTokenError } from './import-css.ts';
 
 describe('css import', () => {
   it('reads :root and .dark blocks and ignores comments', () => {

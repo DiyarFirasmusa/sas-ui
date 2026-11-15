@@ -28,11 +28,7 @@ export function installCommand(
 }
 
 /** Installs `name@range` specs; returns false when the package manager failed. */
-export function installPackages(
-  cwd: string,
-  specs: Record<string, string>,
-  dev: boolean,
-): boolean {
+export function installPackages(cwd: string, specs: Record<string, string>, dev: boolean): boolean {
   const packages = Object.entries(specs).map(([name, range]) => `${name}@${range}`);
   if (packages.length === 0) {
     return true;

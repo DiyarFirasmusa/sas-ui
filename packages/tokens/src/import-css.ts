@@ -1,6 +1,6 @@
+import { parseTokenCss, resolveVariable } from './css-parse.ts';
 import { CORE_TOKEN_NAMES, isThemeTokens } from './token-names.ts';
 import type { CoreTokenName, Preset, ThemeTokens } from './token-names.ts';
-import { parseTokenCss, resolveVariable } from './css-parse.ts';
 
 /**
  * Tokens older palettes do not define get a value borrowed from a related
@@ -53,8 +53,7 @@ function buildTheme(
   theme: 'light' | 'dark',
 ): ThemeTokens {
   const values: Record<string, string> = {};
-  const lookup = (name: string): string | undefined =>
-    resolveVariable(name, scope, fallbackScope);
+  const lookup = (name: string): string | undefined => resolveVariable(name, scope, fallbackScope);
 
   // A fallback may itself be a token that needs its own fallback (kbd →
   // surface-solid-secondary → neutral-100), so resolution recurses.
@@ -64,9 +63,7 @@ function buildTheme(
       return direct;
     }
     for (const candidate of FALLBACKS[name as CoreTokenName] ?? []) {
-      const value = /^(#|rgb)/.test(candidate)
-        ? candidate
-        : resolve(candidate, [...seen, name]);
+      const value = /^(#|rgb)/.test(candidate) ? candidate : resolve(candidate, [...seen, name]);
       if (value !== undefined) {
         return value;
       }
@@ -92,10 +89,7 @@ function buildTheme(
  * does not redefine (brand tile, gold…) from the light block, the same way the
  * apps' cascade does.
  */
-export function importPresetFromCss(
-  css: string,
-  options: ImportOptions,
-): Preset {
+export function importPresetFromCss(css: string, options: ImportOptions): Preset {
   const { light, dark } = parseTokenCss(css);
   const radius = options.radius ?? light.get('radius') ?? '0.75rem';
   return {

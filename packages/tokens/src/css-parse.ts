@@ -16,7 +16,11 @@ function collectBlock(css: string, selector: RegExp): VariableMap {
   const blockPattern = /([^{}]+)\{([^{}]*)\}/g;
   for (const match of css.matchAll(blockPattern)) {
     const [, rawSelector, body] = match;
-    if (!rawSelector || body === undefined || !rawSelector.split(',').some((part) => selector.test(part.trim()))) {
+    if (
+      !rawSelector ||
+      body === undefined ||
+      !rawSelector.split(',').some((part) => selector.test(part.trim()))
+    ) {
       continue;
     }
     for (const declaration of body.matchAll(/--([\w-]+)\s*:\s*([^;]+);/g)) {

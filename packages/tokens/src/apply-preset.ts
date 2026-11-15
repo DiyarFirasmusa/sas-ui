@@ -32,15 +32,10 @@ export function getStoredPreset(fallback: string): string {
 
 export function getStoredMode(): ColorMode {
   const stored = readStorage(MODE_STORAGE_KEY);
-  return stored === 'light' || stored === 'dark' || stored === 'system'
-    ? stored
-    : 'system';
+  return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
 }
 
-export function applyPreset(
-  name: string,
-  root: HTMLElement = document.documentElement,
-): void {
+export function applyPreset(name: string, root: HTMLElement = document.documentElement): void {
   root.dataset.preset = name;
   writeStorage(PRESET_STORAGE_KEY, name);
 }
@@ -49,10 +44,7 @@ function prefersDark(): boolean {
   return globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
 }
 
-export function applyMode(
-  mode: ColorMode,
-  root: HTMLElement = document.documentElement,
-): void {
+export function applyMode(mode: ColorMode, root: HTMLElement = document.documentElement): void {
   const isDark = mode === 'dark' || (mode === 'system' && prefersDark());
   root.classList.toggle('dark', isDark);
   writeStorage(MODE_STORAGE_KEY, mode);

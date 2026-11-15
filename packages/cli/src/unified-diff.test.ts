@@ -3,7 +3,12 @@ import { unifiedDiff } from './unified-diff.ts';
 
 describe('unifiedDiff', () => {
   it('reports identical text as unchanged', () => {
-    expect(unifiedDiff('a\nb', 'a\nb')).toEqual({ changed: false, text: '', added: 0, removed: 0 });
+    expect(unifiedDiff('a\nb', 'a\nb')).toEqual({
+      changed: false,
+      text: '',
+      added: 0,
+      removed: 0,
+    });
   });
 
   it('marks added and removed lines with context', () => {

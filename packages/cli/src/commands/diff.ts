@@ -26,15 +26,23 @@ export interface FileDiff {
  */
 export async function runDiff(context: CommandContext, options: DiffOptions): Promise<FileDiff[]> {
   const config = readConfig(context.cwd);
-  const source = openRegistry({ flag: context.registry, configured: config.registry });
+  const source = openRegistry({
+    flag: context.registry,
+    configured: config.registry,
+  });
   const index = await source.getIndex();
   const names = options.names.length > 0 ? options.names : index.items.map((item) => item.name);
-  const items = options.names.length > 0 ? await resolveItems(source, names) : await Promise.all(names.map((name) => source.getItem(name)));
+  const items =
+    options.names.length > 0
+      ? await resolveItems(source, names)
+      : await Promise.all(names.map((name) => source.getItem(name)));
 
   const results: FileDiff[] = [];
   for (const item of items) {
     const sources = item.files.filter((file) => file.role === 'source');
-    const present = sources.filter((file) => readProjectFile(context.cwd, targetPath(config, file)) !== undefined);
+    const present = sources.filter(
+      (file) => readProjectFile(context.cwd, targetPath(config, file)) !== undefined,
+    );
     if (present.length === 0 && options.names.length === 0) {
       continue;
     }
@@ -42,7 +50,13 @@ export async function runDiff(context: CommandContext, options: DiffOptions): Pr
       const path = targetPath(config, file);
       const local = readProjectFile(context.cwd, path);
       if (local === undefined) {
-        results.push({ item: item.name, path, status: 'missing', added: 0, removed: 0 });
+        results.push({
+          item: item.name,
+          path,
+          status: 'missing',
+          added: 0,
+          removed: 0,
+        });
         continue;
       }
       const diff = unifiedDiff(local, renderedContent(config, file));
@@ -63,13 +77,20 @@ export async function runDiff(context: CommandContext, options: DiffOptions): Pr
 
   const changed = results.filter((result) => result.status !== 'unchanged');
   for (const result of changed) {
-    const detail = result.status === 'modified' ? `+${result.added} −${result.removed} vs registry` : 'not in project';
-    context.logger.line(`${result.status === 'modified' ? color.yellow('M') : color.red('?')} ${result.path} ${color.dim(detail)}`);
+    const detail =
+      result.status === 'modified'
+        ? `+${result.added} −${result.removed} vs registry`
+        : 'not in project';
+    context.logger.line(
+      `${result.status === 'modified' ? color.yellow('M') : color.red('?')} ${result.path} ${color.dim(detail)}`,
+    );
   }
   context.logger.line(
     changed.length === 0
       ? color.green('Everything matches the registry.')
-      : color.dim('Lines marked "−" in --verbose output are in your copy; "+" is what the registry has now.'),
+      : color.dim(
+          'Lines marked "−" in --verbose output are in your copy; "+" is what the registry has now.',
+        ),
   );
   return results;
 }

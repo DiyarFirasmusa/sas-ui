@@ -5,7 +5,9 @@ describe('css entry', () => {
   it('inserts imports right after the tailwind import, once', () => {
     const css = `@import 'tailwindcss';\n\nbody { color: red; }\n`;
     const next = addCssImports(css, ['./styles/sas-ui/theme.css']);
-    expect(next).toBe(`@import 'tailwindcss';\n@import './styles/sas-ui/theme.css';\n\nbody { color: red; }\n`);
+    expect(next).toBe(
+      `@import 'tailwindcss';\n@import './styles/sas-ui/theme.css';\n\nbody { color: red; }\n`,
+    );
     expect(addCssImports(next ?? '', ['./styles/sas-ui/theme.css'])).toBeUndefined();
   });
 
@@ -14,7 +16,11 @@ describe('css entry', () => {
   });
 
   it('computes relative css import paths', () => {
-    expect(cssImportPath('src/index.css', 'src/styles/sas-ui/theme.css')).toBe('./styles/sas-ui/theme.css');
-    expect(cssImportPath('src/style/styles.css', 'src/styles/sas-ui/theme.css')).toBe('../styles/sas-ui/theme.css');
+    expect(cssImportPath('src/index.css', 'src/styles/sas-ui/theme.css')).toBe(
+      './styles/sas-ui/theme.css',
+    );
+    expect(cssImportPath('src/style/styles.css', 'src/styles/sas-ui/theme.css')).toBe(
+      '../styles/sas-ui/theme.css',
+    );
   });
 });

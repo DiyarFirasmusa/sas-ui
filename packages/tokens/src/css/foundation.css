@@ -2,8 +2,7 @@
    from the active preset (see theme-colors, generated). */
 
 @theme inline {
-  --font-sans:
-    'IBM Plex Sans', 'IBM Plex Sans Arabic', Cairo, system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans', 'IBM Plex Sans Arabic', Cairo, system-ui, sans-serif;
   --font-heading: Cairo, 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 

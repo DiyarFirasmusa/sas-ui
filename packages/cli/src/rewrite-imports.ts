@@ -26,9 +26,7 @@ export function rewriteImports(
     if (to === from) {
       continue;
     }
-    result = result
-      .replaceAll(`'${from}`, `'${to}`)
-      .replaceAll(`"${from}`, `"${to}`);
+    result = result.replaceAll(`'${from}`, `'${to}`).replaceAll(`"${from}`, `"${to}`);
   }
   return result;
 }

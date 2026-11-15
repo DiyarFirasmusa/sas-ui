@@ -1,10 +1,15 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { CONFIG_FILE, DEFAULT_DIRECTORIES, writeConfig, type ProjectConfig } from '../config.ts';
 import { setupAlias } from '../alias-setup.ts';
+import { CONFIG_FILE, DEFAULT_DIRECTORIES, writeConfig, type ProjectConfig } from '../config.ts';
 import { addCssImports, cssImportPath, findCssEntry } from '../css-entry.ts';
 import { color } from '../logger.ts';
-import { readProjectFile, writeProjectFile, writeTokenCss, type CommandContext } from '../project.ts';
+import {
+  readProjectFile,
+  writeProjectFile,
+  writeTokenCss,
+  type CommandContext,
+} from '../project.ts';
 import { openRegistry } from '../registry-source.ts';
 import { runAdd } from './add.ts';
 
@@ -31,25 +36,34 @@ function hasAliasInTsconfig(cwd: string, alias: string): boolean {
   });
 }
 
-export async function runInit(context: CommandContext, options: InitOptions): Promise<ProjectConfig> {
+export async function runInit(
+  context: CommandContext,
+  options: InitOptions,
+): Promise<ProjectConfig> {
   const { cwd, logger } = context;
   if (!existsSync(join(cwd, 'package.json'))) {
     throw new Error(`No package.json in ${cwd}. Run "sas-ui init" inside your Vite/React project.`);
   }
   if (existsSync(join(cwd, CONFIG_FILE)) && options.force !== true) {
-    throw new Error(`${CONFIG_FILE} already exists. Use --force to re-initialise, or "sas-ui theme set <preset>" to change the theme.`);
+    throw new Error(
+      `${CONFIG_FILE} already exists. Use --force to re-initialise, or "sas-ui theme set <preset>" to change the theme.`,
+    );
   }
 
   const srcDir = options.srcDir ?? 'src';
   const css = options.css ?? findCssEntry(cwd, srcDir);
   if (!css) {
-    throw new Error('Could not find a stylesheet that imports Tailwind (@import "tailwindcss"). Pass it with --css <file>.');
+    throw new Error(
+      'Could not find a stylesheet that imports Tailwind (@import "tailwindcss"). Pass it with --css <file>.',
+    );
   }
   const source = openRegistry({ flag: context.registry });
   const index = await source.getIndex();
   const preset = options.preset ?? DEFAULT_PRESET;
   if (!index.presets.some((entry) => entry.name === preset)) {
-    throw new Error(`Unknown preset "${preset}". Available: ${index.presets.map((entry) => entry.name).join(', ')}`);
+    throw new Error(
+      `Unknown preset "${preset}". Available: ${index.presets.map((entry) => entry.name).join(', ')}`,
+    );
   }
 
   const config: ProjectConfig = {
@@ -89,15 +103,21 @@ export async function runInit(context: CommandContext, options: InitOptions): Pr
       logger.success(`Configured the "${config.alias}/*" alias in ${file}`);
     }
     if (alias.vite === 'manual') {
-      logger.warn('Add  resolve: { tsconfigPaths: true }  (Vite 8) or a resolve.alias to your Vite config.');
+      logger.warn(
+        'Add  resolve: { tsconfigPaths: true }  (Vite 8) or a resolve.alias to your Vite config.',
+      );
     }
   }
   if (!hasAliasInTsconfig(cwd, config.alias)) {
-    logger.warn(`No "${config.alias}/*" path found in tsconfig. Add  "paths": { "${config.alias}/*": ["./${srcDir}/*"] }  to your tsconfig (and a matching alias in vite.config).`);
+    logger.warn(
+      `No "${config.alias}/*" path found in tsconfig. Add  "paths": { "${config.alias}/*": ["./${srcDir}/*"] }  to your tsconfig (and a matching alias in vite.config).`,
+    );
   }
   logger.line();
   logger.line(color.bold('Next steps'));
-  logger.line(`  1. Set the language on <html>:  <html lang="ar" dir="rtl" data-preset="${preset}">`);
+  logger.line(
+    `  1. Set the language on <html>:  <html lang="ar" dir="rtl" data-preset="${preset}">`,
+  );
   logger.line('  2. Add components:              sas-ui add button input dialog');
   logger.line('  3. Switch the palette later:    sas-ui theme set <preset>');
   return config;

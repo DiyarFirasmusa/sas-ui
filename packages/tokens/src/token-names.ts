@@ -36,12 +36,7 @@ const SURFACE_TOKENS = [
   'scrim',
 ] as const;
 
-const TEXT_TOKENS = [
-  'text-primary',
-  'text-secondary',
-  'text-muted',
-  'text-inactive',
-] as const;
+const TEXT_TOKENS = ['text-primary', 'text-secondary', 'text-muted', 'text-inactive'] as const;
 
 const BRAND_TOKENS = [
   'primary',
@@ -118,13 +113,7 @@ const ACCENT_TOKENS = [
   'brand-tile-foreground',
 ] as const;
 
-const CHART_TOKENS = [
-  'chart-1',
-  'chart-2',
-  'chart-3',
-  'chart-4',
-  'chart-5',
-] as const;
+const CHART_TOKENS = ['chart-1', 'chart-2', 'chart-3', 'chart-4', 'chart-5'] as const;
 
 export const CORE_TOKEN_GROUPS = {
   surfaces: SURFACE_TOKENS,
@@ -195,8 +184,6 @@ export interface Preset {
 }
 
 /** Narrows a loose record to a complete theme (every core token present). */
-export function isThemeTokens(
-  record: Record<string, string>,
-): record is ThemeTokens {
+export function isThemeTokens(record: Record<string, string>): record is ThemeTokens {
   return CORE_TOKEN_NAMES.every((name) => typeof record[name] === 'string');
 }

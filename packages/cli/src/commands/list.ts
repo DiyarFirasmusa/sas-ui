@@ -17,7 +17,10 @@ function tryReadConfig(cwd: string): ProjectConfig | undefined {
 
 export async function runList(context: CommandContext, options: ListOptions): Promise<string[]> {
   const config = tryReadConfig(context.cwd);
-  const source = openRegistry({ flag: context.registry, configured: config?.registry });
+  const source = openRegistry({
+    flag: context.registry,
+    configured: config?.registry,
+  });
   const index = await source.getIndex();
   const names: string[] = [];
   const rows = await Promise.all(
@@ -28,14 +31,21 @@ export async function runList(context: CommandContext, options: ListOptions): Pr
         if (config) {
           const full = await source.getItem(item.name);
           const first = full.files.find((file) => file.role === 'source');
-          installed = first !== undefined && existsSync(join(context.cwd, targetPath(config, first)));
+          installed =
+            first !== undefined && existsSync(join(context.cwd, targetPath(config, first)));
         }
         return { item, installed };
       }),
   );
   const visible = rows.filter((row) => options.installed !== true || row.installed);
   if (options.json === true) {
-    context.logger.line(JSON.stringify(visible.map(({ item, installed }) => ({ ...item, installed })), null, 2));
+    context.logger.line(
+      JSON.stringify(
+        visible.map(({ item, installed }) => ({ ...item, installed })),
+        null,
+        2,
+      ),
+    );
     return visible.map(({ item }) => item.name);
   }
   const categories = [...new Set(visible.map(({ item }) => item.category))].sort();
@@ -45,10 +55,16 @@ export async function runList(context: CommandContext, options: ListOptions): Pr
       names.push(item.name);
       const mark = installed ? color.green('✔') : ' ';
       const tier = item.tier === 'extra' ? color.dim(' (extra)') : '';
-      context.logger.line(`  ${mark} ${item.name.padEnd(22)} ${color.dim(item.description)}${tier}`);
+      context.logger.line(
+        `  ${mark} ${item.name.padEnd(22)} ${color.dim(item.description)}${tier}`,
+      );
     }
   }
   context.logger.line();
-  context.logger.line(color.dim(`${visible.length} items · registry ${index.version} · presets: ${index.presets.map((preset) => preset.name).join(', ')}`));
+  context.logger.line(
+    color.dim(
+      `${visible.length} items · registry ${index.version} · presets: ${index.presets.map((preset) => preset.name).join(', ')}`,
+    ),
+  );
   return names;
 }

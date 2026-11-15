@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "description": "SAS UI design tokens: data-driven colour presets, CSS generator, contrast checks and a runtime preset switcher.",
   "license": "MIT",
+  "files": [
+    "dist",
+    "css"
+  ],
   "type": "module",
   "sideEffects": false,
-  "files": ["dist", "css"],
   "exports": {
     "./*": "./src/*.ts",
     "./css/*": "./css/*"

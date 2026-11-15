@@ -13,9 +13,7 @@ export function parseColor(input: string): Rgba {
   const hex = HEX.exec(value);
   if (hex?.[1]) {
     const digits =
-      hex[1].length === 3
-        ? [...hex[1]].map((digit) => digit + digit).join('')
-        : hex[1];
+      hex[1].length === 3 ? [...hex[1]].map((digit) => digit + digit).join('') : hex[1];
     return {
       r: parseInt(digits.slice(0, 2), 16),
       g: parseInt(digits.slice(2, 4), 16),

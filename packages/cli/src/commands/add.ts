@@ -49,7 +49,9 @@ export async function runAdd(
     throw new Error('Name at least one component, or pass --all. Try "sas-ui list".');
   }
 
-  const items = await resolveItems(source, requested);
+  // Component tests import the shared test utilities (axe helper, jsdom stubs).
+  const wanted = options.tests === true ? [...new Set([...requested, 'test-utils'])] : requested;
+  const items = await resolveItems(source, wanted, { includeTests: options.tests === true });
   const result: AddResult = {
     written: [],
     overwritten: [],
@@ -70,7 +72,9 @@ export async function runAdd(
       }
       if (existing !== undefined && options.overwrite !== true) {
         result.skipped.push(destination);
-        logger.warn(`${destination} already exists and differs — kept (use --overwrite, or "sas-ui diff ${item.name}")`);
+        logger.warn(
+          `${destination} already exists and differs — kept (use --overwrite, or "sas-ui diff ${item.name}")`,
+        );
         continue;
       }
       if (options.dryRun !== true) {
@@ -84,6 +88,11 @@ export async function runAdd(
     }
   }
 
+  if (options.tests === true && options.dryRun !== true) {
+    logger.info(
+      "Tests need Vitest set up for jsdom: test: { environment: 'jsdom', setupFiles: ['./src/test/setup.ts'] } in vite.config, with the same '@' alias.",
+    );
+  }
   const verb = options.dryRun === true ? 'Would write' : 'Wrote';
   for (const path of result.written) {
     logger.success(`${verb} ${path}`);
@@ -99,10 +108,17 @@ export async function runAdd(
     const dependenciesOk = installPackages(context.cwd, result.dependencies, false);
     const devOk = installPackages(context.cwd, result.devDependencies, true);
     if (!dependenciesOk || !devOk) {
-      logger.warn('Dependency install failed — install these manually: ' + JSON.stringify({ ...result.dependencies, ...result.devDependencies }));
+      logger.warn(
+        'Dependency install failed — install these manually: ' +
+          JSON.stringify({ ...result.dependencies, ...result.devDependencies }),
+      );
     }
   } else if (Object.keys(result.dependencies).length > 0) {
-    logger.info(`Dependencies to install: ${Object.entries(result.dependencies).map(([name, range]) => `${name}@${range}`).join(' ')}`);
+    logger.info(
+      `Dependencies to install: ${Object.entries(result.dependencies)
+        .map(([name, range]) => `${name}@${range}`)
+        .join(' ')}`,
+    );
   }
   return result;
 }

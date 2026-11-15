@@ -7,7 +7,11 @@ import { join } from 'node:path';
  * otherwise the caller prints instructions instead of guessing.
  */
 
-export function patchTsconfigPaths(source: string, alias: string, srcDir: string): string | undefined {
+export function patchTsconfigPaths(
+  source: string,
+  alias: string,
+  srcDir: string,
+): string | undefined {
   if (source.includes(`"${alias}/*"`)) {
     return undefined;
   }
@@ -49,7 +53,11 @@ function findTsconfig(cwd: string): string | undefined {
 }
 
 export function setupAlias(cwd: string, alias: string, srcDir: string): AliasSetupResult {
-  const result: AliasSetupResult = { tsconfig: 'manual', vite: 'absent', patchedFiles: [] };
+  const result: AliasSetupResult = {
+    tsconfig: 'manual',
+    vite: 'absent',
+    patchedFiles: [],
+  };
 
   const tsconfigName = findTsconfig(cwd);
   if (tsconfigName) {
@@ -67,7 +75,9 @@ export function setupAlias(cwd: string, alias: string, srcDir: string): AliasSet
     }
   }
 
-  const viteName = ['vite.config.ts', 'vite.config.mts', 'vite.config.js'].find((file) => existsSync(join(cwd, file)));
+  const viteName = ['vite.config.ts', 'vite.config.mts', 'vite.config.js'].find((file) =>
+    existsSync(join(cwd, file)),
+  );
   if (viteName) {
     const path = join(cwd, viteName);
     const current = readFileSync(path, 'utf8');

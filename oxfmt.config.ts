@@ -1,9 +1,15 @@
 import { defineConfig } from 'oxfmt';
 
 export default defineConfig({
-  printWidth: 80,
+  printWidth: 100,
   singleQuote: true,
   sortTailwindcss: {},
   sortImports: { enabled: true, newlinesBetween: false },
-  ignorePatterns: ['**/dist/**', 'packages/registry/registry-out/**', 'packages/cli/registry/**', 'packages/tokens/css/**', 'pnpm-lock.yaml'],
+  ignorePatterns: [
+    '**/dist/**',
+    'packages/registry/registry-out/**',
+    'packages/cli/registry/**',
+    'packages/tokens/css/**',
+    'pnpm-lock.yaml',
+  ],
 });
