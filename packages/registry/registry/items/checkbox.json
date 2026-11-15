@@ -1,0 +1,10 @@
+{
+  "name": "checkbox",
+  "type": "ui",
+  "category": "form",
+  "title": "Checkbox",
+  "description": "Checkbox with checked, unchecked and indeterminate states.",
+  "files": [
+    "ui/checkbox.tsx"
+  ]
+}

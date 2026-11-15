@@ -1,0 +1,10 @@
+{
+  "name": "button",
+  "type": "ui",
+  "category": "form",
+  "title": "Button",
+  "description": "Buttons with variants, sizes, a loading (single-flight) state and link styling.",
+  "files": [
+    "ui/button.tsx"
+  ]
+}

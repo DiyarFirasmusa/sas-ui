@@ -1,0 +1,150 @@
+/* Non-colour tokens: type, spacing by role, radii, elevation. Colours come
+   from the active preset (see theme-colors, generated). */
+
+@theme inline {
+  --font-sans:
+    'IBM Plex Sans', 'IBM Plex Sans Arabic', Cairo, system-ui, sans-serif;
+  --font-heading: Cairo, 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Spacing by role. Never name these xs/sm/md/lg: those keys shadow
+     Tailwind's container scale and break max-w-md and friends.
+       field   8px  label→value, tab→tab, badge/button internal gap
+       inline 12px  icon tile→title, nav item→nav item
+       row    16px  field-row→field-row, control inline padding
+       panel  20px  panel padding
+       card   24px  card padding, section blocks
+       page   32px  page gutters */
+  --spacing-field: 8px;
+  --spacing-inline: 12px;
+  --spacing-row: 16px;
+  --spacing-panel: 20px;
+  --spacing-card: 24px;
+  --spacing-page: 32px;
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-control: 10px;
+  --radius-modal: 20px;
+  --radius-pill: 999px;
+
+  --shadow-small: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-mid: 0 2px 8px 0 rgb(0 0 0 / 0.06);
+  --shadow-large: 0 4px 16px 0 rgb(0 0 0 / 0.08);
+  --shadow-xlarge: 0 18px 44px 0 rgb(0 0 0 / 0.24);
+  --shadow-primary: 0 8px 24px 0 color-mix(in oklab, var(--primary) 28%, transparent);
+
+  --animate-accordion-down: accordion-down 200ms ease-out;
+  --animate-accordion-up: accordion-up 200ms ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--accordion-panel-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--accordion-panel-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/* Type ramp — one utility per named style; each sets size, line-height,
+   weight and family together, so never pair them with font-* or leading-*. */
+@utility text-h1 {
+  font: 700 28px / 33.6px var(--font-heading);
+}
+@utility text-h2 {
+  font: 700 24px / 26.4px var(--font-heading);
+}
+@utility text-h3 {
+  font: 700 20px / 26px var(--font-heading);
+}
+@utility text-h4 {
+  font: 700 16px / 24px var(--font-heading);
+}
+@utility text-h5 {
+  font: 600 14px / 21px var(--font-sans);
+}
+@utility text-b1 {
+  font: 400 14px / 21px var(--font-sans);
+}
+@utility text-b2 {
+  font: 400 13px / 19.5px var(--font-sans);
+}
+@utility text-b3 {
+  font: 400 12px / 18px var(--font-sans);
+}
+@utility text-button-1 {
+  font: 600 14px / 21px var(--font-sans);
+}
+@utility text-button-2 {
+  font: 600 13px / 19.5px var(--font-sans);
+}
+@utility text-label {
+  font: 600 12px / 18px var(--font-sans);
+}
+@utility text-table-header {
+  font: 500 12px / 18px var(--font-sans);
+}
+@utility text-kpi {
+  font: 700 30px / 1.1 var(--font-heading);
+}
+@utility text-metric {
+  font: 700 24px / 36px var(--font-heading);
+}
+
+/* Elevation helpers that read the preset's primary. */
+@utility focus-ring {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  * {
+    border-color: var(--border);
+  }
+  th {
+    text-align: start;
+  }
+  /* Digits stay aligned in tables and fields in both languages. */
+  :where(input, textarea, table) {
+    font-variant-numeric: tabular-nums;
+  }
+  :where(button, [role='button'], a, input, select, textarea, summary):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Motion is decoration; honour the user's request to reduce it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

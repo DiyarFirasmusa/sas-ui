@@ -1,0 +1,10 @@
+{
+  "name": "field",
+  "type": "ui",
+  "category": "form",
+  "title": "Field",
+  "description": "Label, control, description and error wired together for accessibility.",
+  "files": [
+    "ui/field.tsx"
+  ]
+}

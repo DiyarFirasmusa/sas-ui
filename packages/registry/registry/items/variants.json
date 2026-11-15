@@ -1,0 +1,10 @@
+{
+  "name": "variants",
+  "type": "lib",
+  "category": "foundation",
+  "title": "variants()",
+  "description": "Typed class variants with defaults and compound variants (a small cva).",
+  "files": [
+    "lib/variants.ts"
+  ]
+}

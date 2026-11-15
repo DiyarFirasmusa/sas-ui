@@ -1,0 +1,23 @@
+{
+  "name": "@sas-ui/tokens",
+  "version": "0.1.0",
+  "description": "SAS UI design tokens: data-driven colour presets, CSS generator, contrast checks and a runtime preset switcher.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist", "css"],
+  "exports": {
+    "./*": "./src/*.ts",
+    "./css/*": "./css/*"
+  },
+  "scripts": {
+    "build": "node --experimental-strip-types scripts/build-css.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "jsdom": "^30.0.1",
+    "vitest": "^5.1.0"
+  }
+}

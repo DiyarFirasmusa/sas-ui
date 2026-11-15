@@ -1,0 +1,10 @@
+{
+  "name": "locale",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Locale",
+  "description": "Tiny ar/en i18n context: useLocale() and useLabels() with per-component defaults.",
+  "files": [
+    "lib/locale.tsx"
+  ]
+}

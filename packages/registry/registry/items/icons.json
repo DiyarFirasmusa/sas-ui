@@ -1,0 +1,10 @@
+{
+  "name": "icons",
+  "type": "ui",
+  "category": "foundation",
+  "title": "Icons",
+  "description": "Dependency-free SVG icon set; direction-aware glyphs mirror in RTL.",
+  "files": [
+    "ui/icons.tsx"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "slot",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Slot",
+  "description": "asChild-style prop merging for wrapping links and custom elements.",
+  "files": [
+    "lib/slot.tsx"
+  ]
+}

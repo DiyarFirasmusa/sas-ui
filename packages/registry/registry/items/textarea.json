@@ -1,0 +1,10 @@
+{
+  "name": "textarea",
+  "type": "ui",
+  "category": "form",
+  "title": "Textarea",
+  "description": "Auto-growing multi-line input with the same direction handling as Input.",
+  "files": [
+    "ui/textarea.tsx"
+  ]
+}

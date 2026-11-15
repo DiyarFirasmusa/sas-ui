@@ -1,0 +1,11 @@
+{
+  "name": "test-utils",
+  "type": "test",
+  "category": "foundation",
+  "title": "Test utilities",
+  "description": "axe helper, jsdom stubs and a locale-aware render for component tests.",
+  "files": [
+    "test/a11y.ts",
+    "test/render.tsx"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "spinner",
+  "type": "ui",
+  "category": "feedback",
+  "title": "Spinner",
+  "description": "Indeterminate activity indicator with a localised accessible name.",
+  "files": [
+    "ui/spinner.tsx"
+  ]
+}
