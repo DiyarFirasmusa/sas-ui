@@ -1,0 +1,8 @@
+{
+  "name": "date-picker",
+  "type": "ui",
+  "category": "form",
+  "title": "Date picker",
+  "description": "Popover date field with a calendar; ISO yyyy-mm-dd value, clearable, works in Field and react-hook-form.",
+  "files": ["ui/date-picker.tsx"]
+}

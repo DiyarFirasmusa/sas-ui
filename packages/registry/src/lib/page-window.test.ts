@@ -26,12 +26,24 @@ describe('getPageWindow', () => {
   });
 
   it('keeps the same length while the page moves', () => {
-    const lengths = new Set(Array.from({ length: 20 }, (_, index) => getPageWindow(index + 1, 20).length));
+    const lengths = new Set(
+      Array.from({ length: 20 }, (_, index) => getPageWindow(index + 1, 20).length),
+    );
     expect(lengths).toEqual(new Set([7]));
   });
 
   it('honours the sibling count', () => {
-    expect(getPageWindow(10, 30, 2)).toEqual([1, 'start-ellipsis', 8, 9, 10, 11, 12, 'end-ellipsis', 30]);
+    expect(getPageWindow(10, 30, 2)).toEqual([
+      1,
+      'start-ellipsis',
+      8,
+      9,
+      10,
+      11,
+      12,
+      'end-ellipsis',
+      30,
+    ]);
     expect(getPageWindow(1, 30, 0)).toEqual([1, 2, 3, 'end-ellipsis', 30]);
   });
 

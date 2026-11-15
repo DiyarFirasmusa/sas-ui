@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { EmptyState } from '@/components/ui/empty-state';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('EmptyState', () => {
   it('shows the localized default title with an icon', () => {

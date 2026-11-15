@@ -1,0 +1,8 @@
+{
+  "name": "filter-bar",
+  "type": "ui",
+  "category": "data",
+  "title": "Filter bar",
+  "description": "Backend-driven filters: search box, grouped filters popover, active chips with remove and clear all, and a count badge.",
+  "files": ["ui/filter-bar.tsx", "ui/filter-bar-fields.tsx"]
+}

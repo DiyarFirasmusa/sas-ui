@@ -26,6 +26,8 @@ export interface ItemManifest {
   files: string[];
   /** Phase B items that are optional extras (heavier dependencies). */
   tier?: 'core' | 'extra';
+  /** Extra dev packages the item needs but cannot be found by scanning imports (test setup files, jsdom). */
+  extraDevDependencies?: string[];
 }
 
 export interface ItemFile {
@@ -44,16 +46,21 @@ export interface RegistryItem extends Omit<ItemManifest, 'files'> {
   devDependencies: Record<string, string>;
   /** Other registry items whose files this item imports. */
   registryDependencies: string[];
+  /** Items only the tests import (copied with `add --tests`). */
+  testRegistryDependencies: string[];
   files: ItemFile[];
 }
 
-export interface RegistryIndexEntry
-  extends Omit<RegistryItem, 'files'> {
+export interface RegistryIndexEntry extends Omit<RegistryItem, 'files'> {
   fileCount: number;
 }
 
 export interface RegistryIndex {
   version: string;
   items: RegistryIndexEntry[];
-  presets: { name: string; label: { en: string; ar: string }; description: string }[];
+  presets: {
+    name: string;
+    label: { en: string; ar: string };
+    description: string;
+  }[];
 }

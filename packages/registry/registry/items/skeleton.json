@@ -4,7 +4,5 @@
   "category": "feedback",
   "title": "Skeleton",
   "description": "Pulse placeholder block with text-lines and table-rows helpers; honours reduced motion.",
-  "files": [
-    "ui/skeleton.tsx"
-  ]
+  "files": ["ui/skeleton.tsx"]
 }

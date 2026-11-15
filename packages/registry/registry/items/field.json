@@ -4,7 +4,5 @@
   "category": "form",
   "title": "Field",
   "description": "Label, control, description and error wired together for accessibility.",
-  "files": [
-    "ui/field.tsx"
-  ]
+  "files": ["ui/field.tsx"]
 }

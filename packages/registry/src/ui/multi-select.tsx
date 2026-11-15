@@ -66,7 +66,8 @@ const iconButton = cn(
 );
 
 interface MultiSelectProps
-  extends ComboboxAsyncProps,
+  extends
+    ComboboxAsyncProps,
     Omit<
       ComboboxPrimitive.Root.Props<ComboboxOption, true>,
       | 'items'
@@ -230,8 +231,10 @@ function MultiSelect({
                       <span className="truncate">{option.label}</span>
                       <ComboboxPrimitive.ChipRemove
                         data-slot="multi-select-chip-remove"
-                        aria-label={fillLabel(labels.remove, { label: option.label })}
-                        className="inline-flex size-6 shrink-0 items-center justify-center rounded-md outline-none hover:bg-primary-tint focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-3.5"
+                        aria-label={fillLabel(labels.remove, {
+                          label: option.label,
+                        })}
+                        className="hover:bg-primary-tint focus-visible:ring-ring inline-flex size-6 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2 [&_svg]:size-3.5"
                       >
                         <CloseIcon />
                       </ComboboxPrimitive.ChipRemove>
@@ -246,7 +249,7 @@ function MultiSelect({
                         expanded ? labels.showLess : fillLabel(labels.showMore, { count: hidden })
                       }
                       onClick={() => setExpanded((open) => !open)}
-                      className="inline-flex h-7 items-center rounded-md bg-surface-dim px-2 text-b2 text-text-secondary tabular-nums outline-none hover:bg-hover-row focus-visible:ring-2 focus-visible:ring-ring"
+                      className="bg-surface-dim text-b2 text-text-secondary hover:bg-hover-row focus-visible:ring-ring inline-flex h-7 items-center rounded-md px-2 tabular-nums outline-none focus-visible:ring-2"
                     >
                       {expanded ? labels.showLess : `+${hidden}`}
                     </button>
@@ -258,11 +261,13 @@ function MultiSelect({
                     aria-invalid={ariaInvalid}
                     aria-description={
                       chosen.length > 0
-                        ? fillLabel(labels.selectedCount, { count: chosen.length })
+                        ? fillLabel(labels.selectedCount, {
+                            count: chosen.length,
+                          })
                         : undefined
                     }
                     data-slot="multi-select-input"
-                    className="h-7 min-w-16 flex-1 bg-transparent text-b1 text-text-primary outline-none placeholder:text-text-muted disabled:cursor-not-allowed"
+                    className="text-b1 text-text-primary placeholder:text-text-muted h-7 min-w-16 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
                   />
                 </ComboboxPrimitive.Chips>
               );

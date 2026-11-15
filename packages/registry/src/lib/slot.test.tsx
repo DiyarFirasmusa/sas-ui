@@ -5,7 +5,7 @@ import { Slot } from '@/lib/slot';
 describe('Slot', () => {
   it('merges props and classes onto the child', () => {
     render(
-      <Slot className="px-2 text-b1" data-slot="x">
+      <Slot className="text-b1 px-2" data-slot="x">
         <a href="/home" className="px-4">
           Home
         </a>

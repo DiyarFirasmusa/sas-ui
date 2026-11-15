@@ -101,7 +101,7 @@ function ChartSkeleton({ label }: { label: string }) {
       aria-busy="true"
       aria-label={label}
       data-slot="chart-skeleton"
-      className="flex size-full items-end gap-inline px-inline"
+      className="gap-inline px-inline flex size-full items-end"
     >
       {SKELETON_BARS.map((height, index) => (
         <div
@@ -121,7 +121,7 @@ function ChartEmpty({ label }: { label: string }) {
   return (
     <div
       data-slot="chart-empty"
-      className="flex size-full flex-col items-center justify-center gap-field text-b2 text-text-muted"
+      className="gap-field text-b2 text-text-muted flex size-full flex-col items-center justify-center"
     >
       <InboxIcon className="size-6" />
       <p>{label}</p>
@@ -304,11 +304,14 @@ function ChartTooltipContent({
 
   const first = payload[0];
   const headingConfig =
-    typeof label === 'string' ? config[label] : seriesConfigFor(config, first, String(first?.dataKey ?? 'value'));
+    typeof label === 'string'
+      ? config[label]
+      : seriesConfigFor(config, first, String(first?.dataKey ?? 'value'));
   const headingContent = labelFormatter
     ? labelFormatter(headingConfig?.label ?? label, payload)
     : (headingConfig?.label ?? label);
-  const showHeading = !hideLabel && headingContent !== undefined && headingContent !== null && headingContent !== '';
+  const showHeading =
+    !hideLabel && headingContent !== undefined && headingContent !== null && headingContent !== '';
 
   return (
     <div
@@ -319,15 +322,17 @@ function ChartTooltipContent({
       )}
     >
       {showHeading ? <div className="text-label text-text-primary">{headingContent}</div> : null}
-      <ul className="grid gap-field">
+      <ul className="gap-field grid">
         {payload.map((item, index) => {
-          const key = String(nameKey ? (item.payload?.[nameKey] ?? nameKey) : (item.name ?? item.dataKey ?? 'value'));
+          const key = String(
+            nameKey ? (item.payload?.[nameKey] ?? nameKey) : (item.name ?? item.dataKey ?? 'value'),
+          );
           const series = seriesConfigFor(config, item, key);
           const swatch = item.payload?.fill;
           const color = typeof swatch === 'string' ? swatch : item.color;
           const Icon = series?.icon;
           return (
-            <li key={String(item.dataKey ?? index)} className="flex items-center gap-field">
+            <li key={String(item.dataKey ?? index)} className="gap-field flex items-center">
               {Icon ? (
                 <Icon />
               ) : hideIndicator ? null : (
@@ -345,10 +350,12 @@ function ChartTooltipContent({
                   }
                 />
               )}
-              <span className="flex-1 text-text-muted">{series?.label ?? item.name}</span>
+              <span className="text-text-muted flex-1">{series?.label ?? item.name}</span>
               {item.value !== undefined && item.value !== null ? (
                 <span dir="ltr" className="text-label text-text-primary tabular-nums">
-                  {valueFormatter ? valueFormatter(item.value, item) : formatChartNumber(item.value)}
+                  {valueFormatter
+                    ? valueFormatter(item.value, item)
+                    : formatChartNumber(item.value)}
                 </span>
               ) : null}
             </li>
@@ -402,7 +409,10 @@ function ChartLegendContent({
         const series = seriesConfigFor(config, item, key);
         const Icon = series?.icon;
         return (
-          <li key={String(item.dataKey ?? item.value ?? index)} className="flex items-center gap-field text-b3 text-text-secondary">
+          <li
+            key={String(item.dataKey ?? item.value ?? index)}
+            className="gap-field text-b3 text-text-secondary flex items-center"
+          >
             {Icon && !hideIcon ? (
               <Icon />
             ) : hideIcon ? null : (

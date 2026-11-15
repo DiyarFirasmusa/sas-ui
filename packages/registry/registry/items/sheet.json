@@ -1,0 +1,8 @@
+{
+  "name": "sheet",
+  "type": "ui",
+  "category": "overlay",
+  "title": "Sheet",
+  "description": "Side panel that slides in from any edge, with logical start/end placement for RTL.",
+  "files": ["ui/sheet.tsx"]
+}

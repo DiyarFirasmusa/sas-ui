@@ -1,8 +1,7 @@
-import { useId } from 'react';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
-import type { DateRangeValue, FilterDefinition, NumberRangeValue } from '@/lib/filter-state';
+import type { FilterDefinition } from '@/lib/filter-state';
 
 interface FilterFieldLabels {
   any: string;
@@ -29,7 +28,9 @@ function asString(value: unknown): string {
 }
 
 function asStringList(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : [];
 }
 
 function asRange(value: unknown): Record<string, unknown> {
@@ -64,14 +65,14 @@ function RangeField({
 }) {
   const range = asRange(value);
   const update = (key: string, next: string) => {
-    const merged = { ...range, [key]: next };
-    onChange(merged);
+    onChange({ ...range, [key]: next });
   };
-  const limits = definition.type === 'number-range' ? { min: definition.min, max: definition.max } : {};
+  const limits =
+    definition.type === 'number-range' ? { min: definition.min, max: definition.max } : {};
   return (
-    <fieldset data-slot="filter-range" className="flex min-w-0 flex-col gap-field">
+    <fieldset data-slot="filter-range" className="gap-field flex min-w-0 flex-col">
       <legend className={labelClasses}>{definition.label}</legend>
-      <div className="grid grid-cols-2 gap-field">
+      <div className="gap-field grid grid-cols-2">
         <Field label={startLabel}>
           <Input
             kind="latin"
@@ -103,8 +104,6 @@ function RangeField({
  * a calendar component; swap them for your own date picker if you have one.
  */
 function FilterField({ definition, value, onChange, labels }: FilterFieldProps) {
-  const choiceLabelId = useId();
-
   switch (definition.type) {
     case 'text':
       return (
@@ -126,10 +125,13 @@ function FilterField({ definition, value, onChange, labels }: FilterFieldProps) 
               { value: 'true', label: labels.yes },
               { value: 'false', label: labels.no },
             ];
-      const current = definition.type === 'boolean' && typeof value === 'boolean' ? String(value) : asString(value);
+      const current =
+        definition.type === 'boolean' && typeof value === 'boolean'
+          ? String(value)
+          : asString(value);
       return (
-        <div className="flex min-w-0 flex-col gap-field">
-          <span id={choiceLabelId} className={labelClasses}>
+        <div className="gap-field flex min-w-0 flex-col">
+          <span aria-hidden="true" className={labelClasses}>
             {definition.label}
           </span>
           <Select
@@ -150,14 +152,17 @@ function FilterField({ definition, value, onChange, labels }: FilterFieldProps) 
     case 'multi-select': {
       const selected = asStringList(value);
       return (
-        <fieldset data-slot="filter-multi-select" className="flex min-w-0 flex-col gap-field">
+        <fieldset data-slot="filter-multi-select" className="gap-field flex min-w-0 flex-col">
           <legend className={labelClasses}>{definition.label}</legend>
           <div className="flex max-h-40 flex-col overflow-y-auto">
             {definition.options.map((option) => (
-              <label key={option.value} className="flex min-h-11 cursor-pointer items-center gap-field rounded-md px-field text-b1 hover:bg-hover-row sm:min-h-9">
+              <label
+                key={option.value}
+                className="gap-field px-field text-b1 hover:bg-hover-row flex min-h-11 cursor-pointer items-center rounded-md sm:min-h-9"
+              >
                 <input
                   type="checkbox"
-                  className="size-4 shrink-0 cursor-pointer accent-primary"
+                  className="accent-primary size-4 shrink-0 cursor-pointer"
                   checked={selected.includes(option.value)}
                   onChange={(event) =>
                     onChange(
@@ -177,14 +182,19 @@ function FilterField({ definition, value, onChange, labels }: FilterFieldProps) 
     case 'date':
       return (
         <Field label={definition.label}>
-          <Input kind="latin" type="date" value={asString(value)} onChange={(event) => onChange(event.target.value)} />
+          <Input
+            kind="latin"
+            type="date"
+            value={asString(value)}
+            onChange={(event) => onChange(event.target.value)}
+          />
         </Field>
       );
     case 'number-range':
       return (
         <RangeField
           definition={definition}
-          value={value satisfies NumberRangeValue | unknown}
+          value={value}
           onChange={onChange}
           type="number"
           startKey="min"
@@ -197,7 +207,7 @@ function FilterField({ definition, value, onChange, labels }: FilterFieldProps) 
       return (
         <RangeField
           definition={definition}
-          value={value satisfies DateRangeValue | unknown}
+          value={value}
           onChange={onChange}
           type="date"
           startKey="from"

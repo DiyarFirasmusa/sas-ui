@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Spinner } from '@/components/ui/spinner';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('Spinner', () => {
   it('announces itself as a status in the active language', () => {

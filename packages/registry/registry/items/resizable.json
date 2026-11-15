@@ -1,0 +1,8 @@
+{
+  "name": "resizable",
+  "type": "ui",
+  "category": "layout",
+  "title": "Resizable",
+  "description": "Resizable panel groups with pointer and keyboard resizing, mirrored in RTL.",
+  "files": ["ui/resizable.tsx"]
+}

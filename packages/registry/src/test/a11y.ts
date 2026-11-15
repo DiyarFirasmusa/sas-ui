@@ -6,9 +6,7 @@ import { expect } from 'vitest';
  * violations. jsdom cannot compute colour contrast or layout, so those rules
  * are off here; contrast is covered by the preset tests in @sas-ui/tokens.
  */
-export async function expectNoA11yViolations(
-  container: Element = document.body,
-): Promise<void> {
+export async function expectNoA11yViolations(container: Element = document.body): Promise<void> {
   const results = await axe.run(container, {
     rules: {
       'color-contrast': { enabled: false },

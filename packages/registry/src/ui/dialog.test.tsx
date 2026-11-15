@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Example() {
   return (

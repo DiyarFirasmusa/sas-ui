@@ -10,8 +10,10 @@ interface SelectOption {
   disabled?: boolean;
 }
 
-interface SelectProps
-  extends Omit<SelectPrimitive.Root.Props<string>, 'items' | 'children' | 'multiple'> {
+interface SelectProps extends Omit<
+  SelectPrimitive.Root.Props<string>,
+  'items' | 'children' | 'multiple'
+> {
   options: readonly SelectOption[];
   placeholder?: ReactNode;
   /** Classes for the trigger button. */
@@ -34,25 +36,36 @@ function Select({
   'aria-label': ariaLabel,
   ...props
 }: SelectProps) {
-  const items = options.map((option) => ({ value: option.value, label: option.label }));
+  const items = options.map((option) => ({
+    value: option.value,
+    label: option.label,
+  }));
   return (
     <SelectPrimitive.Root data-slot="select" items={items} {...props}>
       <SelectPrimitive.Trigger
         id={id}
         aria-label={ariaLabel}
         data-slot="select-trigger"
-        className={cn(controlClasses, 'cursor-pointer justify-between data-[popup-open]:border-primary-highlight', className)}
+        className={cn(
+          controlClasses,
+          'cursor-pointer justify-between data-[popup-open]:border-primary-highlight',
+          className,
+        )}
       >
         <SelectPrimitive.Value
           placeholder={placeholder}
-          className="truncate data-[placeholder]:text-text-muted"
+          className="data-[placeholder]:text-text-muted truncate"
         />
         <SelectPrimitive.Icon className="text-text-muted">
           <ChevronDownIcon />
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal>
-        <SelectPrimitive.Positioner sideOffset={4} className="z-50 outline-none" alignItemWithTrigger={false}>
+        <SelectPrimitive.Positioner
+          sideOffset={4}
+          className="z-50 outline-none"
+          alignItemWithTrigger={false}
+        >
           <SelectPrimitive.Popup
             data-slot="select-content"
             className={cn(
@@ -75,7 +88,7 @@ function Select({
                   )}
                 >
                   <SelectPrimitive.ItemIndicator className="absolute start-2 flex items-center">
-                    <CheckIcon className="size-4 text-primary-text" />
+                    <CheckIcon className="text-primary-text size-4" />
                   </SelectPrimitive.ItemIndicator>
                   <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                 </SelectPrimitive.Item>

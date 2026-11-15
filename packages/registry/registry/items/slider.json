@@ -4,7 +4,5 @@
   "category": "form",
   "title": "Slider",
   "description": "Single-value or range slider with an optional value label; direction aware.",
-  "files": [
-    "ui/slider.tsx"
-  ]
+  "files": ["ui/slider.tsx"]
 }

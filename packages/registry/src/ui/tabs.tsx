@@ -1,7 +1,7 @@
 import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
 import { createContext, useContext } from 'react';
-import { useLocale } from '@/lib/locale';
+import { useLocale, type Direction } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 import { variants, type VariantProps } from '@/lib/variants';
 
@@ -11,7 +11,8 @@ const tabsListVariants = variants(
   {
     variants: {
       variant: {
-        underline: 'gap-row border-b border-stroke data-[orientation=vertical]:gap-0 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-e',
+        underline:
+          'gap-row border-b border-stroke data-[orientation=vertical]:gap-0 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-e',
         pill: 'w-fit gap-1 rounded-lg bg-hover-row p-1',
       },
     },
@@ -46,23 +47,27 @@ type TabsVariant = NonNullable<VariantProps<typeof tabsListVariants>['variant']>
 
 const TabsVariantContext = createContext<TabsVariant>('underline');
 
-interface TabsProps extends TabsPrimitive.Root.Props {
+interface TabsProps extends Omit<TabsPrimitive.Root.Props, 'dir'> {
   variant?: TabsVariant;
+  /** Text direction; defaults to the locale's. Arrow keys follow it. */
+  dir?: Direction;
 }
 
 /**
  * Tabs with roving focus: Left/Right (mirrored in RTL) move between tabs,
  * Home/End jump to the ends. The list scrolls horizontally when it overflows.
  */
-function Tabs({ className, variant = 'underline', ...props }: TabsProps) {
+function Tabs({ className, variant = 'underline', dir, ...props }: TabsProps) {
   // Base UI reads direction from its own context, not <html dir>; without
   // this the arrow keys would not mirror in Arabic.
-  const { direction } = useLocale();
+  const locale = useLocale();
+  const direction = dir ?? locale.direction;
   return (
     <DirectionProvider direction={direction}>
       <TabsVariantContext value={variant}>
         <TabsPrimitive.Root
           data-slot="tabs"
+          dir={direction}
           className={cn('flex flex-col gap-row data-[orientation=vertical]:flex-row', className)}
           {...props}
         />

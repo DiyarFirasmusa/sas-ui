@@ -22,8 +22,10 @@ const alertVariants = variants(
     variants: {
       variant: {
         info: 'border-tag-cyan/30 bg-tag-cyan-container [&_[data-slot=alert-icon]]:text-tag-cyan',
-        success: 'border-tag-green/30 bg-tag-green-container [&_[data-slot=alert-icon]]:text-tag-green',
-        warning: 'border-tag-yellow/30 bg-tag-yellow-container [&_[data-slot=alert-icon]]:text-tag-yellow',
+        success:
+          'border-tag-green/30 bg-tag-green-container [&_[data-slot=alert-icon]]:text-tag-green',
+        warning:
+          'border-tag-yellow/30 bg-tag-yellow-container [&_[data-slot=alert-icon]]:text-tag-yellow',
         danger: 'border-tag-red/30 bg-tag-red-container [&_[data-slot=alert-icon]]:text-tag-red',
       },
     },
@@ -41,8 +43,7 @@ const ICONS: Record<AlertVariant, typeof InfoIcon> = {
 };
 
 interface AlertProps
-  extends Omit<React.ComponentProps<'div'>, 'title'>,
-    VariantProps<typeof alertVariants> {
+  extends Omit<React.ComponentProps<'div'>, 'title'>, VariantProps<typeof alertVariants> {
   title?: ReactNode;
   /** Body text. `children` is rendered after it for richer content. */
   description?: ReactNode;
@@ -95,7 +96,7 @@ function Alert({
         {title ? <p className="text-h5 text-text-primary">{title}</p> : null}
         {description ? <p className="text-b2 text-text-secondary">{description}</p> : null}
         {children}
-        {action ? <div className="mt-field flex flex-wrap gap-field">{action}</div> : null}
+        {action ? <div className="mt-field gap-field flex flex-wrap">{action}</div> : null}
       </div>
       {onDismiss ? (
         <Button

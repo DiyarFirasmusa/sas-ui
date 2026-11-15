@@ -25,7 +25,15 @@ class SizedResizeObserver {
   observe(target: Element) {
     const contentRect = new DOMRect(0, 0, 400, 240);
     this.callback(
-      [{ target, contentRect, borderBoxSize: [], contentBoxSize: [], devicePixelContentBoxSize: [] }],
+      [
+        {
+          target,
+          contentRect,
+          borderBoxSize: [],
+          contentBoxSize: [],
+          devicePixelContentBoxSize: [],
+        },
+      ],
       this,
     );
   }
@@ -124,7 +132,9 @@ describe('ChartContainer', () => {
   });
 
   it('localises its strings in Arabic', () => {
-    const { rerender } = renderWithLocale(<SalesChart label={undefined} loading />, { locale: 'ar' });
+    const { rerender } = renderWithLocale(<SalesChart label={undefined} loading />, {
+      locale: 'ar',
+    });
     expect(screen.getByRole('status', { name: 'جارٍ تحميل المخطط' })).toBeInTheDocument();
     rerender(<SalesChart label={undefined} empty />);
     expect(screen.getByText('لا توجد بيانات للعرض')).toBeInTheDocument();
@@ -158,7 +168,12 @@ describe('ChartContainer with the recharts keyboard layer', () => {
 
 describe('ChartTooltipContent', () => {
   const payload = [
-    { name: 'sales', dataKey: 'sales', value: 1234567, color: 'var(--color-sales)' },
+    {
+      name: 'sales',
+      dataKey: 'sales',
+      value: 1234567,
+      color: 'var(--color-sales)',
+    },
     { name: 'cost', dataKey: 'cost', value: 'n/a', color: 'var(--color-cost)' },
   ];
 
@@ -241,7 +256,13 @@ describe('ChartTooltipContent', () => {
         <ChartTooltipContent
           active
           nameKey="browser"
-          payload={[{ dataKey: 'visitors', value: 90, payload: { browser: 'chrome', fill: 'red' } }]}
+          payload={[
+            {
+              dataKey: 'visitors',
+              value: 90,
+              payload: { browser: 'chrome', fill: 'red' },
+            },
+          ]}
         />
       </ChartConfigProvider>,
     );

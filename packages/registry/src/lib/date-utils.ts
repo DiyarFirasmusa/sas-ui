@@ -72,8 +72,7 @@ export function parseISODate(value: string | null | undefined): Date | null {
   const month = Number(match[2]) - 1;
   const day = Number(match[3]);
   const date = createDate(year, month, day);
-  const isReal =
-    date.getFullYear() === year && date.getMonth() === month && date.getDate() === day;
+  const isReal = date.getFullYear() === year && date.getMonth() === month && date.getDate() === day;
   return isReal ? date : null;
 }
 
@@ -99,14 +98,16 @@ export function isSameMonth(a: Date, b: Date): boolean {
 
 /** Negative when `a` is before `b`, 0 on the same day, positive after. */
 export function compareDays(a: Date, b: Date): number {
-  const diff = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) -
+  const diff =
+    Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) -
     Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
   return Math.sign(diff);
 }
 
 /** Whole days from `a` to `b` (DST-safe: counts calendar days, not 24h blocks). */
 export function differenceInDays(a: Date, b: Date): number {
-  const diff = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) -
+  const diff =
+    Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) -
     Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
   return Math.round(diff / MS_PER_DAY);
 }
@@ -201,8 +202,8 @@ export function getMonthGrid(
   const gridStart = startOfWeek(first, weekStartsOn);
   const leading = differenceInDays(gridStart, first);
   const weekCount = fixedWeeks ? 6 : Math.ceil((leading + daysInMonth(year, month)) / 7);
-  return Array.from({ length: weekCount }, (_, week) =>
-    Array.from({ length: 7 }, (_, day) => addDays(gridStart, week * 7 + day)),
+  return Array.from({ length: weekCount }, (_unused, week) =>
+    Array.from({ length: 7 }, (_unusedDay, day) => addDays(gridStart, week * 7 + day)),
   );
 }
 
@@ -327,7 +328,10 @@ export function formatTime({ hour, minute }: TimeOfDay): string {
 
 /** 0 → 12 am, 12 → 12 pm, 15 → 3 pm. */
 export function to12Hour(hour: number): { hour: number; period: DayPeriod } {
-  return { hour: hour % 12 === 0 ? 12 : hour % 12, period: hour >= 12 ? 'pm' : 'am' };
+  return {
+    hour: hour % 12 === 0 ? 12 : hour % 12,
+    period: hour >= 12 ? 'pm' : 'am',
+  };
 }
 
 /** Inverse of `to12Hour`: 12 am → 0, 12 pm → 12. */
@@ -341,12 +345,26 @@ export function stepWithin(value: number, delta: number, min: number, max: numbe
   return ((((value - min + delta) % size) + size) % size) + min;
 }
 
+/**
+ * Next/previous multiple of `step` in [0, max], wrapping at the ends: from 45
+ * with step 15 going up lands on 0, so values stay on the step grid even when
+ * the current value is not on it (e.g. 7 with step 15 goes to 15, then 30).
+ */
+export function stepToMultiple(value: number, direction: 1 | -1, step: number, max = 59): number {
+  const last = Math.floor(max / step) * step;
+  const next =
+    direction > 0 ? (Math.floor(value / step) + 1) * step : (Math.ceil(value / step) - 1) * step;
+  if (next > last) {
+    return 0;
+  }
+  return next < 0 ? last : next;
+}
+
 /** AM/PM labels from Intl (`AM`/`PM`, `ص`/`م`). */
 export function getDayPeriodLabels(options: DateFormatOptions = {}): Record<DayPeriod, string> {
   const formatter = dateFormatter(options, { hour: 'numeric', hour12: true });
   const label = (hour: number) =>
-    formatter
-      .formatToParts(new Date(2023, 0, 1, hour))
-      .find((part) => part.type === 'dayPeriod')?.value ?? '';
+    formatter.formatToParts(new Date(2023, 0, 1, hour)).find((part) => part.type === 'dayPeriod')
+      ?.value ?? '';
   return { am: label(9), pm: label(15) };
 }

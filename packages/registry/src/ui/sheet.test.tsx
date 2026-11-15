@@ -12,8 +12,8 @@ import {
   SheetTrigger,
   type SheetSide,
 } from '@/components/ui/sheet';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Example({ side, closeLabel }: { side?: SheetSide; closeLabel?: string }) {
   return (

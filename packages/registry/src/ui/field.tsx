@@ -35,7 +35,7 @@ function Field({
       {...props}
     >
       {label ? (
-        <FieldPrimitive.Label className="flex items-center gap-1 text-label text-text-secondary">
+        <FieldPrimitive.Label className="text-label text-text-secondary flex items-center gap-1">
           {label}
           {required ? (
             <span aria-hidden="true" className="text-danger">

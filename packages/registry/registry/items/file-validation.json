@@ -1,0 +1,8 @@
+{
+  "name": "file-validation",
+  "type": "lib",
+  "category": "foundation",
+  "title": "File validation",
+  "description": "Pure file rules: accept matching, size and count limits, duplicates, per-file rejection codes, Intl file-size formatting.",
+  "files": ["lib/file-validation.ts"]
+}

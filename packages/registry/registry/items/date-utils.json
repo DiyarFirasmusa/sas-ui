@@ -1,0 +1,8 @@
+{
+  "name": "date-utils",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Date utils",
+  "description": "Pure local-date helpers: ISO parse/format without timezone drift, month grids, ranges, Intl formatting with Latin or Arabic digits, time helpers.",
+  "files": ["lib/date-utils.ts"]
+}

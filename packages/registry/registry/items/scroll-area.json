@@ -1,0 +1,8 @@
+{
+  "name": "scroll-area",
+  "type": "ui",
+  "category": "layout",
+  "title": "Scroll area",
+  "description": "Scroll container with thin themed scrollbars that follow the text direction.",
+  "files": ["ui/scroll-area.tsx"]
+}

@@ -99,7 +99,10 @@ export function applyMode(
 }
 
 /** Direction and language live on <html> so every component inherits them. */
-export function applyLocale(locale: Locale, root: HTMLElement = document.documentElement): Direction {
+export function applyLocale(
+  locale: Locale,
+  root: HTMLElement = document.documentElement,
+): Direction {
   const direction = directionOf(locale);
   root.dir = direction;
   root.lang = locale;

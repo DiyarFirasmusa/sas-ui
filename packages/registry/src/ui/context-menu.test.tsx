@@ -14,8 +14,8 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Example({ onDelete = () => {} }: { onDelete?: () => void }) {
   return (
@@ -43,7 +43,10 @@ function Example({ onDelete = () => {} }: { onDelete?: () => void }) {
 }
 
 async function openMenu() {
-  await userEvent.pointer({ keys: '[MouseRight]', target: screen.getByTestId('area') });
+  await userEvent.pointer({
+    keys: '[MouseRight]',
+    target: screen.getByTestId('area'),
+  });
   return screen.findByRole('menu');
 }
 

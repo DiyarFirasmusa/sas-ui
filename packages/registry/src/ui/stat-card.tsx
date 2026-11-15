@@ -7,22 +7,29 @@ import { variants, type VariantProps } from '@/lib/variants';
 
 const messages: Messages<'increase' | 'decrease' | 'loading'> = {
   en: { increase: 'Increase of', decrease: 'Decrease of', loading: 'Loading' },
-  ar: { increase: 'زيادة بنسبة', decrease: 'انخفاض بنسبة', loading: 'جارٍ التحميل' },
+  ar: {
+    increase: 'زيادة بنسبة',
+    decrease: 'انخفاض بنسبة',
+    loading: 'جارٍ التحميل',
+  },
 };
 
-const tileVariants = variants('inline-flex size-10 shrink-0 items-center justify-center rounded-xl [&>svg]:size-5', {
-  variants: {
-    tone: {
-      primary: 'bg-primary-light text-primary-text',
-      success: 'bg-tag-green-container text-tag-green',
-      warning: 'bg-tag-yellow-container text-tag-yellow',
-      danger: 'bg-tag-red-container text-tag-red',
-      info: 'bg-tag-cyan-container text-tag-cyan',
-      purple: 'bg-tag-purple-container text-tag-purple',
+const tileVariants = variants(
+  'inline-flex size-10 shrink-0 items-center justify-center rounded-xl [&>svg]:size-5',
+  {
+    variants: {
+      tone: {
+        primary: 'bg-primary-light text-primary-text',
+        success: 'bg-tag-green-container text-tag-green',
+        warning: 'bg-tag-yellow-container text-tag-yellow',
+        danger: 'bg-tag-red-container text-tag-red',
+        info: 'bg-tag-cyan-container text-tag-cyan',
+        purple: 'bg-tag-purple-container text-tag-purple',
+      },
     },
+    defaultVariants: { tone: 'primary' },
   },
-  defaultVariants: { tone: 'primary' },
-});
+);
 
 type DeltaTrend = 'up' | 'down' | 'neutral';
 type DeltaTone = 'positive' | 'negative' | 'neutral';
@@ -47,7 +54,8 @@ interface StatDelta {
 }
 
 interface StatCardProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'onClick' | 'children'>,
+  extends
+    Omit<React.HTMLAttributes<HTMLElement>, 'onClick' | 'children'>,
     VariantProps<typeof tileVariants> {
   label: string;
   /** The headline figure. Strings and numbers are rendered left-to-right. */
@@ -81,12 +89,15 @@ function DeltaBadge({ delta }: { delta: StatDelta }) {
   const spoken =
     delta.trend === 'neutral' ? null : delta.trend === 'up' ? labels.increase : labels.decrease;
   return (
-    <span className="flex flex-wrap items-center gap-1 text-b3">
+    <span className="text-b3 flex flex-wrap items-center gap-1">
       <span
         data-slot="stat-card-delta"
         data-trend={delta.trend}
         data-tone={resolveTone(delta)}
-        className={cn('inline-flex items-center gap-0.5 font-medium', DELTA_TONE_CLASS[resolveTone(delta)])}
+        className={cn(
+          'inline-flex items-center gap-0.5 font-medium',
+          DELTA_TONE_CLASS[resolveTone(delta)],
+        )}
       >
         {delta.trend === 'neutral' ? null : <Arrow className="size-3.5" />}
         {spoken ? <span className="sr-only">{spoken}</span> : null}
@@ -134,9 +145,9 @@ function StatCard({
     );
 
   const body = (
-    <span className="flex items-start justify-between gap-inline">
-      <span className="flex min-w-0 flex-1 flex-col gap-field">
-        <span className="block text-b2 text-text-secondary">{label}</span>
+    <span className="gap-inline flex items-start justify-between">
+      <span className="gap-field flex min-w-0 flex-1 flex-col">
+        <span className="text-b2 text-text-secondary block">{label}</span>
         {loading ? (
           <>
             <Skeleton className="h-8 w-28" />
@@ -145,7 +156,7 @@ function StatCard({
           </>
         ) : (
           <>
-            <span className="block truncate text-kpi tabular-nums text-text-primary">{figure}</span>
+            <span className="text-kpi text-text-primary block truncate tabular-nums">{figure}</span>
             {delta ? <DeltaBadge delta={delta} /> : null}
           </>
         )}
@@ -166,14 +177,24 @@ function StatCard({
 
   if (href) {
     return (
-      <a href={href} onClick={onClick} className={cn(cardClass, interactiveClass, className)} {...shared}>
+      <a
+        href={href}
+        onClick={onClick}
+        className={cn(cardClass, interactiveClass, className)}
+        {...shared}
+      >
         {body}
       </a>
     );
   }
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={cn(cardClass, interactiveClass, className)} {...shared}>
+      <button
+        type="button"
+        onClick={onClick}
+        className={cn(cardClass, interactiveClass, className)}
+        {...shared}
+      >
         {body}
       </button>
     );
@@ -202,7 +223,9 @@ function StatGrid({
   columns,
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof statGridVariants>) {
-  return <div data-slot="stat-grid" className={statGridVariants({ columns, className })} {...props} />;
+  return (
+    <div data-slot="stat-grid" className={statGridVariants({ columns, className })} {...props} />
+  );
 }
 
 export { StatCard, StatGrid };

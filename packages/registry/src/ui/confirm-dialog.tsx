@@ -1,4 +1,4 @@
-import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import type { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { useRef, useState, type ReactElement, type ReactNode } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -15,8 +15,16 @@ import {
 import { useLabels, type Messages } from '@/lib/locale';
 
 const messages: Messages<'confirm' | 'cancel' | 'failed'> = {
-  en: { confirm: 'Confirm', cancel: 'Cancel', failed: 'Something went wrong. Please try again.' },
-  ar: { confirm: 'تأكيد', cancel: 'إلغاء', failed: 'حدث خطأ ما. حاول مرة أخرى.' },
+  en: {
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    failed: 'Something went wrong. Please try again.',
+  },
+  ar: {
+    confirm: 'تأكيد',
+    cancel: 'إلغاء',
+    failed: 'حدث خطأ ما. حاول مرة أخرى.',
+  },
 };
 
 interface ConfirmDialogProps {
@@ -77,7 +85,10 @@ function ConfirmDialog({
   const actions = useRef<DialogPrimitive.Root.Actions | null>(null);
   const cancelButton = useRef<HTMLButtonElement | null>(null);
 
-  const handleOpenChange: NonNullable<DialogPrimitive.Root.Props['onOpenChange']> = (next, details) => {
+  const handleOpenChange: NonNullable<DialogPrimitive.Root.Props['onOpenChange']> = (
+    next,
+    details,
+  ) => {
     if (!next && inFlight.current) {
       details.cancel();
       return;
@@ -128,7 +139,7 @@ function ConfirmDialog({
           {description ? <DialogDescription>{description}</DialogDescription> : null}
         </DialogHeader>
         {shownError || children ? (
-          <DialogBody className="flex flex-col gap-row">
+          <DialogBody className="gap-row flex flex-col">
             {children}
             {shownError ? <Alert variant="danger" description={shownError} /> : null}
           </DialogBody>

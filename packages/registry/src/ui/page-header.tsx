@@ -66,23 +66,24 @@ function PageHeader({
       data-sticky={sticky ? '' : undefined}
       className={cn(
         'flex flex-wrap items-start justify-between gap-row',
-        sticky && 'sticky top-0 z-10 border-b border-stroke bg-background/95 py-row backdrop-blur-sm',
+        sticky &&
+          'sticky top-0 z-10 border-b border-stroke bg-background/95 py-row backdrop-blur-sm',
         className,
       )}
       {...props}
     >
-      <div className="flex min-w-0 flex-1 items-start gap-inline">
+      <div className="gap-inline flex min-w-0 flex-1 items-start">
         {back ? <span className="shrink-0">{back}</span> : null}
         <div className="flex min-w-0 flex-col gap-1">
           {breadcrumb}
-          <div className="flex flex-wrap items-center gap-inline">
+          <div className="gap-inline flex flex-wrap items-center">
             <h1 className="text-h2 text-text-primary">{title}</h1>
             {badge}
           </div>
           {subtitle ? <p className="text-b2 text-text-secondary">{subtitle}</p> : null}
         </div>
       </div>
-      {actions ? <div className="flex flex-wrap items-center gap-field">{actions}</div> : null}
+      {actions ? <div className="gap-field flex flex-wrap items-center">{actions}</div> : null}
     </header>
   );
 }

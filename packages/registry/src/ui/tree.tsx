@@ -8,7 +8,13 @@ import {
   type ReactNode,
 } from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckIcon, ChevronDownIcon, ChevronRightIcon, LoaderIcon, MinusIcon } from '@/components/ui/icons';
+import {
+  TreeItemRow,
+  TreeStatusRow,
+  type TreeNodeState,
+  type TreeRow,
+} from '@/components/ui/tree-row';
+import { useTreeChildren } from '@/hooks/use-tree-children';
 import { useLabels, useLocale, type Messages } from '@/lib/locale';
 import {
   attachChildren,
@@ -16,7 +22,6 @@ import {
   getCheckStates,
   toggleChecked,
   type CheckState,
-  type FlatTreeNode,
   type TreeNode,
 } from '@/lib/tree-utils';
 import { cn } from '@/lib/utils';
@@ -45,17 +50,6 @@ const messages: Messages<
 };
 
 type TreeLabels = Partial<Record<keyof (typeof messages)['en'], string>>;
-
-interface TreeNodeState {
-  depth: number;
-  expanded: boolean;
-  selected: boolean;
-  checkState: CheckState;
-}
-
-type TreeRow<TData> =
-  | { kind: 'node'; id: string; flat: FlatTreeNode<TData> }
-  | { kind: 'status'; id: string; parentId: string; depth: number; state: 'loading' | 'error' };
 
 interface TreeProps<TData = unknown> {
   nodes: readonly TreeNode<TData>[];
@@ -164,9 +158,7 @@ function Tree<TData = unknown>({
     onCheckedChange ? (ids) => onCheckedChange([...ids]) : undefined,
   );
 
-  const [loaded, setLoaded] = useState<Record<string, TreeNode<TData>[]>>({});
-  const [status, setStatus] = useState<Record<string, 'loading' | 'error'>>({});
-  const requested = useRef(new Set<string>());
+  const { loaded, status, load, retry } = useTreeChildren(loadChildren);
   const [activeId, setActiveId] = useState<string | null>(null);
   const itemRefs = useRef(new Map<string, HTMLElement>());
 
@@ -200,27 +192,6 @@ function Tree<TData = unknown>({
     return result;
   }, [effectiveNodes, expandedSet, status]);
 
-  const load = useCallback(
-    (node: TreeNode<TData>) => {
-      if (!loadChildren || requested.current.has(node.id)) {
-        return;
-      }
-      requested.current.add(node.id);
-      setStatus((previous) => ({ ...previous, [node.id]: 'loading' }));
-      loadChildren(node).then(
-        (children) => {
-          setLoaded((previous) => ({ ...previous, [node.id]: children }));
-          setStatus(({ [node.id]: _done, ...rest }) => rest);
-        },
-        () => {
-          requested.current.delete(node.id);
-          setStatus((previous) => ({ ...previous, [node.id]: 'error' }));
-        },
-      );
-    },
-    [loadChildren],
-  );
-
   // Loads lazy branches as soon as they are open, however they were opened
   // (click, keyboard or a defaultExpanded id).
   useEffect(() => {
@@ -253,11 +224,6 @@ function Tree<TData = unknown>({
     setExpandedIds([...next]);
   }
 
-  function retry(parentId: string) {
-    requested.current.delete(parentId);
-    setStatus(({ [parentId]: _cleared, ...rest }) => rest);
-  }
-
   function activate(row: TreeRow<TData>) {
     if (row.kind === 'status') {
       if (row.state === 'error') {
@@ -274,7 +240,11 @@ function Tree<TData = unknown>({
     } else if (selectionMode === 'single') {
       setSelectedIds([node.id]);
     } else if (selectionMode === 'multiple') {
-      setSelectedIds(selectedSet.has(node.id) ? selectedIds.filter((id) => id !== node.id) : [...selectedIds, node.id]);
+      setSelectedIds(
+        selectedSet.has(node.id)
+          ? selectedIds.filter((id) => id !== node.id)
+          : [...selectedIds, node.id],
+      );
     } else if (row.flat.isBranch) {
       setExpanded(node.id, !row.flat.expanded);
     }
@@ -320,7 +290,9 @@ function Tree<TData = unknown>({
       if (flat?.isBranch && flat.expanded) {
         setExpanded(flat.node.id, false);
       } else if (parentId !== null) {
-        focusRow(rows.findIndex((candidate) => candidate.kind === 'node' && candidate.id === parentId));
+        focusRow(
+          rows.findIndex((candidate) => candidate.kind === 'node' && candidate.id === parentId),
+        );
       }
     } else if (event.key === 'Enter' || event.key === ' ') {
       activate(row);
@@ -334,12 +306,21 @@ function Tree<TData = unknown>({
 
   if (loading) {
     return (
-      <div role="status" aria-busy="true" aria-label={labels.loading} data-slot="tree-loading" className={cn('flex flex-col gap-field p-field', className)}>
+      <div
+        role="status"
+        aria-busy="true"
+        aria-label={labels.loading}
+        data-slot="tree-loading"
+        className={cn('flex flex-col gap-field p-field', className)}
+      >
         {[70, 55, 80, 45].map((width, index) => (
           <div
             key={width}
-            className="h-5 animate-pulse rounded-md bg-surface-dim motion-reduce:animate-none"
-            style={{ width: `${width}%`, marginInlineStart: index % 2 === 1 ? '1.25rem' : undefined }}
+            className="bg-surface-dim h-5 animate-pulse rounded-md motion-reduce:animate-none"
+            style={{
+              width: `${width}%`,
+              marginInlineStart: index % 2 === 1 ? '1.25rem' : undefined,
+            }}
           />
         ))}
       </div>
@@ -347,7 +328,11 @@ function Tree<TData = unknown>({
   }
   if (error) {
     return (
-      <div role="alert" data-slot="tree-error" className={cn('flex flex-col items-start gap-field p-row text-b2 text-danger', className)}>
+      <div
+        role="alert"
+        data-slot="tree-error"
+        className={cn('flex flex-col items-start gap-field p-row text-b2 text-danger', className)}
+      >
         <p>{labels.loadError}</p>
         {onRetry ? (
           <Button size="sm" variant="outline" onClick={onRetry}>
@@ -359,7 +344,10 @@ function Tree<TData = unknown>({
   }
   if (nodes.length === 0) {
     return (
-      <p data-slot="tree-empty" className={cn('p-row text-center text-b2 text-text-muted', className)}>
+      <p
+        data-slot="tree-empty"
+        className={cn('p-row text-center text-b2 text-text-muted', className)}
+      >
         {labels.empty}
       </p>
     );
@@ -369,106 +357,55 @@ function Tree<TData = unknown>({
     <div
       role="tree"
       data-slot="tree"
-      aria-label={ariaProps['aria-label'] ?? (ariaProps['aria-labelledby'] ? undefined : labels.tree)}
+      aria-label={
+        ariaProps['aria-label'] ?? (ariaProps['aria-labelledby'] ? undefined : labels.tree)
+      }
       aria-labelledby={ariaProps['aria-labelledby']}
       aria-multiselectable={checkable || selectionMode === 'multiple' ? true : undefined}
       className={cn('flex flex-col text-b1 text-text-primary', className)}
     >
       {rows.map((row, index) => {
-        const setRef = (element: HTMLElement | null) => {
-          if (element) {
-            itemRefs.current.set(row.id, element);
-          } else {
-            itemRefs.current.delete(row.id);
-          }
-        };
-        const common = {
-          ref: setRef,
-          role: 'treeitem' as const,
-          tabIndex: row.id === tabStopId ? 0 : -1,
+        const tabIndex = row.id === tabStopId ? 0 : -1;
+        const behaviour = {
+          setRef: (element: HTMLElement | null) => {
+            if (element) {
+              itemRefs.current.set(row.id, element);
+            } else {
+              itemRefs.current.delete(row.id);
+            }
+          },
+          tabIndex,
           onFocus: () => setActiveId(row.id),
           onKeyDown: (event: KeyboardEvent<HTMLElement>) => handleKeyDown(event, index),
+          onActivate: () => activate(row),
         };
-        const rowClasses = [
-          'flex min-h-11 items-center gap-field rounded-md pe-inline outline-none sm:min-h-9',
-          'focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
-        ];
 
         if (row.kind === 'status') {
           return (
-            <div
+            <TreeStatusRow
               key={row.id}
-              {...common}
-              aria-level={row.depth + 1}
-              aria-disabled={row.state === 'loading' ? true : undefined}
-              aria-busy={row.state === 'loading' ? true : undefined}
-              data-slot="tree-status"
-              style={{ paddingInlineStart: `calc(${row.depth} * 1.25rem + 2.25rem)` }}
-              className={cn(rowClasses, 'text-b2', row.state === 'error' ? 'cursor-pointer text-danger hover:bg-hover-row' : 'text-text-muted')}
-              onClick={() => activate(row)}
-            >
-              {row.state === 'loading' ? <LoaderIcon className="animate-spin motion-reduce:animate-none" /> : null}
-              {row.state === 'loading' ? labels.loadingChildren : labels.childrenError}
-            </div>
+              {...behaviour}
+              depth={row.depth}
+              state={row.state}
+              loadingLabel={labels.loadingChildren}
+              errorLabel={labels.childrenError}
+            />
           );
         }
 
-        const { flat } = row;
-        const { node } = flat;
-        const checkState = checkStates.get(node.id) ?? 'unchecked';
-        const isSelected = !checkable && selectionMode !== 'none' && selectedSet.has(node.id);
-        const state: TreeNodeState = { depth: flat.depth, expanded: flat.expanded, selected: isSelected, checkState };
+        const checkState = checkStates.get(row.flat.node.id) ?? 'unchecked';
         return (
-          <div
+          <TreeItemRow
             key={row.id}
-            {...common}
-            data-slot="tree-item"
-            data-id={node.id}
-            aria-level={flat.depth + 1}
-            aria-posinset={flat.position}
-            aria-setsize={flat.setSize}
-            aria-expanded={flat.isBranch ? flat.expanded : undefined}
-            aria-selected={!checkable && selectionMode !== 'none' ? isSelected : undefined}
-            aria-checked={checkable ? (checkState === 'indeterminate' ? 'mixed' : checkState === 'checked') : undefined}
-            aria-disabled={node.disabled ? true : undefined}
-            style={{ paddingInlineStart: `calc(${flat.depth} * 1.25rem + 0.5rem)` }}
-            className={cn(
-              rowClasses,
-              'cursor-pointer select-none hover:bg-hover-row',
-              isSelected && 'bg-primary-light text-primary-text hover:bg-primary-light',
-              node.disabled && 'cursor-not-allowed opacity-50 hover:bg-transparent',
-            )}
-            onClick={() => activate(row)}
-          >
-            <span
-              aria-hidden="true"
-              data-slot="tree-toggle"
-              className={cn('flex size-6 shrink-0 items-center justify-center rounded-sm text-text-muted', flat.isBranch && 'hover:bg-surface-dim')}
-              onClick={(event) => {
-                if (flat.isBranch) {
-                  event.stopPropagation();
-                  setExpanded(node.id, !flat.expanded);
-                }
-              }}
-            >
-              {flat.isBranch ? flat.expanded ? <ChevronDownIcon /> : <ChevronRightIcon /> : null}
-            </span>
-            {checkable ? (
-              <span
-                aria-hidden="true"
-                data-slot="tree-checkbox"
-                data-state={checkState}
-                className={cn(
-                  'flex size-5 shrink-0 items-center justify-center rounded-sm border border-stroke-strong bg-surface',
-                  checkState !== 'unchecked' && 'border-primary bg-primary text-primary-foreground',
-                )}
-              >
-                {checkState === 'checked' ? <CheckIcon className="size-3.5" /> : null}
-                {checkState === 'indeterminate' ? <MinusIcon className="size-3.5" /> : null}
-              </span>
-            ) : null}
-            <span className="min-w-0 flex-1 truncate">{renderNode ? renderNode(node, state) : node.label}</span>
-          </div>
+            {...behaviour}
+            flat={row.flat}
+            checkable={checkable}
+            selectionMode={selectionMode}
+            checkState={checkState}
+            selected={!checkable && selectionMode !== 'none' && selectedSet.has(row.flat.node.id)}
+            renderNode={renderNode}
+            onToggleExpanded={setExpanded}
+          />
         );
       })}
     </div>

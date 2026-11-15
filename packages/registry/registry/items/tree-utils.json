@@ -1,0 +1,8 @@
+{
+  "name": "tree-utils",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Tree utils",
+  "description": "Pure tree helpers: flatten, find path, descendants, filter keeping ancestors and tri-state checking.",
+  "files": ["lib/tree-utils.ts"]
+}

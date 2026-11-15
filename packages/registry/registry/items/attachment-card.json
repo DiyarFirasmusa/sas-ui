@@ -4,7 +4,5 @@
   "category": "display",
   "title": "Attachment card",
   "description": "Uploaded file row with size and download/remove actions.",
-  "files": [
-    "ui/attachment-card.tsx"
-  ]
+  "files": ["ui/attachment-card.tsx"]
 }

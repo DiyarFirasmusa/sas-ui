@@ -1,0 +1,8 @@
+{
+  "name": "date-range-picker",
+  "type": "ui",
+  "category": "form",
+  "title": "Date range picker",
+  "description": "Popover date-range field with a one or two month calendar and optional presets; value is { from, to } ISO strings.",
+  "files": ["ui/date-range-picker.tsx"]
+}

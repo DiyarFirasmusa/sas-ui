@@ -104,7 +104,7 @@ export function getAncestorIds(nodes: readonly TreeNode[], id: string): string[]
   return path
     .slice(0, -1)
     .map((node) => node.id)
-    .reverse();
+    .toReversed();
 }
 
 /** Every node below `node`, depth first, the node itself excluded. */
@@ -172,7 +172,13 @@ export function filterTree<TData>(
       if (kept.length > 0) {
         ancestorIds.add(node.id);
       }
-      return [{ ...node, children: kept.length > 0 ? kept : undefined, hasChildren: undefined }];
+      return [
+        {
+          ...node,
+          children: kept.length > 0 ? kept : undefined,
+          hasChildren: undefined,
+        },
+      ];
     });
   return { nodes: prune(nodes), matchIds, ancestorIds };
 }
@@ -308,10 +314,7 @@ export function toggleChecked<TData>(
  * branch is listed once and its descendants are left out. The inverse of what
  * `normalizeChecked` expands.
  */
-export function collapseChecked(
-  nodes: readonly TreeNode[],
-  checked: Iterable<string>,
-): string[] {
+export function collapseChecked(nodes: readonly TreeNode[], checked: Iterable<string>): string[] {
   const set = normalizeChecked(nodes, checked);
   const result: string[] = [];
   const visit = (siblings: readonly TreeNode[]) => {

@@ -4,7 +4,5 @@
   "category": "display",
   "title": "Stat card",
   "description": "KPI card with left-to-right figure, up/down delta, icon tile, loading skeleton and optional link or button behaviour, plus a StatGrid layout.",
-  "files": [
-    "ui/stat-card.tsx"
-  ]
+  "files": ["ui/stat-card.tsx"]
 }

@@ -177,7 +177,8 @@ function collectPayload(payload: unknown, declared: ReadonlySet<string>): Collec
       continue;
     }
     if (!declared.has(key)) {
-      const plain = typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
+      const plain =
+        typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean';
       if (MESSAGE_KEYS.has(key) && typeof value === 'string') {
         addMessage(collected, '', value);
         continue;
@@ -239,12 +240,17 @@ export function applyServerErrors<TName extends string>(
       form.push(...messages);
       continue;
     }
-    setError(name, { type, message: unique(messages).join(' ') }, { shouldFocus: focus && applied.length === 0 });
+    setError(
+      name,
+      { type, message: unique(messages).join(' ') },
+      { shouldFocus: focus && applied.length === 0 },
+    );
     applied.push(name);
   }
 
   const text = unique(form).join(' ');
-  const formMessage = text !== '' ? text : applied.length === 0 && fallbackMessage ? fallbackMessage : null;
+  const formMessage =
+    text !== '' ? text : applied.length === 0 && fallbackMessage ? fallbackMessage : null;
   if (formMessage !== null) {
     setError('root.server', { type, message: formMessage });
   }

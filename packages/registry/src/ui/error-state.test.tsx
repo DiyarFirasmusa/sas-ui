@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ErrorState } from '@/components/ui/error-state';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('ErrorState', () => {
   it('is announced as an alert with localized default wording', () => {
@@ -62,7 +62,9 @@ describe('ErrorState', () => {
   });
 
   it('uses Arabic wording', () => {
-    const { unmount } = renderWithLocale(<ErrorState onRetry={() => {}} />, { locale: 'ar' });
+    const { unmount } = renderWithLocale(<ErrorState onRetry={() => {}} />, {
+      locale: 'ar',
+    });
     expect(screen.getByRole('heading', { name: 'حدث خطأ ما' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'إعادة المحاولة' })).toBeInTheDocument();
     unmount();
@@ -70,8 +72,11 @@ describe('ErrorState', () => {
     expect(screen.getByRole('heading', { name: 'لا تملك صلاحية الوصول' })).toBeInTheDocument();
   });
 
-  it.each(['error', 'not-found', 'forbidden'] as const)('has no axe violations (%s)', async (kind) => {
-    const { container } = render(<ErrorState kind={kind} onRetry={() => {}} />);
-    await expectNoA11yViolations(container);
-  });
+  it.each(['error', 'not-found', 'forbidden'] as const)(
+    'has no axe violations (%s)',
+    async (kind) => {
+      const { container } = render(<ErrorState kind={kind} onRetry={() => {}} />);
+      await expectNoA11yViolations(container);
+    },
+  );
 });

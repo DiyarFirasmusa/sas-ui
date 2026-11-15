@@ -93,11 +93,39 @@ export function normalizeLinkUrl(input: string): string | null {
 }
 
 const ALLOWED_TAGS = new Set([
-  'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'code', 'pre', 'blockquote',
-  'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'a',
+  'p',
+  'br',
+  'strong',
+  'b',
+  'em',
+  'i',
+  'u',
+  's',
+  'code',
+  'pre',
+  'blockquote',
+  'ul',
+  'ol',
+  'li',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'hr',
+  'a',
 ]);
 /** Elements dropped together with everything inside them. */
-const DROPPED_TAGS = new Set(['script', 'style', 'iframe', 'object', 'embed', 'template', 'noscript']);
+const DROPPED_TAGS = new Set([
+  'script',
+  'style',
+  'iframe',
+  'object',
+  'embed',
+  'template',
+  'noscript',
+]);
 const ALIGNMENTS = new Set(['left', 'right', 'center', 'justify']);
 
 function escapeHtml(text: string): string {
@@ -131,7 +159,9 @@ function cleanNode(node: Node, output: Node, document: Document): void {
         clean.setAttribute('rel', 'noopener noreferrer');
       }
     }
-    const align = /text-align:\s*(\w+)/iu.exec(child.getAttribute('style') ?? '')?.[1]?.toLowerCase();
+    const align = /text-align:\s*(\w+)/iu
+      .exec(child.getAttribute('style') ?? '')?.[1]
+      ?.toLowerCase();
     if (align !== undefined && ALIGNMENTS.has(align) && /^(p|h[1-6]|li)$/u.test(tag)) {
       clean.setAttribute('style', `text-align: ${align}`);
     }

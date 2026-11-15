@@ -1,0 +1,8 @@
+{
+  "name": "pdf-viewer",
+  "type": "ui",
+  "category": "display",
+  "title": "PDF viewer",
+  "description": "Iframe-based PDF frame with download, open in new tab and full screen, a loading skeleton, and an error state with retry and download fallback.",
+  "files": ["ui/pdf-viewer.tsx"]
+}

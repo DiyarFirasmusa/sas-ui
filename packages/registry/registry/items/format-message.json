@@ -1,0 +1,8 @@
+{
+  "name": "format-message",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Format message",
+  "description": "fillTemplate for {placeholder} labels and formatCount for Latin-digit numbers in every locale.",
+  "files": ["lib/format-message.ts"]
+}

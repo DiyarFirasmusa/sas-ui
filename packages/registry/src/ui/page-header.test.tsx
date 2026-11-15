@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { PageHeader } from '@/components/ui/page-header';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('PageHeader', () => {
   it('renders the title as the page heading with subtitle, badge, breadcrumb and actions', () => {
@@ -37,7 +37,9 @@ describe('PageHeader', () => {
   });
 
   it('goes back through a link, and onBack wins over backHref', () => {
-    const { rerender } = render(<PageHeader title="Invoice 12" backHref="/invoices" backLabel="All invoices" />);
+    const { rerender } = render(
+      <PageHeader title="Invoice 12" backHref="/invoices" backLabel="All invoices" />,
+    );
     expect(screen.getByRole('link', { name: 'All invoices' })).toHaveAttribute('href', '/invoices');
     rerender(<PageHeader title="Invoice 12" backHref="/invoices" onBack={() => {}} />);
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
@@ -45,7 +47,9 @@ describe('PageHeader', () => {
   });
 
   it('mirrors the back arrow in RTL and labels it in Arabic', () => {
-    const { container } = renderWithLocale(<PageHeader title="الفواتير" onBack={() => {}} />, { locale: 'ar' });
+    const { container } = renderWithLocale(<PageHeader title="الفواتير" onBack={() => {}} />, {
+      locale: 'ar',
+    });
     expect(screen.getByRole('button', { name: 'رجوع' })).toBeInTheDocument();
     expect(container.querySelector('svg')).toHaveClass('rtl:-scale-x-100');
   });
@@ -63,7 +67,12 @@ describe('PageHeader', () => {
 
   it('has no axe violations', async () => {
     const { container } = render(
-      <PageHeader title="Invoices" subtitle="All" onBack={() => {}} actions={<button type="button">New</button>} />,
+      <PageHeader
+        title="Invoices"
+        subtitle="All"
+        onBack={() => {}}
+        actions={<button type="button">New</button>}
+      />,
     );
     await expectNoA11yViolations(container);
   });

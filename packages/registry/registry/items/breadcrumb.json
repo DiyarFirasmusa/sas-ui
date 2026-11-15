@@ -1,0 +1,8 @@
+{
+  "name": "breadcrumb",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Breadcrumb",
+  "description": "Breadcrumb trail with mirrored separators and a collapsing middle.",
+  "files": ["ui/breadcrumb.tsx"]
+}

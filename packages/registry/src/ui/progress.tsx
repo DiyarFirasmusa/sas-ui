@@ -30,7 +30,8 @@ const trackVariants = variants('relative w-full overflow-hidden rounded-pill bg-
 });
 
 interface ProgressProps
-  extends Omit<ProgressPrimitive.Root.Props, 'value' | 'format' | 'locale' | 'children'>,
+  extends
+    Omit<ProgressPrimitive.Root.Props, 'value' | 'format' | 'locale' | 'children'>,
     VariantProps<typeof indicatorVariants>,
     VariantProps<typeof trackVariants> {
   /** Current value, or `null` while the amount of work is unknown (indeterminate). */
@@ -67,7 +68,7 @@ function Progress({
       {...props}
     >
       {hasHeader ? (
-        <div className="flex items-center justify-between gap-field text-b2">
+        <div className="gap-field text-b2 flex items-center justify-between">
           {label ? (
             <ProgressPrimitive.Label className="text-text-primary">{label}</ProgressPrimitive.Label>
           ) : (
@@ -79,7 +80,10 @@ function Progress({
         </div>
       ) : null}
       <ProgressPrimitive.Track className={trackVariants({ size })}>
-        <ProgressPrimitive.Indicator data-slot="progress-indicator" className={indicatorVariants({ tone })} />
+        <ProgressPrimitive.Indicator
+          data-slot="progress-indicator"
+          className={indicatorVariants({ tone })}
+        />
       </ProgressPrimitive.Track>
     </ProgressPrimitive.Root>
   );

@@ -59,14 +59,17 @@ function AttachmentCard({
       )}
       {...props}
     >
-      <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary-light text-primary-text">
+      <span
+        aria-hidden="true"
+        className="bg-primary-light text-primary-text grid size-10 shrink-0 place-items-center rounded-lg"
+      >
         {icon ?? <FileIcon className="size-5" />}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-h5 text-text-primary" dir="auto" title={name}>
+        <p className="text-h5 text-text-primary truncate" dir="auto" title={name}>
           {name}
         </p>
-        <p className="flex flex-wrap gap-x-field text-b3 text-text-muted">
+        <p className="gap-x-field text-b3 text-text-muted flex flex-wrap">
           {size === undefined ? null : (
             <span dir="ltr" className="tabular-nums">
               {formatFileSize(size)}
@@ -76,12 +79,22 @@ function AttachmentCard({
         </p>
       </div>
       {onDownload ? (
-        <Button variant="ghost" size="icon-sm" aria-label={`${labels.download}: ${name}`} onClick={onDownload}>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={`${labels.download}: ${name}`}
+          onClick={onDownload}
+        >
           <DownloadIcon />
         </Button>
       ) : null}
       {onRemove ? (
-        <Button variant="ghost" size="icon-sm" aria-label={`${labels.remove}: ${name}`} onClick={onRemove}>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={`${labels.remove}: ${name}`}
+          onClick={onRemove}
+        >
           <TrashIcon />
         </Button>
       ) : null}

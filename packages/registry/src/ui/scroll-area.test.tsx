@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 // jsdom has no Web Animations API; Base UI's scroll viewport asks for it.
 beforeAll(() => {
@@ -40,7 +40,10 @@ describe('ScrollArea', () => {
       </ScrollArea>,
     );
     expect(container.querySelector('[data-slot="scroll-area"]')).toHaveClass('h-40', 'relative');
-    expect(container.querySelector('[data-slot="scroll-area-viewport"]')).toHaveClass('p-2', 'size-full');
+    expect(container.querySelector('[data-slot="scroll-area-viewport"]')).toHaveClass(
+      'p-2',
+      'size-full',
+    );
   });
 
   it('follows the Arabic locale direction', () => {

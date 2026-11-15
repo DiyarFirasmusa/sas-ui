@@ -1,0 +1,9 @@
+{
+  "name": "rich-text-editor",
+  "type": "ui",
+  "category": "form",
+  "title": "Rich text editor",
+  "description": "TipTap editor with a localised formatting toolbar, HTML value, per-block text direction, read-only and invalid states, and Field integration.",
+  "files": ["ui/rich-text-editor.tsx", "ui/rich-text-toolbar.tsx", "lib/rich-text.ts"],
+  "tier": "extra"
+}

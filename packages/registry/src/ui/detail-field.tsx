@@ -27,9 +27,12 @@ function DetailField({
   const isEmpty = value === undefined || value === null || value === '';
   return (
     <div data-slot="detail-field" className={cn('flex min-w-0 flex-col gap-field', className)}>
-      <dt className="flex items-center gap-field text-label text-text-secondary">
+      <dt className="gap-field text-label text-text-secondary flex items-center">
         {icon ? (
-          <span aria-hidden="true" className="grid size-6 shrink-0 place-items-center rounded-md bg-primary-light text-primary-text [&>svg]:size-3.5">
+          <span
+            aria-hidden="true"
+            className="bg-primary-light text-primary-text grid size-6 shrink-0 place-items-center rounded-md [&>svg]:size-3.5"
+          >
             {icon}
           </span>
         ) : null}
@@ -43,7 +46,13 @@ function DetailField({
           valueClassName,
         )}
       >
-        {isEmpty ? <span aria-label="—" className="text-text-muted">—</span> : value}
+        {isEmpty ? (
+          <span aria-label="—" className="text-text-muted">
+            —
+          </span>
+        ) : (
+          value
+        )}
       </dd>
     </div>
   );

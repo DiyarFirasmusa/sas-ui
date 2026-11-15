@@ -1,0 +1,8 @@
+{
+  "name": "kbd",
+  "type": "ui",
+  "category": "display",
+  "title": "Kbd",
+  "description": "Keyboard key caps that stay left-to-right in Arabic text.",
+  "files": ["ui/kbd.tsx"]
+}

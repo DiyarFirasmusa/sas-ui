@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Alert } from '@/components/ui/alert';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('Alert', () => {
   it('renders the title and description', () => {
@@ -48,7 +48,9 @@ describe('Alert', () => {
   });
 
   it('labels the dismiss button in Arabic and accepts an override', () => {
-    const { unmount } = renderWithLocale(<Alert title="تنبيه" onDismiss={() => {}} />, { locale: 'ar' });
+    const { unmount } = renderWithLocale(<Alert title="تنبيه" onDismiss={() => {}} />, {
+      locale: 'ar',
+    });
     expect(screen.getByRole('button', { name: 'إغلاق التنبيه' })).toBeInTheDocument();
     unmount();
     renderWithLocale(<Alert title="x" onDismiss={() => {}} dismissLabel="Hide" />);

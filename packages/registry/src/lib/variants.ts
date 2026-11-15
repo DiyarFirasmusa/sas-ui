@@ -3,9 +3,7 @@ import { cn } from '@/lib/utils';
 type VariantMap = Record<string, Record<string, ClassValue>>;
 
 /** A variant with `true`/`false` keys also accepts a real boolean. */
-type Choice<Map> =
-  | keyof Map
-  | ([keyof Map & ('true' | 'false')] extends [never] ? never : boolean);
+type Choice<Map> = keyof Map | ([keyof Map & ('true' | 'false')] extends [never] ? never : boolean);
 
 type VariantSelection<V extends VariantMap> = {
   [K in keyof V]?: Choice<V[K]> | null;
@@ -28,9 +26,7 @@ export function variants<V extends VariantMap>(
     compoundVariants?: CompoundVariant<V>[];
   },
 ) {
-  return function build(
-    props?: VariantSelection<V> & { className?: string },
-  ): string {
+  return function build(props?: VariantSelection<V> & { className?: string }): string {
     const keys = Object.keys(config.variants);
     const selected: Record<string, string | undefined> = {};
     const classes: ClassValue[] = [base];

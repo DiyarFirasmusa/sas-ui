@@ -1,0 +1,8 @@
+{
+  "name": "page-window",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Page window",
+  "description": "Pure helpers for pagination: windowed page list with ellipses, page count and row range.",
+  "files": ["lib/page-window.ts"]
+}

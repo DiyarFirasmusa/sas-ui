@@ -41,7 +41,10 @@ describe('Select', () => {
   it('marks disabled options', async () => {
     render(<Select aria-label="Status" options={options} />);
     await userEvent.click(screen.getByRole('combobox'));
-    expect(await screen.findByRole('option', { name: 'Void' })).toHaveAttribute('aria-disabled', 'true');
+    expect(await screen.findByRole('option', { name: 'Void' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
   });
 
   it('has no axe violations', async () => {

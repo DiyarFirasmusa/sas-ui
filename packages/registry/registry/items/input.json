@@ -4,7 +4,5 @@
   "category": "form",
   "title": "Input",
   "description": "Text input with RTL-aware direction (auto while typing, ltr for codes/emails).",
-  "files": [
-    "ui/input.tsx"
-  ]
+  "files": ["ui/input.tsx"]
 }

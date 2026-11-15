@@ -1,0 +1,20 @@
+{
+  "name": "data-table",
+  "type": "ui",
+  "category": "data",
+  "title": "Data table",
+  "description": "Server-driven table on TanStack Table with sorting, selection, bulk actions, column visibility, sticky columns, row actions, states and mobile cards.",
+  "files": [
+    "ui/data-table.tsx",
+    "ui/data-table-body.tsx",
+    "ui/data-table-cards.tsx",
+    "ui/data-table-header.tsx",
+    "ui/data-table-mobile.tsx",
+    "ui/data-table-row-actions.tsx",
+    "ui/data-table-selection.tsx",
+    "ui/data-table-states.tsx",
+    "ui/data-table-toolbar.tsx",
+    "hooks/use-data-table-state.ts",
+    "lib/data-table-sticky.ts"
+  ]
+}

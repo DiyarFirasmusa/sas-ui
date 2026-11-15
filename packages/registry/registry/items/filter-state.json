@@ -1,0 +1,8 @@
+{
+  "name": "filter-state",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Filter state",
+  "description": "Pure helpers for filter values: count, chips, remove, clear and a URL search-params round trip.",
+  "files": ["lib/filter-state.ts"]
+}

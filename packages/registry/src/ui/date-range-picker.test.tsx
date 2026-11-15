@@ -44,21 +44,30 @@ describe('DateRangePicker', () => {
     const trigger = screen.getByRole('button', { name: /Range/ });
     expect(trigger).toHaveTextContent('Select a date range');
     await userEvent.click(trigger);
-    const dialog = await screen.findByRole('dialog', { name: 'Choose a date range' });
+    const dialog = await screen.findByRole('dialog', {
+      name: 'Choose a date range',
+    });
     expect(dialog.querySelector('[role="grid"]')).toHaveAttribute('aria-multiselectable', 'true');
   });
 
   it('commits only a complete range, then closes and shows it', async () => {
     const onValueChange = vi.fn();
     renderWithLocale(
-      <DateRangePicker aria-label="Range" defaultMonth="2026-11-01" onValueChange={onValueChange} />,
+      <DateRangePicker
+        aria-label="Range"
+        defaultMonth="2026-11-01"
+        onValueChange={onValueChange}
+      />,
     );
     const trigger = await open();
     await userEvent.click(dayButton('Tuesday, November 10, 2026'));
     expect(onValueChange).not.toHaveBeenCalled();
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     await userEvent.click(dayButton('Saturday, November 14, 2026'));
-    expect(onValueChange).toHaveBeenCalledWith({ from: '2026-11-10', to: '2026-11-14' });
+    expect(onValueChange).toHaveBeenCalledWith({
+      from: '2026-11-10',
+      to: '2026-11-14',
+    });
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(trigger.textContent).toMatch(/November 10\s*[–-]\s*14, 2026/);
     expect(trigger).toHaveFocus();
@@ -90,18 +99,26 @@ describe('DateRangePicker', () => {
         value={{ from: '2026-03-05', to: '2026-03-09' }}
       />,
     );
-    expect(screen.getByRole('button', { name: /Range/ }).textContent).toMatch(/Mar 5\s*[–-]\s*9, 2026/);
+    expect(screen.getByRole('button', { name: /Range/ }).textContent).toMatch(
+      /Mar 5\s*[–-]\s*9, 2026/,
+    );
   });
 
   it('shows a half-open range with a trailing dash', () => {
     renderWithLocale(
-      <DateRangePicker aria-label="Range" value={{ from: '2026-03-05', to: null }} dateStyle="medium" />,
+      <DateRangePicker
+        aria-label="Range"
+        value={{ from: '2026-03-05', to: null }}
+        dateStyle="medium"
+      />,
     );
     expect(screen.getByRole('button', { name: /Range/ })).toHaveTextContent('Mar 5, 2026 –');
   });
 
   it('shows two months on a wide viewport and one on a narrow one', async () => {
-    const { unmount } = renderWithLocale(<DateRangePicker aria-label="Range" defaultMonth="2026-11-01" />);
+    const { unmount } = renderWithLocale(
+      <DateRangePicker aria-label="Range" defaultMonth="2026-11-01" />,
+    );
     await open();
     expect(screen.getAllByRole('grid')).toHaveLength(1);
     unmount();
@@ -119,13 +136,21 @@ describe('DateRangePicker', () => {
         aria-label="Range"
         defaultMonth="2026-11-01"
         onValueChange={onValueChange}
-        presets={[{ label: 'First week', value: { from: '2026-11-01', to: '2026-11-07' } }]}
+        presets={[
+          {
+            label: 'First week',
+            value: { from: '2026-11-01', to: '2026-11-07' },
+          },
+        ]}
       />,
     );
     await open();
     expect(screen.getByRole('group', { name: 'Quick ranges' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'First week' }));
-    expect(onValueChange).toHaveBeenCalledWith({ from: '2026-11-01', to: '2026-11-07' });
+    expect(onValueChange).toHaveBeenCalledWith({
+      from: '2026-11-01',
+      to: '2026-11-07',
+    });
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 
@@ -166,7 +191,14 @@ describe('DateRangePicker', () => {
     await userEvent.click(screen.getByRole('button', { name: /Range/ }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     unmount();
-    renderWithLocale(<DateRangePicker aria-label="Range" readOnly clearable defaultValue={{ from: '2026-11-02', to: '2026-11-04' }} />);
+    renderWithLocale(
+      <DateRangePicker
+        aria-label="Range"
+        readOnly
+        clearable
+        defaultValue={{ from: '2026-11-02', to: '2026-11-04' }}
+      />,
+    );
     await userEvent.click(screen.getByRole('button', { name: /Range/ }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Clear dates' })).not.toBeInTheDocument();
@@ -187,8 +219,12 @@ describe('DateRangePicker', () => {
     );
     expect(ref.current).toBe(screen.getByRole('button', { name: /Range/ }));
     expect(ref.current).toHaveAttribute('aria-invalid', 'true');
-    expect(container.querySelector<HTMLInputElement>('input[name="stay-from"]')?.value).toBe('2026-11-02');
-    expect(container.querySelector<HTMLInputElement>('input[name="stay-to"]')?.value).toBe('2026-11-04');
+    expect(container.querySelector<HTMLInputElement>('input[name="stay-from"]')?.value).toBe(
+      '2026-11-02',
+    );
+    expect(container.querySelector<HTMLInputElement>('input[name="stay-to"]')?.value).toBe(
+      '2026-11-04',
+    );
     ref.current?.focus();
     ref.current?.blur();
     expect(onBlur).toHaveBeenCalled();
@@ -222,12 +258,16 @@ describe('DateRangePicker', () => {
       expect(ARABIC_INDIC.test(trigger.textContent ?? '')).toBe(false);
       expect(screen.getByRole('button', { name: 'مسح التواريخ' })).toBeInTheDocument();
       await userEvent.click(trigger);
-      const dialog = await screen.findByRole('dialog', { name: 'اختيار فترة زمنية' });
+      const dialog = await screen.findByRole('dialog', {
+        name: 'اختيار فترة زمنية',
+      });
       expect(dialog.querySelectorAll('th')[0]).toHaveAttribute('aria-label', 'السبت');
     });
 
     it('shows the Arabic placeholder', () => {
-      renderWithLocale(<DateRangePicker aria-label="الفترة" />, { locale: 'ar' });
+      renderWithLocale(<DateRangePicker aria-label="الفترة" />, {
+        locale: 'ar',
+      });
       expect(screen.getByRole('button', { name: /الفترة/ })).toHaveTextContent('اختر فترة زمنية');
     });
   });
@@ -244,7 +284,12 @@ describe('DateRangePicker', () => {
       <DateRangePicker
         aria-label="Range"
         defaultMonth="2026-11-01"
-        presets={[{ label: 'First week', value: { from: '2026-11-01', to: '2026-11-07' } }]}
+        presets={[
+          {
+            label: 'First week',
+            value: { from: '2026-11-01', to: '2026-11-07' },
+          },
+        ]}
       />,
     );
     await open();

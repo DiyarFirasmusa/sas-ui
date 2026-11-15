@@ -4,7 +4,5 @@
   "category": "foundation",
   "title": "cn()",
   "description": "Class-name helper: clsx + tailwind-merge, taught the SAS type ramp and role spacing.",
-  "files": [
-    "lib/utils.ts"
-  ]
+  "files": ["lib/utils.ts"]
 }

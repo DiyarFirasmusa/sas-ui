@@ -6,15 +6,18 @@ import { useLabels, type Messages } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 
 const messages: Messages<'increase' | 'decrease' | 'roleDescription'> = {
-  en: { increase: 'Increase', decrease: 'Decrease', roleDescription: 'Number field' },
+  en: {
+    increase: 'Increase',
+    decrease: 'Decrease',
+    roleDescription: 'Number field',
+  },
   ar: { increase: 'زيادة', decrease: 'إنقاص', roleDescription: 'حقل رقمي' },
 };
 
-interface NumberInputProps
-  extends Omit<
-    NumberFieldPrimitive.Root.Props,
-    'ref' | 'children' | 'locale' | 'onBlur' | 'onFocus' | 'render' | 'inputRef' | 'aria-label'
-  > {
+interface NumberInputProps extends Omit<
+  NumberFieldPrimitive.Root.Props,
+  'ref' | 'children' | 'locale' | 'onBlur' | 'onFocus' | 'render' | 'inputRef' | 'aria-label'
+> {
   /** Reaches the text input, so react-hook-form can focus it on error. */
   ref?: Ref<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;

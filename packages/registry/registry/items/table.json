@@ -1,0 +1,8 @@
+{
+  "name": "table",
+  "type": "ui",
+  "category": "data",
+  "title": "Table",
+  "description": "Semantic table primitives with sticky header, sticky columns, logical and numeric alignment, and a scroll container.",
+  "files": ["ui/table.tsx"]
+}

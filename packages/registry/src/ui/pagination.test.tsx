@@ -9,7 +9,10 @@ describe('Pagination', () => {
   it('is a labelled nav landmark with the current page marked', () => {
     render(<Pagination page={3} pageCount={10} onPageChange={() => {}} />);
     const nav = screen.getByRole('navigation', { name: 'Pagination' });
-    expect(within(nav).getByRole('button', { name: 'Page 3' })).toHaveAttribute('aria-current', 'page');
+    expect(within(nav).getByRole('button', { name: 'Page 3' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
     expect(within(nav).getByRole('button', { name: 'Page 2' })).not.toHaveAttribute('aria-current');
   });
 
@@ -91,7 +94,13 @@ describe('Pagination', () => {
 
   it('includes a custom page size in the options', async () => {
     render(
-      <Pagination page={1} total={500} pageSize={25} onPageChange={() => {}} onPageSizeChange={() => {}} />,
+      <Pagination
+        page={1}
+        total={500}
+        pageSize={25}
+        onPageChange={() => {}}
+        onPageSizeChange={() => {}}
+      />,
     );
     await userEvent.click(screen.getByRole('combobox', { name: 'Rows per page' }));
     expect(await screen.findByRole('option', { name: '25' })).toBeInTheDocument();
@@ -117,7 +126,12 @@ describe('Pagination', () => {
 
   it('accepts label overrides', () => {
     render(
-      <Pagination page={1} pageCount={3} onPageChange={() => {}} labels={{ navigation: 'Invoices pages' }} />,
+      <Pagination
+        page={1}
+        pageCount={3}
+        onPageChange={() => {}}
+        labels={{ navigation: 'Invoices pages' }}
+      />,
     );
     expect(screen.getByRole('navigation', { name: 'Invoices pages' })).toBeInTheDocument();
   });
@@ -128,20 +142,31 @@ describe('Pagination', () => {
     });
     expect(screen.getByRole('navigation', { name: 'ترقيم الصفحات' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'الصفحة التالية' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'الصفحة 2' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: 'الصفحة 2' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
     expect(screen.getByText('عرض 11–20 من 1,234')).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('الصفحة 2 من 124');
   });
 
   it('mirrors the chevrons in RTL through the icon classes', () => {
-    renderWithLocale(<Pagination page={2} pageCount={5} onPageChange={() => {}} />, { locale: 'ar' });
+    renderWithLocale(<Pagination page={2} pageCount={5} onPageChange={() => {}} />, {
+      locale: 'ar',
+    });
     const icon = screen.getByRole('button', { name: 'الصفحة التالية' }).querySelector('svg');
     expect(icon).toHaveClass('rtl:-scale-x-100');
   });
 
   it('has no axe violations', async () => {
     const { container } = render(
-      <Pagination page={2} total={300} pageSize={20} onPageChange={() => {}} onPageSizeChange={() => {}} />,
+      <Pagination
+        page={2}
+        total={300}
+        pageSize={20}
+        onPageChange={() => {}}
+        onPageSizeChange={() => {}}
+      />,
     );
     await expectNoA11yViolations(container);
   });

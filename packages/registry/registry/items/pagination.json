@@ -1,0 +1,8 @@
+{
+  "name": "pagination",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Pagination",
+  "description": "Server-driven pagination: windowed page list, first/last, page-size select and a localized \"showing a–b of N\" summary.",
+  "files": ["ui/pagination.tsx"]
+}

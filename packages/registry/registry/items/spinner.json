@@ -4,7 +4,5 @@
   "category": "feedback",
   "title": "Spinner",
   "description": "Indeterminate activity indicator with a localised accessible name.",
-  "files": [
-    "ui/spinner.tsx"
-  ]
+  "files": ["ui/spinner.tsx"]
 }

@@ -94,10 +94,19 @@ describe('ThemeSwitcher inline', () => {
   it('renders grouped toggle buttons with the current choice pressed', () => {
     setup('inline');
     const modeGroup = screen.getByRole('group', { name: 'Mode' });
-    expect(within(modeGroup).getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true');
-    expect(within(modeGroup).getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'false');
+    expect(within(modeGroup).getByRole('button', { name: 'Light' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(within(modeGroup).getByRole('button', { name: 'Dark' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
     const presetGroup = screen.getByRole('group', { name: 'Theme' });
-    expect(within(presetGroup).getByRole('button', { name: 'HR' })).toHaveAttribute('aria-pressed', 'true');
+    expect(within(presetGroup).getByRole('button', { name: 'HR' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 
   it('applies a click to the document', async () => {

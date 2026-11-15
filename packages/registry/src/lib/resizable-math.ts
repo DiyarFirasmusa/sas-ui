@@ -62,7 +62,9 @@ export function initialSizes(
     const each = difference / flexible.length;
     for (const { index, limits } of flexible) {
       const current = sizes[index] ?? 0;
-      sizes[index] = limits ? clamp(current + each, limits.minSize, limits.maxSize) : current + each;
+      sizes[index] = limits
+        ? clamp(current + each, limits.minSize, limits.maxSize)
+        : current + each;
     }
   }
   return sizes;

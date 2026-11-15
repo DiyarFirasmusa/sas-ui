@@ -1,0 +1,8 @@
+{
+  "name": "tooltip",
+  "type": "ui",
+  "category": "overlay",
+  "title": "Tooltip",
+  "description": "Hover and focus hint with a shared-delay provider and optional arrow.",
+  "files": ["ui/tooltip.tsx"]
+}

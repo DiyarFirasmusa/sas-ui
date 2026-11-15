@@ -105,7 +105,11 @@ function Stepper({
         ].join(', ');
 
         const indicator = (
-          <span data-slot="stepper-indicator" data-state={state} className={indicatorVariants({ state })}>
+          <span
+            data-slot="stepper-indicator"
+            data-state={state}
+            className={indicatorVariants({ state })}
+          >
             {state === 'complete' ? (
               <CheckIcon />
             ) : state === 'error' ? (
@@ -116,7 +120,12 @@ function Stepper({
           </span>
         );
         const text = (
-          <span className={cn('flex min-w-0 flex-col gap-0.5', vertical ? 'items-start text-start' : 'items-center text-center')}>
+          <span
+            className={cn(
+              'flex min-w-0 flex-col gap-0.5',
+              vertical ? 'items-start text-start' : 'items-center text-center',
+            )}
+          >
             <span
               className={cn(
                 'text-h5',
@@ -127,7 +136,9 @@ function Stepper({
               {step.label}
               <span className="sr-only">{`, ${description}`}</span>
             </span>
-            {step.description ? <span className="text-b3 text-text-muted">{step.description}</span> : null}
+            {step.description ? (
+              <span className="text-b3 text-text-muted">{step.description}</span>
+            ) : null}
           </span>
         );
         const body = (
@@ -162,7 +173,12 @@ function Stepper({
             data-slot="stepper-item"
             data-state={state}
             aria-current={state === 'current' ? 'step' : undefined}
-            className={cn('relative', vertical ? 'flex flex-col items-start pb-card last:pb-0' : 'flex flex-1 justify-center')}
+            className={cn(
+              'relative',
+              vertical
+                ? 'flex flex-col items-start pb-card last:pb-0'
+                : 'flex flex-1 justify-center',
+            )}
           >
             {content}
             {last ? null : (

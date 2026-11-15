@@ -1,0 +1,8 @@
+{
+  "name": "theme-provider",
+  "type": "ui",
+  "category": "foundation",
+  "title": "Theme provider",
+  "description": "ThemeProvider and useTheme: preset, light/dark/system mode and language/direction written to <html> and persisted, plus a no-flash script.",
+  "files": ["ui/theme-provider.tsx", "lib/theme.ts"]
+}

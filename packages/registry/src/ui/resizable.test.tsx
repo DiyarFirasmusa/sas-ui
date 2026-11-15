@@ -7,8 +7,8 @@ import {
   ResizablePanelGroup,
   type ResizablePanelGroupProps,
 } from '@/components/ui/resizable';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Example(props: Partial<ResizablePanelGroupProps>) {
   return (
@@ -23,7 +23,17 @@ function Example(props: Partial<ResizablePanelGroupProps>) {
 }
 
 function rect(width: number, height: number): DOMRect {
-  return { x: 0, y: 0, top: 0, left: 0, right: width, bottom: height, width, height, toJSON: () => ({}) };
+  return {
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    right: width,
+    bottom: height,
+    width,
+    height,
+    toJSON: () => ({}),
+  };
 }
 
 afterEach(() => vi.restoreAllMocks());
@@ -121,7 +131,10 @@ describe('Resizable', () => {
     );
     screen.getByRole('separator', { name: 'Second' }).focus();
     await userEvent.keyboard('{ArrowRight}');
-    expect(screen.getByRole('separator', { name: 'Second' })).toHaveAttribute('aria-valuenow', '45');
+    expect(screen.getByRole('separator', { name: 'Second' })).toHaveAttribute(
+      'aria-valuenow',
+      '45',
+    );
     expect(screen.getByRole('separator', { name: 'First' })).toHaveAttribute('aria-valuenow', '30');
     expect(screen.getByText('C')).toHaveStyle({ flexGrow: '25' });
   });
@@ -131,16 +144,29 @@ describe('Resizable', () => {
     render(<Example />);
     const handle = screen.getByRole('separator');
     await userEvent.pointer([
-      { keys: '[MouseLeft>]', target: handle, coords: { clientX: 400, clientY: 0 } },
+      {
+        keys: '[MouseLeft>]',
+        target: handle,
+        coords: { clientX: 400, clientY: 0 },
+      },
       { coords: { clientX: 500, clientY: 0 } },
     ]);
     expect(handle).toHaveAttribute('aria-valuenow', '50');
-    await userEvent.pointer({ target: handle, coords: { clientX: 900, clientY: 0 } });
+    await userEvent.pointer({
+      target: handle,
+      coords: { clientX: 900, clientY: 0 },
+    });
     expect(handle).toHaveAttribute('aria-valuenow', '70');
-    await userEvent.pointer({ target: handle, coords: { clientX: 450, clientY: 0 } });
+    await userEvent.pointer({
+      target: handle,
+      coords: { clientX: 450, clientY: 0 },
+    });
     expect(handle).toHaveAttribute('aria-valuenow', '45');
     fireEvent.pointerUp(handle);
-    await userEvent.pointer({ target: handle, coords: { clientX: 100, clientY: 0 } });
+    await userEvent.pointer({
+      target: handle,
+      coords: { clientX: 100, clientY: 0 },
+    });
     expect(handle).toHaveAttribute('aria-valuenow', '45');
   });
 
@@ -156,7 +182,11 @@ describe('Resizable', () => {
     expect(handle).toHaveAttribute('aria-valuenow', '35');
 
     await userEvent.pointer([
-      { keys: '[MouseLeft>]', target: handle, coords: { clientX: 600, clientY: 0 } },
+      {
+        keys: '[MouseLeft>]',
+        target: handle,
+        coords: { clientX: 600, clientY: 0 },
+      },
       { coords: { clientX: 500, clientY: 0 } },
     ]);
     // Dragging left grows the first panel, which sits on the right.

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Skeleton, SkeletonTable, SkeletonText } from '@/components/ui/skeleton';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('Skeleton', () => {
   it('is a decorative pulse block that stops pulsing for reduced motion', () => {
@@ -33,7 +33,10 @@ describe('Skeleton', () => {
 
   it('announces the loading region in the active language', () => {
     renderWithLocale(<SkeletonText />, { locale: 'ar' });
-    expect(screen.getByRole('status', { name: 'جارٍ التحميل' })).toHaveAttribute('aria-busy', 'true');
+    expect(screen.getByRole('status', { name: 'جارٍ التحميل' })).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
   });
 
   it('accepts a custom label', () => {

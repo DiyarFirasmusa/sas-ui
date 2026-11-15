@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Avatar, AvatarGroup, getInitials, hueIndexForName } from '@/components/ui/avatar';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('getInitials', () => {
   it('takes the first letter of the first two words', () => {
@@ -36,7 +36,18 @@ describe('hueIndexForName', () => {
   });
 
   it('spreads different names over several hues', () => {
-    const names = ['Ada', 'Grace', 'Linus', 'Margaret', 'Dennis', 'Barbara', 'Ken', 'علي', 'سارة', 'نور'];
+    const names = [
+      'Ada',
+      'Grace',
+      'Linus',
+      'Margaret',
+      'Dennis',
+      'Barbara',
+      'Ken',
+      'علي',
+      'سارة',
+      'نور',
+    ];
     expect(new Set(names.map(hueIndexForName)).size).toBeGreaterThan(2);
   });
 });
@@ -91,9 +102,14 @@ describe('Avatar', () => {
   });
 });
 
-const people = ['Ada Lovelace', 'Grace Hopper', 'Linus Torvalds', 'Ken Thompson', 'Dennis Ritchie', 'Margaret Hamilton'].map(
-  (name) => ({ name }),
-);
+const people = [
+  'Ada Lovelace',
+  'Grace Hopper',
+  'Linus Torvalds',
+  'Ken Thompson',
+  'Dennis Ritchie',
+  'Margaret Hamilton',
+].map((name) => ({ name }));
 
 describe('AvatarGroup', () => {
   it('collapses the overflow into a +N tile with an accessible count', () => {

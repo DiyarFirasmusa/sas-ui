@@ -64,7 +64,7 @@ function DialogContent({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="absolute end-inline top-inline"
+                className="end-inline top-inline absolute"
                 aria-label={labels.close}
               />
             }

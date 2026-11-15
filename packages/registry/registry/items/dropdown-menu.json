@@ -4,7 +4,5 @@
   "category": "overlay",
   "title": "Dropdown menu",
   "description": "Action menu with items, checkbox/radio items, groups and submenus.",
-  "files": [
-    "ui/dropdown-menu.tsx"
-  ]
+  "files": ["ui/dropdown-menu.tsx"]
 }

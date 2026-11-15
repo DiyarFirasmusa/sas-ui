@@ -59,8 +59,10 @@ const toasterStyle: ToasterStyle = {
   '--border-radius': 'var(--radius-xl)',
 };
 
-interface ToasterComponentProps
-  extends Omit<ToasterProps, 'position' | 'dir' | 'icons' | 'theme' | 'containerAriaLabel'> {
+interface ToasterComponentProps extends Omit<
+  ToasterProps,
+  'position' | 'dir' | 'icons' | 'theme' | 'containerAriaLabel'
+> {
   /** Default `bottom-end`: the bottom-right corner in LTR, bottom-left in RTL. */
   position?: ToastPosition;
   /** Accessible name of the notifications region. */
@@ -94,11 +96,13 @@ function Toaster({
       containerAriaLabel={labels.notifications}
       toastOptions={{ closeButtonAriaLabel: labels.close, ...toastOptions }}
       icons={{
-        success: <CheckCircleIcon className="size-5 text-success" />,
-        info: <InfoIcon className="size-5 text-info" />,
-        warning: <AlertTriangleIcon className="size-5 text-warning" />,
-        error: <XCircleIcon className="size-5 text-danger" />,
-        loading: <LoaderIcon className="size-5 animate-spin text-text-muted motion-reduce:animate-none" />,
+        success: <CheckCircleIcon className="text-success size-5" />,
+        info: <InfoIcon className="text-info size-5" />,
+        warning: <AlertTriangleIcon className="text-warning size-5" />,
+        error: <XCircleIcon className="text-danger size-5" />,
+        loading: (
+          <LoaderIcon className="text-text-muted size-5 animate-spin motion-reduce:animate-none" />
+        ),
       }}
       style={{ ...toasterStyle, ...style }}
       {...props}

@@ -58,9 +58,7 @@ type DateRangeCalendarProps = Pick<
   'min' | 'max' | 'isDateDisabled' | 'weekStartsOn' | 'numerals' | 'fixedWeeks' | 'defaultMonth'
 >;
 
-interface DateRangePickerProps
-  extends Omit<DateFieldProps, 'name'>,
-    DateRangeCalendarProps {
+interface DateRangePickerProps extends Omit<DateFieldProps, 'name'>, DateRangeCalendarProps {
   /** `{ from, to }` as ISO `yyyy-mm-dd` strings; both null when empty. */
   value?: DateRangeValue | null;
   defaultValue?: DateRangeValue | null;
@@ -108,7 +106,7 @@ function DateRangePanel({
 }: PanelProps) {
   const [draft, setDraft] = useState<DateRangeValue>(initial);
   return (
-    <div ref={ref} className="flex flex-col gap-row sm:flex-row">
+    <div ref={ref} className="gap-row flex flex-col sm:flex-row">
       {presets && presets.length > 0 ? (
         <div
           role="group"

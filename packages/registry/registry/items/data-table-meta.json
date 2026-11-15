@@ -1,0 +1,8 @@
+{
+  "name": "data-table-meta",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Data table column meta",
+  "description": "Typed reader for the column meta the data table understands (alignment, sticky, card role).",
+  "files": ["lib/data-table-meta.ts"]
+}

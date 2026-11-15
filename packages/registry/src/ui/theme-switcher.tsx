@@ -15,8 +15,8 @@ import {
 import { MoonIcon, SunIcon, type IconProps } from '@/components/ui/icons';
 import { useTheme } from '@/components/ui/theme-provider';
 import { useLabels, type Locale, type Messages } from '@/lib/locale';
-import { cn } from '@/lib/utils';
 import { COLOR_MODES, isColorMode, isLocale, type ColorMode } from '@/lib/theme';
+import { cn } from '@/lib/utils';
 
 const messages: Messages<
   'appearance' | 'preset' | 'mode' | 'language' | 'light' | 'dark' | 'system' | 'arabic' | 'english'
@@ -93,7 +93,7 @@ function Swatch({ color }: { color: string }) {
   return (
     <span
       aria-hidden="true"
-      className="size-4 shrink-0 rounded-full border border-stroke"
+      className="border-stroke size-4 shrink-0 rounded-full border"
       style={{ backgroundColor: color }}
     />
   );
@@ -229,7 +229,7 @@ interface SegmentedProps {
 /** One pressed segment at a time; arrow keys move between segments (Base UI toggle group). */
 function Segmented({ label, value, options, onChange }: SegmentedProps) {
   return (
-    <div className="flex flex-col gap-field">
+    <div className="gap-field flex flex-col">
       <span className="text-label text-text-secondary">{label}</span>
       <ToggleGroup
         aria-label={label}
@@ -241,7 +241,7 @@ function Segmented({ label, value, options, onChange }: SegmentedProps) {
             onChange(picked);
           }
         }}
-        className="inline-flex w-fit max-w-full flex-wrap rounded-control border border-stroke bg-surface p-0.5"
+        className="rounded-control border-stroke bg-surface inline-flex w-fit max-w-full flex-wrap border p-0.5"
       >
         {options.map((option) => (
           <Toggle
@@ -274,10 +274,7 @@ function ThemeSwitcherInline({
   const { labels, modeLabels, languageLabels } = useSwitcherLabels(overrides);
 
   return (
-    <div
-      data-slot="theme-switcher"
-      className={cn('flex flex-wrap items-start gap-row', className)}
-    >
+    <div data-slot="theme-switcher" className={cn('flex flex-wrap items-start gap-row', className)}>
       {presets !== undefined && presets.length > 0 ? (
         <Segmented
           label={labels.preset}
@@ -314,7 +311,10 @@ function ThemeSwitcherInline({
               theme.setLocale(value);
             }
           }}
-          options={LANGUAGES.map((locale) => ({ value: locale, label: languageLabels[locale] }))}
+          options={LANGUAGES.map((locale) => ({
+            value: locale,
+            label: languageLabels[locale],
+          }))}
         />
       ) : null}
     </div>

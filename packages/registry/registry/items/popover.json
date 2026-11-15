@@ -4,7 +4,5 @@
   "category": "overlay",
   "title": "Popover",
   "description": "Anchored floating panel with title and description.",
-  "files": [
-    "ui/popover.tsx"
-  ]
+  "files": ["ui/popover.tsx"]
 }

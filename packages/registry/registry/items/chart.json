@@ -1,0 +1,9 @@
+{
+  "name": "chart",
+  "type": "ui",
+  "category": "data",
+  "title": "Chart",
+  "description": "Themed recharts wrapper: per-series CSS colour variables, tooltip and legend content, RTL-aware axes, loading and empty states, and an accessible summary with an optional hidden data table.",
+  "files": ["ui/chart.tsx", "lib/chart.ts"],
+  "tier": "extra"
+}

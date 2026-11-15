@@ -4,7 +4,5 @@
   "category": "form",
   "title": "Label",
   "description": "Form label with an optional required marker.",
-  "files": [
-    "ui/label.tsx"
-  ]
+  "files": ["ui/label.tsx"]
 }

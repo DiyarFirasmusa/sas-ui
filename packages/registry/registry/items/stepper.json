@@ -1,0 +1,8 @@
+{
+  "name": "stepper",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Stepper",
+  "description": "Step progress, horizontal or vertical, with complete, current, upcoming and error states.",
+  "files": ["ui/stepper.tsx"]
+}

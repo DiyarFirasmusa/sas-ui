@@ -21,7 +21,13 @@ type RichTextTool =
   | 'redo';
 
 type RichTextToolbarLabels = Record<
-  RichTextTool | 'toolbar' | 'linkAddress' | 'applyLink' | 'removeLink' | 'cancelLink' | 'invalidLink',
+  | RichTextTool
+  | 'toolbar'
+  | 'linkAddress'
+  | 'applyLink'
+  | 'removeLink'
+  | 'cancelLink'
+  | 'invalidLink',
   string
 >;
 
@@ -35,7 +41,11 @@ const TOOL_GROUPS: readonly (readonly RichTextTool[])[] = [
   ['undo', 'redo'],
 ];
 
-function Glyph({ children, mirror = false, ...props }: SVGProps<SVGSVGElement> & { mirror?: boolean; children: ReactNode }) {
+function Glyph({
+  children,
+  mirror = false,
+  ...props
+}: SVGProps<SVGSVGElement> & { mirror?: boolean; children: ReactNode }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -169,7 +179,10 @@ function runTool(editor: Editor, tool: RichTextTool): void {
     case 'alignCenter':
     case 'alignEnd': {
       const alignment = tool === 'alignStart' ? 'start' : tool === 'alignCenter' ? 'center' : 'end';
-      (editor.isActive({ textAlign: alignment }) ? chain.unsetTextAlign() : chain.setTextAlign(alignment)).run();
+      (editor.isActive({ textAlign: alignment })
+        ? chain.unsetTextAlign()
+        : chain.setTextAlign(alignment)
+      ).run();
       break;
     }
     case 'undo':
@@ -215,7 +228,7 @@ function LinkBar({ editor, initialHref, active, labels, onClose }: LinkBarProps)
   return (
     <div
       data-slot="rich-text-link-bar"
-      className="flex flex-wrap items-center gap-field border-b border-stroke bg-surface-dim p-field"
+      className="gap-field border-stroke bg-surface-dim p-field flex flex-wrap items-center border-b"
     >
       <Input
         kind="latin"
@@ -261,7 +274,7 @@ function LinkBar({ editor, initialHref, active, labels, onClose }: LinkBarProps)
         {labels.cancelLink}
       </Button>
       {invalid ? (
-        <p id={errorId} role="alert" className="w-full text-b3 text-danger">
+        <p id={errorId} role="alert" className="text-b3 text-danger w-full">
           {labels.invalidLink}
         </p>
       ) : null}
@@ -293,11 +306,11 @@ function RichTextToolbar({ editor, tools, labels, disabled = false }: RichTextTo
       <Toolbar.Root
         aria-label={labels.toolbar}
         data-slot="rich-text-toolbar"
-        className="flex flex-wrap items-center gap-1 border-b border-stroke bg-surface-dim p-1"
+        className="border-stroke bg-surface-dim flex flex-wrap items-center gap-1 border-b p-1"
       >
         {groups.map((group, index) => (
           <Fragment key={group.join()}>
-            {index > 0 ? <Toolbar.Separator className="mx-1 h-5 w-px bg-stroke" /> : null}
+            {index > 0 ? <Toolbar.Separator className="bg-stroke mx-1 h-5 w-px" /> : null}
             <Toolbar.Group className="flex items-center gap-1">
               {group.map((tool) => {
                 const pressed =

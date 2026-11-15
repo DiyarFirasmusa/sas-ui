@@ -9,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Example({ title = 'Invoices' }: { title?: string }) {
   return (
@@ -31,8 +31,18 @@ function Example({ title = 'Invoices' }: { title?: string }) {
 describe('Card', () => {
   it('renders every slot with token surface classes', () => {
     const { container } = render(<Example />);
-    expect(container.querySelector('[data-slot="card"]')).toHaveClass('bg-surface', 'border-stroke');
-    for (const slot of ['card-header', 'card-title', 'card-description', 'card-action', 'card-content', 'card-footer']) {
+    expect(container.querySelector('[data-slot="card"]')).toHaveClass(
+      'bg-surface',
+      'border-stroke',
+    );
+    for (const slot of [
+      'card-header',
+      'card-title',
+      'card-description',
+      'card-action',
+      'card-content',
+      'card-footer',
+    ]) {
       expect(container.querySelector(`[data-slot="${slot}"]`)).toBeInTheDocument();
     }
   });
@@ -66,7 +76,11 @@ describe('Card', () => {
       </Card>,
     );
     expect(container.querySelector('[data-slot="card"]')).toHaveClass('max-w-sm');
-    expect(container.querySelector('[data-slot="card-action"]')).toHaveClass('col-start-2', 'justify-self-end', 'self-center');
+    expect(container.querySelector('[data-slot="card-action"]')).toHaveClass(
+      'col-start-2',
+      'justify-self-end',
+      'self-center',
+    );
   });
 
   it('renders Arabic content', () => {

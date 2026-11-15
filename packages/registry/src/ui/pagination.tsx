@@ -93,9 +93,11 @@ function Pagination({
 }: PaginationProps) {
   const labels = useLabels(messages, labelOverrides);
   const resolvedCount =
-    pageCount ?? (total !== undefined && pageSize !== undefined ? getPageCount(total, pageSize) : 1);
+    pageCount ??
+    (total !== undefined && pageSize !== undefined ? getPageCount(total, pageSize) : 1);
   const current = Math.min(Math.max(page, 1), resolvedCount);
-  const range = total !== undefined && pageSize !== undefined ? getRowRange(current, pageSize, total) : null;
+  const range =
+    total !== undefined && pageSize !== undefined ? getRowRange(current, pageSize, total) : null;
   const isFirst = current <= 1;
   const isLast = current >= resolvedCount;
   const pageStatus = fillTemplate(labels.pageStatus, {
@@ -103,9 +105,10 @@ function Pagination({
     pageCount: formatCount(resolvedCount),
   });
 
-  const sizeChoices = pageSize !== undefined && !pageSizeOptions.includes(pageSize)
-    ? [...pageSizeOptions, pageSize].sort((a, b) => a - b)
-    : pageSizeOptions;
+  const sizeChoices =
+    pageSize !== undefined && !pageSizeOptions.includes(pageSize)
+      ? [...pageSizeOptions, pageSize].sort((a, b) => a - b)
+      : pageSizeOptions;
 
   function go(target: number) {
     if (!disabled && target !== current && target >= 1 && target <= resolvedCount) {
@@ -119,9 +122,12 @@ function Pagination({
     <nav
       aria-label={labels.navigation}
       data-slot="pagination"
-      className={cn('flex flex-wrap items-center justify-between gap-row text-b2 text-text-secondary', className)}
+      className={cn(
+        'flex flex-wrap items-center justify-between gap-row text-b2 text-text-secondary',
+        className,
+      )}
     >
-      <div className="flex flex-wrap items-center gap-row">
+      <div className="gap-row flex flex-wrap items-center">
         {total !== undefined && pageSize !== undefined ? (
           <p data-slot="pagination-summary" className="tabular-nums">
             {range
@@ -134,14 +140,17 @@ function Pagination({
           </p>
         ) : null}
         {onPageSizeChange && pageSize !== undefined ? (
-          <div className="flex items-center gap-field">
+          <div className="gap-field flex items-center">
             <span aria-hidden="true">{labels.rowsPerPage}</span>
             <Select
               aria-label={labels.rowsPerPage}
               className="w-20"
               disabled={disabled}
               value={String(pageSize)}
-              options={sizeChoices.map((size) => ({ value: String(size), label: formatCount(size) }))}
+              options={sizeChoices.map((size) => ({
+                value: String(size),
+                label: formatCount(size),
+              }))}
               onValueChange={(value) => {
                 if (value !== null) {
                   onPageSizeChange(Number(value));
@@ -181,7 +190,9 @@ function Pagination({
                 <Button
                   variant={item === current ? 'default' : 'ghost'}
                   size="icon-sm"
-                  aria-label={fillTemplate(labels.page, { page: formatCount(item) })}
+                  aria-label={fillTemplate(labels.page, {
+                    page: formatCount(item),
+                  })}
                   aria-current={item === current ? 'page' : undefined}
                   disabled={disabled}
                   className="tabular-nums"
@@ -191,7 +202,7 @@ function Pagination({
                 </Button>
               </li>
             ) : (
-              <li key={item} aria-hidden="true" className="px-1 text-text-muted">
+              <li key={item} aria-hidden="true" className="text-text-muted px-1">
                 …
               </li>
             ),

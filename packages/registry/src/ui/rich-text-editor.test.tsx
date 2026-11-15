@@ -11,7 +11,10 @@ function Harness({
   initial = '',
   onChange,
   ...props
-}: { initial?: string; onChange?: (html: string) => void } & Omit<RichTextEditorProps, 'value' | 'onChange'>) {
+}: { initial?: string; onChange?: (html: string) => void } & Omit<
+  RichTextEditorProps,
+  'value' | 'onChange'
+>) {
   const [value, setValue] = useState(initial);
   return (
     <>
@@ -40,7 +43,11 @@ describe('RichTextEditor', () => {
       const range = new Range();
       range.getBoundingClientRect = () => new DOMRect();
       range.getClientRects = () => {
-        const rects = { item: () => null, length: 0, [Symbol.iterator]: [][Symbol.iterator] };
+        const rects = {
+          item: () => null,
+          length: 0,
+          [Symbol.iterator]: [][Symbol.iterator],
+        };
         return rects;
       };
       return range;
@@ -116,15 +123,23 @@ describe('RichTextEditor', () => {
 
   it('shows the list tool as pressed while the caret is inside a list', async () => {
     render(<Harness initial="<ul><li><p>Item</p></li></ul>" />);
-    const item = (await screen.findByRole('textbox', { name: 'Letter body' })).querySelector('li p');
+    const item = (await screen.findByRole('textbox', { name: 'Letter body' })).querySelector(
+      'li p',
+    );
     expect(item).not.toBeNull();
     if (item) {
       await userEvent.click(item);
     }
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Bulleted list' })).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByRole('button', { name: 'Bulleted list' })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
     });
-    expect(screen.getByRole('button', { name: 'Numbered list' })).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('button', { name: 'Numbered list' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
   });
 
   it('undoes and redoes', async () => {
@@ -155,7 +170,10 @@ describe('RichTextEditor', () => {
     expect(screen.getByRole('button', { name: 'Italic' })).toHaveFocus();
     await userEvent.keyboard('{Enter}');
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Italic' })).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByRole('button', { name: 'Italic' })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
     });
   });
 
@@ -177,7 +195,9 @@ describe('RichTextEditor', () => {
     await userEvent.type(address, 'example.com');
     await userEvent.keyboard('{Enter}');
     await waitFor(() => {
-      expect(onChange).toHaveBeenLastCalledWith(expect.stringContaining('href="https://example.com"'));
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.stringContaining('href="https://example.com"'),
+      );
     });
     expect(screen.queryByRole('textbox', { name: 'Link address' })).not.toBeInTheDocument();
 
@@ -275,7 +295,9 @@ describe('RichTextEditor', () => {
     );
     await screen.findByRole('textbox', { name: 'Body' });
     await waitFor(() => {
-      expect(container.querySelector<HTMLInputElement>('input[name=body]')?.value).toBe('<p>Hi</p>');
+      expect(container.querySelector<HTMLInputElement>('input[name=body]')?.value).toBe(
+        '<p>Hi</p>',
+      );
     });
   });
 
@@ -292,7 +314,9 @@ describe('RichTextEditor', () => {
 
   it('uses Arabic labels and the UI direction while empty', async () => {
     renderWithLocale(<RichTextEditor />, { locale: 'ar' });
-    const body = await screen.findByRole('textbox', { name: 'محرر النص المنسق' });
+    const body = await screen.findByRole('textbox', {
+      name: 'محرر النص المنسق',
+    });
     expect(screen.getByRole('toolbar', { name: 'التنسيق' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'غامق' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'محاذاة إلى البداية' })).toBeInTheDocument();
@@ -300,7 +324,9 @@ describe('RichTextEditor', () => {
   });
 
   it('lets typed content decide its direction', async () => {
-    renderWithLocale(<RichTextEditor defaultValue="<p>مرحبا</p>" aria-label="x" />, { locale: 'en' });
+    renderWithLocale(<RichTextEditor defaultValue="<p>مرحبا</p>" aria-label="x" />, {
+      locale: 'en',
+    });
     const body = await screen.findByRole('textbox', { name: 'x' });
     expect(body.parentElement).toHaveAttribute('dir', 'auto');
   });

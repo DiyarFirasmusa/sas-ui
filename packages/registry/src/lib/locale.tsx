@@ -1,9 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useMemo,
-  type ReactNode,
-} from 'react';
+import { DirectionProvider } from '@base-ui/react/direction-provider';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 export type Locale = 'ar' | 'en';
 export type Direction = 'rtl' | 'ltr';
@@ -30,22 +26,19 @@ export function directionOf(locale: Locale): Direction {
 }
 
 /**
- * Provides the UI language to library components. Without it they fall back
- * to <html lang>. Components never hardcode a string: each ships its own
+ * Provides the UI language and text direction to library components. Without
+ * it they fall back to <html lang> (and Base UI to left-to-right). Components never hardcode a string: each ships its own
  * ar/en defaults and accepts overrides through a `labels` prop.
  */
-export function LocaleProvider({
-  locale,
-  children,
-}: {
-  locale: Locale;
-  children: ReactNode;
-}) {
-  const value = useMemo(
-    () => ({ locale, direction: directionOf(locale) }),
-    [locale],
+export function LocaleProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
+  const value = useMemo(() => ({ locale, direction: directionOf(locale) }), [locale]);
+  // Base UI reads text direction from its own provider (not <html dir>), so
+  // popups, sliders and arrow-key navigation mirror correctly for every component.
+  return (
+    <LocaleContext value={value}>
+      <DirectionProvider direction={value.direction}>{children}</DirectionProvider>
+    </LocaleContext>
   );
-  return <LocaleContext value={value}>{children}</LocaleContext>;
 }
 
 export function useLocale(): LocaleValue {

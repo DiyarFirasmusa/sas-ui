@@ -1,0 +1,8 @@
+{
+  "name": "tree-picker",
+  "type": "ui",
+  "category": "form",
+  "title": "Tree picker",
+  "description": "Popover picker for hierarchies of any depth, with search, selected path text, single or multiple selection and clear.",
+  "files": ["ui/tree-picker.tsx"]
+}

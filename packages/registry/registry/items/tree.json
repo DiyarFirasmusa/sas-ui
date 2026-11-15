@@ -1,0 +1,8 @@
+{
+  "name": "tree",
+  "type": "ui",
+  "category": "data",
+  "title": "Tree",
+  "description": "Accessible tree of any depth: WAI-ARIA keyboard support, selection, tri-state checkboxes and lazy loading.",
+  "files": ["ui/tree.tsx", "ui/tree-row.tsx", "hooks/use-tree-children.ts"]
+}

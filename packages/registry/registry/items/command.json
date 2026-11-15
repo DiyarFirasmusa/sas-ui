@@ -1,0 +1,15 @@
+{
+  "name": "command",
+  "type": "ui",
+  "category": "overlay",
+  "title": "Command",
+  "description": "Command palette: searchable, grouped, keyboard-navigable list inline or in a dialog.",
+  "files": [
+    "ui/command.tsx",
+    "ui/command-input.tsx",
+    "ui/command-item.tsx",
+    "ui/command-list.tsx",
+    "hooks/use-command.ts",
+    "lib/command-messages.ts"
+  ]
+}

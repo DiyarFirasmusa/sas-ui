@@ -87,7 +87,9 @@ interface TreePickerMultipleProps<TData> extends TreePickerCommonProps<TData> {
   onValueChange?: (value: string[]) => void;
 }
 
-type TreePickerProps<TData = unknown> = TreePickerSingleProps<TData> | TreePickerMultipleProps<TData>;
+type TreePickerProps<TData = unknown> =
+  | TreePickerSingleProps<TData>
+  | TreePickerMultipleProps<TData>;
 
 /**
  * Popover picker for hierarchies of any depth (organisation units, categories,
@@ -120,11 +122,19 @@ function TreePicker<TData = unknown>(props: TreePickerProps<TData>) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [expanded, setExpanded] = useState<string[]>([]);
-  const [innerSingle, setInnerSingle] = useState<string | null>(props.multiple ? null : (props.defaultValue ?? null));
-  const [innerMultiple, setInnerMultiple] = useState<readonly string[]>(props.multiple ? (props.defaultValue ?? []) : []);
+  const [innerSingle, setInnerSingle] = useState<string | null>(
+    props.multiple ? null : (props.defaultValue ?? null),
+  );
+  const [innerMultiple, setInnerMultiple] = useState<readonly string[]>(
+    props.multiple ? (props.defaultValue ?? []) : [],
+  );
 
   const singleValue = props.multiple ? null : props.value === undefined ? innerSingle : props.value;
-  const multipleValue = props.multiple ? (props.value === undefined ? innerMultiple : props.value) : [];
+  const multipleValue = props.multiple
+    ? props.value === undefined
+      ? innerMultiple
+      : props.value
+    : [];
   const hasValue = props.multiple ? multipleValue.length > 0 : singleValue !== null;
 
   const filtered = useMemo(() => filterTree(nodes, query), [nodes, query]);
@@ -183,7 +193,9 @@ function TreePicker<TData = unknown>(props: TreePickerProps<TData>) {
         return null;
       }
       const path = findPath(nodes, singleValue);
-      return path ? path.map((node) => node.label).join(pathSeparator) : (valueLabel ?? singleValue);
+      return path
+        ? path.map((node) => node.label).join(pathSeparator)
+        : (valueLabel ?? singleValue);
     }
     if (multipleValue.length === 0) {
       return null;
@@ -192,7 +204,9 @@ function TreePicker<TData = unknown>(props: TreePickerProps<TData>) {
     const labelsOf = shown.map((value) => findNode(nodes, value)?.label ?? value);
     return labelsOf.length <= 2
       ? labelsOf.join(labels.listSeparator)
-      : fillTemplate(labels.selectedCount, { count: formatCount(labelsOf.length) });
+      : fillTemplate(labels.selectedCount, {
+          count: formatCount(labelsOf.length),
+        });
   })();
 
   return (
@@ -213,7 +227,10 @@ function TreePicker<TData = unknown>(props: TreePickerProps<TData>) {
             clearable && hasValue && 'pe-16',
           )}
         >
-          <span dir="auto" className={cn('min-w-0 flex-1 truncate', summary === null && 'text-text-muted')}>
+          <span
+            dir="auto"
+            className={cn('min-w-0 flex-1 truncate', summary === null && 'text-text-muted')}
+          >
             {summary ?? placeholder ?? labels.placeholder}
           </span>
           <ChevronDownIcon className="text-text-muted" />
@@ -222,11 +239,11 @@ function TreePicker<TData = unknown>(props: TreePickerProps<TData>) {
           align="start"
           aria-label={props['aria-labelledby'] ? undefined : (props['aria-label'] ?? labels.tree)}
           aria-labelledby={props['aria-labelledby']}
-          className="flex w-(--anchor-width) min-w-72 flex-col gap-field p-field"
+          className="gap-field p-field flex w-(--anchor-width) min-w-72 flex-col"
         >
           {searchable ? (
             <div className="relative">
-              <SearchIcon className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <SearchIcon className="text-text-muted pointer-events-none absolute start-3 top-1/2 -translate-y-1/2" />
               <Input
                 type="search"
                 aria-label={labels.search}

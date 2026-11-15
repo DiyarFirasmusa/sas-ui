@@ -1,8 +1,8 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { notify, resolvePosition, Toaster } from '@/components/ui/toast';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 afterEach(() => {
   act(() => {
@@ -76,7 +76,10 @@ describe('Toaster', () => {
       notify.info('Top');
     });
     await screen.findByText('Top');
-    expect(container.querySelector('[data-sonner-toaster]')).toHaveAttribute('data-y-position', 'top');
+    expect(container.querySelector('[data-sonner-toaster]')).toHaveAttribute(
+      'data-y-position',
+      'top',
+    );
     expect(screen.getByRole('region', { name: /Alerts/ })).toBeInTheDocument();
   });
 

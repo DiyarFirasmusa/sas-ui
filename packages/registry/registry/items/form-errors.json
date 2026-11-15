@@ -1,0 +1,8 @@
+{
+  "name": "form-errors",
+  "type": "lib",
+  "category": "form",
+  "title": "Server form errors",
+  "description": "applyServerErrors(): maps a backend validation payload onto react-hook-form fields and a form-level message.",
+  "files": ["lib/form-errors.ts"]
+}

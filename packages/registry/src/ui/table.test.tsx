@@ -69,7 +69,10 @@ describe('Table', () => {
     render(<Example />);
     const cell = screen.getByRole('cell', { name: '1,200' });
     expect(cell).toHaveClass('text-end', 'tabular-nums');
-    expect(screen.getByRole('columnheader', { name: 'Amount' })).toHaveClass('text-end', 'tabular-nums');
+    expect(screen.getByRole('columnheader', { name: 'Amount' })).toHaveClass(
+      'text-end',
+      'tabular-nums',
+    );
   });
 
   it('uses logical alignment and sticky classes only', () => {

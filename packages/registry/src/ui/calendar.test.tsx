@@ -10,8 +10,23 @@ const ARABIC_INDIC = /[٠-٩۰-۹]/;
 
 function day(iso: string) {
   const [year, month, date] = iso.split('-').map(Number);
-  const names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const weekday = new Date(year ?? 0, (month ?? 1) - 1, date).toLocaleDateString('en-US', { weekday: 'long' });
+  const names = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const weekday = new Date(year ?? 0, (month ?? 1) - 1, date).toLocaleDateString('en-US', {
+    weekday: 'long',
+  });
   return screen.getByRole('button', {
     name: `${weekday}, ${names[(month ?? 1) - 1]} ${date}, ${year}`,
   });
@@ -35,7 +50,13 @@ describe('Calendar', () => {
     const grid = screen.getByRole('grid', { name: 'November 2026' });
     const headers = within(grid).getAllByRole('columnheader');
     expect(headers.map((header) => header.getAttribute('aria-label'))).toEqual([
-      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
     ]);
     expect(within(grid).getAllByRole('button')).toHaveLength(30);
     expect(screen.getByRole('button', { name: 'Previous month' })).toBeInTheDocument();
@@ -130,7 +151,9 @@ describe('Calendar', () => {
 
     it('does nothing when disabled', async () => {
       const onValueChange = vi.fn();
-      renderWithLocale(<Calendar defaultMonth="2026-11-01" disabled onValueChange={onValueChange} />);
+      renderWithLocale(
+        <Calendar defaultMonth="2026-11-01" disabled onValueChange={onValueChange} />,
+      );
       await userEvent.click(day('2026-11-18'));
       expect(onValueChange).not.toHaveBeenCalled();
       expect(screen.getByRole('button', { name: 'Next month' })).toBeDisabled();
@@ -139,7 +162,12 @@ describe('Calendar', () => {
     it('lets a read-only calendar navigate but not select', async () => {
       const onValueChange = vi.fn();
       renderWithLocale(
-        <Calendar defaultMonth="2026-11-01" value="2026-11-05" readOnly onValueChange={onValueChange} />,
+        <Calendar
+          defaultMonth="2026-11-01"
+          value="2026-11-05"
+          readOnly
+          onValueChange={onValueChange}
+        />,
       );
       await userEvent.click(day('2026-11-18'));
       expect(onValueChange).not.toHaveBeenCalled();
@@ -167,7 +195,10 @@ describe('Calendar', () => {
 
   describe('range mode', () => {
     function Harness({ onValueChange }: { onValueChange?: (value: DateRangeValue) => void }) {
-      const [value, setValue] = useState<DateRangeValue>({ from: null, to: null });
+      const [value, setValue] = useState<DateRangeValue>({
+        from: null,
+        to: null,
+      });
       return (
         <Calendar
           mode="range"
@@ -185,9 +216,15 @@ describe('Calendar', () => {
       const onValueChange = vi.fn();
       renderWithLocale(<Harness onValueChange={onValueChange} />);
       await userEvent.click(day('2026-11-10'));
-      expect(onValueChange).toHaveBeenLastCalledWith({ from: '2026-11-10', to: null });
+      expect(onValueChange).toHaveBeenLastCalledWith({
+        from: '2026-11-10',
+        to: null,
+      });
       await userEvent.click(day('2026-11-14'));
-      expect(onValueChange).toHaveBeenLastCalledWith({ from: '2026-11-10', to: '2026-11-14' });
+      expect(onValueChange).toHaveBeenLastCalledWith({
+        from: '2026-11-10',
+        to: '2026-11-14',
+      });
       expect(day('2026-11-10')).toHaveAttribute('data-range-start');
       expect(day('2026-11-14')).toHaveAttribute('data-range-end');
       expect(day('2026-11-12')).toHaveAttribute('data-range-middle');
@@ -200,15 +237,19 @@ describe('Calendar', () => {
       renderWithLocale(<Harness onValueChange={onValueChange} />);
       await userEvent.click(day('2026-11-20'));
       await userEvent.click(day('2026-11-12'));
-      expect(onValueChange).toHaveBeenLastCalledWith({ from: '2026-11-12', to: '2026-11-20' });
+      expect(onValueChange).toHaveBeenLastCalledWith({
+        from: '2026-11-12',
+        to: '2026-11-20',
+      });
       await userEvent.click(day('2026-11-25'));
-      expect(onValueChange).toHaveBeenLastCalledWith({ from: '2026-11-25', to: null });
+      expect(onValueChange).toHaveBeenLastCalledWith({
+        from: '2026-11-25',
+        to: null,
+      });
     });
 
     it('draws a backwards controlled value in order', () => {
-      renderWithLocale(
-        <Calendar mode="range" value={{ from: '2026-11-14', to: '2026-11-10' }} />,
-      );
+      renderWithLocale(<Calendar mode="range" value={{ from: '2026-11-14', to: '2026-11-10' }} />);
       expect(day('2026-11-10')).toHaveAttribute('data-range-start');
       expect(day('2026-11-14')).toHaveAttribute('data-range-end');
     });
@@ -287,7 +328,9 @@ describe('Calendar', () => {
 
     it('selects the focused day with Enter and Space', async () => {
       const onValueChange = vi.fn();
-      renderWithLocale(<Calendar defaultMonth="2026-11-01" value="2026-11-18" onValueChange={onValueChange} />);
+      renderWithLocale(
+        <Calendar defaultMonth="2026-11-01" value="2026-11-18" onValueChange={onValueChange} />,
+      );
       day('2026-11-18').focus();
       await userEvent.keyboard('{ArrowRight}{Enter}');
       expect(onValueChange).toHaveBeenLastCalledWith('2026-11-19');
@@ -298,7 +341,9 @@ describe('Calendar', () => {
 
   describe('Arabic / RTL', () => {
     it('uses Arabic month and weekday names with Saturday first', () => {
-      renderWithLocale(<Calendar defaultMonth="2026-11-01" />, { locale: 'ar' });
+      renderWithLocale(<Calendar defaultMonth="2026-11-01" />, {
+        locale: 'ar',
+      });
       expect(screen.getByRole('grid', { name: 'تشرين الثاني 2026' })).toBeInTheDocument();
       const headers = screen.getAllByRole('columnheader');
       expect(headers[0]).toHaveAttribute('aria-label', 'السبت');
@@ -307,7 +352,9 @@ describe('Calendar', () => {
     });
 
     it('renders Latin digits by default and Arabic-Indic digits on request', () => {
-      const { unmount } = renderWithLocale(<Calendar defaultMonth="2026-11-01" />, { locale: 'ar' });
+      const { unmount } = renderWithLocale(<Calendar defaultMonth="2026-11-01" />, {
+        locale: 'ar',
+      });
       const grid = screen.getByRole('grid');
       expect(grid.textContent).toContain('30');
       expect(ARABIC_INDIC.test(document.body.textContent ?? '')).toBe(false);
@@ -318,7 +365,9 @@ describe('Calendar', () => {
     });
 
     it('localises the month buttons and mirrors their chevrons', () => {
-      renderWithLocale(<Calendar defaultMonth="2026-11-01" />, { locale: 'ar' });
+      renderWithLocale(<Calendar defaultMonth="2026-11-01" />, {
+        locale: 'ar',
+      });
       const previous = screen.getByRole('button', { name: 'الشهر السابق' });
       const next = screen.getByRole('button', { name: 'الشهر التالي' });
       expect(previous.querySelector('svg')).toHaveClass('rtl:-scale-x-100');
@@ -327,7 +376,10 @@ describe('Calendar', () => {
 
     it('lets labels be overridden', () => {
       renderWithLocale(
-        <Calendar defaultMonth="2026-11-01" labels={{ nextMonth: 'Later', previousMonth: 'Earlier' }} />,
+        <Calendar
+          defaultMonth="2026-11-01"
+          labels={{ nextMonth: 'Later', previousMonth: 'Earlier' }}
+        />,
       );
       expect(screen.getByRole('button', { name: 'Later' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Earlier' })).toBeInTheDocument();
@@ -336,7 +388,9 @@ describe('Calendar', () => {
     it('mirrors the horizontal arrow keys', async () => {
       renderWithLocale(<Calendar defaultMonth="2026-11-01" value="2026-11-18" />, { locale: 'ar' });
       const focusDay = (date: number) =>
-        screen.getByRole('button', { name: new RegExp(`${date} تشرين الثاني 2026`) });
+        screen.getByRole('button', {
+          name: new RegExp(`${date} تشرين الثاني 2026`),
+        });
       focusDay(18).focus();
       await userEvent.keyboard('{ArrowLeft}');
       expect(focusDay(19)).toHaveFocus(); // visually left = later day in RTL
@@ -346,7 +400,9 @@ describe('Calendar', () => {
 
     it('selects with Arabic labels and an ISO value', async () => {
       const onValueChange = vi.fn();
-      renderWithLocale(<Calendar defaultMonth="2026-11-01" onValueChange={onValueChange} />, { locale: 'ar' });
+      renderWithLocale(<Calendar defaultMonth="2026-11-01" onValueChange={onValueChange} />, {
+        locale: 'ar',
+      });
       await userEvent.click(screen.getByRole('button', { name: /18 تشرين الثاني 2026/ }));
       expect(onValueChange).toHaveBeenCalledWith('2026-11-18');
     });
@@ -358,11 +414,18 @@ describe('Calendar', () => {
   });
 
   it('has no axe violations (single, range, Arabic)', async () => {
-    const { container, unmount } = renderWithLocale(<Calendar defaultMonth="2026-11-01" value="2026-11-18" />);
+    const { container, unmount } = renderWithLocale(
+      <Calendar defaultMonth="2026-11-01" value="2026-11-18" />,
+    );
     await expectNoA11yViolations(container);
     unmount();
     const range = renderWithLocale(
-      <Calendar mode="range" numberOfMonths={2} defaultMonth="2026-11-01" value={{ from: '2026-11-10', to: '2026-11-14' }} />,
+      <Calendar
+        mode="range"
+        numberOfMonths={2}
+        defaultMonth="2026-11-01"
+        value={{ from: '2026-11-10', to: '2026-11-14' }}
+      />,
       { locale: 'ar' },
     );
     await expectNoA11yViolations(range.container);

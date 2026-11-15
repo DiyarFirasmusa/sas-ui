@@ -32,7 +32,11 @@ const tree: TreeNode[] = [
       { id: 'hr', label: 'Human resources' },
     ],
   },
-  { id: 'br', label: 'Branch', children: [{ id: 'br-1', label: 'Branch office' }] },
+  {
+    id: 'br',
+    label: 'Branch',
+    children: [{ id: 'br-1', label: 'Branch office' }],
+  },
   { id: 'solo', label: 'Solo' },
 ];
 
@@ -61,7 +65,14 @@ describe('flattenTree', () => {
     const rows = flattenTree(tree, new Set(['hq']));
     expect(rows.map((row) => row.node.id)).toEqual(['hq', 'fin', 'hr', 'br', 'solo']);
     const finance = rows.find((row) => row.node.id === 'fin');
-    expect(finance).toMatchObject({ depth: 1, parentId: 'hq', position: 1, setSize: 2, isBranch: true, expanded: false });
+    expect(finance).toMatchObject({
+      depth: 1,
+      parentId: 'hq',
+      position: 1,
+      setSize: 2,
+      isBranch: true,
+      expanded: false,
+    });
   });
 
   it('lists every node with "all", at any depth', () => {
@@ -80,7 +91,10 @@ describe('flattenTree', () => {
 
   it('ignores expansion of leaves and does not descend into lazy nodes without children', () => {
     const rows = flattenTree(
-      [{ id: 'lazy', label: 'Lazy', hasChildren: true }, { id: 'leaf', label: 'Leaf' }],
+      [
+        { id: 'lazy', label: 'Lazy', hasChildren: true },
+        { id: 'leaf', label: 'Leaf' },
+      ],
       new Set(['lazy', 'leaf']),
     );
     expect(rows.map((row) => [row.node.id, row.expanded])).toEqual([
@@ -167,7 +181,11 @@ describe('filterTree', () => {
 
   it('matches Arabic regardless of spelling variant', () => {
     const arabic: TreeNode[] = [
-      { id: 'a', label: 'الإدارة العامة', children: [{ id: 'b', label: 'قسم المالية' }] },
+      {
+        id: 'a',
+        label: 'الإدارة العامة',
+        children: [{ id: 'b', label: 'قسم المالية' }],
+      },
     ];
     expect(ids(filterTree(arabic, 'الاداره').nodes)).toEqual(['a']);
     expect(ids(filterTree(arabic, 'ماليه').nodes)).toEqual(['a', 'b']);
@@ -183,7 +201,11 @@ describe('attachChildren', () => {
   it('attaches loaded children at any level without mutating the input', () => {
     const lazy: TreeNode[] = [
       { id: 'a', label: 'A', hasChildren: true },
-      { id: 'b', label: 'B', children: [{ id: 'c', label: 'C', hasChildren: true }] },
+      {
+        id: 'b',
+        label: 'B',
+        children: [{ id: 'c', label: 'C', hasChildren: true }],
+      },
     ];
     const result = attachChildren(lazy, {
       a: [{ id: 'a1', label: 'A1' }],
@@ -205,7 +227,13 @@ describe('normalizeChecked', () => {
 
   it('checks a branch when all of its children are checked', () => {
     expect([...normalizeChecked(tree, ['ap', 'ar'])].sort()).toEqual(['ap', 'ar', 'fin']);
-    expect([...normalizeChecked(tree, ['ap', 'ar', 'hr'])].sort()).toEqual(['ap', 'ar', 'fin', 'hq', 'hr']);
+    expect([...normalizeChecked(tree, ['ap', 'ar', 'hr'])].sort()).toEqual([
+      'ap',
+      'ar',
+      'fin',
+      'hq',
+      'hr',
+    ]);
   });
 
   it('drops a checked branch whose children are not all checked', () => {
@@ -335,7 +363,14 @@ describe('collapseChecked', () => {
   it('round-trips with normalizeChecked', () => {
     const collapsed = collapseChecked(tree, ['hq', 'solo']);
     expect(collapsed).toEqual(['hq', 'solo']);
-    expect([...normalizeChecked(tree, collapsed)].sort()).toEqual(['ap', 'ar', 'fin', 'hq', 'hr', 'solo']);
+    expect([...normalizeChecked(tree, collapsed)].sort()).toEqual([
+      'ap',
+      'ar',
+      'fin',
+      'hq',
+      'hr',
+      'solo',
+    ]);
   });
 });
 

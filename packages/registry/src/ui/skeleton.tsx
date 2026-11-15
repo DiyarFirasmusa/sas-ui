@@ -72,14 +72,16 @@ interface SkeletonTableProps extends SkeletonGroupProps {
 /** Table placeholder: a header row plus `rows` body rows of `columns` cells. */
 function SkeletonTable({ rows = 5, columns = 4, className, ...props }: SkeletonTableProps) {
   const cells = Array.from({ length: Math.max(1, columns) }, (_, index) => index);
-  const grid = { gridTemplateColumns: `repeat(${cells.length}, minmax(0, 1fr))` };
+  const grid = {
+    gridTemplateColumns: `repeat(${cells.length}, minmax(0, 1fr))`,
+  };
   return (
     <SkeletonGroup
       data-slot="skeleton-table"
       className={cn('flex flex-col overflow-hidden rounded-xl border border-stroke', className)}
       {...props}
     >
-      <div className="grid gap-row border-b border-stroke bg-surface-dim/50 p-row" style={grid}>
+      <div className="gap-row border-stroke bg-surface-dim/50 p-row grid border-b" style={grid}>
         {cells.map((cell) => (
           <Skeleton key={cell} className="h-3 w-2/3" />
         ))}
@@ -87,7 +89,7 @@ function SkeletonTable({ rows = 5, columns = 4, className, ...props }: SkeletonT
       {Array.from({ length: Math.max(1, rows) }, (_, row) => (
         <div
           key={row}
-          className="grid gap-row border-b border-stroke p-row last:border-b-0"
+          className="gap-row border-stroke p-row grid border-b last:border-b-0"
           style={grid}
         >
           {cells.map((cell) => (

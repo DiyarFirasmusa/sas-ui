@@ -1,0 +1,8 @@
+{
+  "name": "app-shell",
+  "type": "ui",
+  "category": "layout",
+  "title": "App shell",
+  "description": "Application frame: collapsible sidebar at the inline start, a topbar with a menu button, a main region with skip link, and a drawer on mobile.",
+  "files": ["ui/app-shell.tsx", "ui/topbar.tsx"]
+}

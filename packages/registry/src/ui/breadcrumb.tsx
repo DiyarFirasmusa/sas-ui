@@ -46,11 +46,7 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<'li'>) {
 }
 
 /** A link to an ancestor page. Use `render` to hand it to your router's link. */
-function BreadcrumbLink({
-  className,
-  render,
-  ...props
-}: useRender.ComponentProps<'a'>) {
+function BreadcrumbLink({ className, render, ...props }: useRender.ComponentProps<'a'>) {
   return useRender({
     defaultTagName: 'a',
     render,
@@ -119,7 +115,10 @@ function BreadcrumbEllipsis({ items, label }: BreadcrumbEllipsisProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {items.map((item) => (
-          <DropdownMenuItem key={`${item.label}-${item.href ?? ''}`} render={<a href={item.href} />}>
+          <DropdownMenuItem
+            key={`${item.label}-${item.href ?? ''}`}
+            render={<a href={item.href} />}
+          >
             {item.label}
           </DropdownMenuItem>
         ))}
@@ -168,7 +167,9 @@ function toEntries(
   return [
     ...items.slice(0, before).map(entry),
     { kind: 'collapsed', items: items.slice(before, before + hidden) },
-    ...items.slice(items.length - after).map((item, offset) => entry(item, items.length - after + offset)),
+    ...items
+      .slice(items.length - after)
+      .map((item, offset) => entry(item, items.length - after + offset)),
   ];
 }
 

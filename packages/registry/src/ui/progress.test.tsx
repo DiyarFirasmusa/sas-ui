@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Progress } from '@/components/ui/progress';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('Progress', () => {
   it('exposes a named progressbar with its value', () => {
@@ -15,7 +15,8 @@ describe('Progress', () => {
 
   it('sizes the indicator from the value and clamps to max', () => {
     const { container, rerender } = render(<Progress value={30} label="x" />);
-    const indicator = () => container.querySelector<HTMLElement>('[data-slot="progress-indicator"]');
+    const indicator = () =>
+      container.querySelector<HTMLElement>('[data-slot="progress-indicator"]');
     expect(indicator()?.style.width).toBe('30%');
     rerender(<Progress value={250} label="x" />);
     expect(indicator()?.style.width).toBe('100%');
@@ -28,7 +29,10 @@ describe('Progress', () => {
     expect(bar).not.toHaveAttribute('aria-valuenow');
     expect(screen.queryByText(/%/)).not.toBeInTheDocument();
     const indicator = container.querySelector('[data-slot="progress-indicator"]');
-    expect(indicator).toHaveClass('data-[indeterminate]:animate-pulse', 'motion-reduce:data-[indeterminate]:animate-none');
+    expect(indicator).toHaveClass(
+      'data-[indeterminate]:animate-pulse',
+      'motion-reduce:data-[indeterminate]:animate-none',
+    );
   });
 
   it.each([
@@ -52,9 +56,14 @@ describe('Progress', () => {
   });
 
   it('keeps Latin digits in Arabic', () => {
-    renderWithLocale(<Progress value={45} label="رفع الملف" />, { locale: 'ar' });
+    renderWithLocale(<Progress value={45} label="رفع الملف" />, {
+      locale: 'ar',
+    });
     expect(screen.getByText('45%')).toHaveAttribute('dir', 'ltr');
-    expect(screen.getByRole('progressbar', { name: 'رفع الملف' })).toHaveAttribute('aria-valuetext', '45%');
+    expect(screen.getByRole('progressbar', { name: 'رفع الملف' })).toHaveAttribute(
+      'aria-valuetext',
+      '45%',
+    );
   });
 
   it('has no axe violations', async () => {

@@ -34,12 +34,7 @@ function DataBadge({ value, statusMap, emptyLabel = '—', ...props }: DataBadge
   // hasOwn: a backend value such as "constructor" must not resolve to Object.prototype.
   const status = Object.hasOwn(statusMap, key) ? statusMap[key] : undefined;
   return (
-    <Badge
-      data-slot="data-badge"
-      data-value={key}
-      tone={status?.tone ?? 'neutral'}
-      {...props}
-    >
+    <Badge data-slot="data-badge" data-value={key} tone={status?.tone ?? 'neutral'} {...props}>
       {status?.label ?? key}
     </Badge>
   );

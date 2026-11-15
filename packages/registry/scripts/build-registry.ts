@@ -15,9 +15,7 @@ const packageJson: {
   version: string;
   dependencies: Record<string, string>;
   devDependencies: Record<string, string>;
-} = JSON.parse(
-  readFileSync(join(root, 'package.json'), 'utf8'),
-);
+} = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 
 const items = buildItems(readManifests(), packageJson);
 rmSync(out, { recursive: true, force: true });
@@ -32,5 +30,7 @@ const index = buildIndex(
   PRESETS.map(({ name, label, description }) => ({ name, label, description })),
 );
 writeFileSync(join(out, 'index.json'), `${JSON.stringify(index, null, 2)}\n`);
-cpSync(join(root, '..', 'tokens', 'css'), join(out, 'css'), { recursive: true });
+cpSync(join(root, '..', 'tokens', 'css'), join(out, 'css'), {
+  recursive: true,
+});
 console.log(`registry: ${items.length} items, ${PRESETS.length} presets → registry-out/`);

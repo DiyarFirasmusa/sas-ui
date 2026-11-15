@@ -100,10 +100,7 @@ function ComboboxContent({
             'motion-reduce:transition-none',
           )}
         >
-          <div
-            onScroll={handleScroll}
-            className="max-h-72 overflow-y-auto overscroll-contain p-1"
-          >
+          <div onScroll={handleScroll} className="max-h-72 overflow-y-auto overscroll-contain p-1">
             <ComboboxPrimitive.List>
               {(option: ComboboxOption) => (
                 <ComboboxPrimitive.Item
@@ -117,7 +114,7 @@ function ComboboxContent({
                   )}
                 >
                   <ComboboxPrimitive.ItemIndicator className="absolute start-2 flex items-center">
-                    <CheckIcon className="size-4 text-primary-text" />
+                    <CheckIcon className="text-primary-text size-4" />
                   </ComboboxPrimitive.ItemIndicator>
                   <span className="truncate">{option.label}</span>
                 </ComboboxPrimitive.Item>
@@ -138,9 +135,7 @@ function ComboboxContent({
                 <div className={cn(rowClasses, 'text-text-muted')}>{labels.empty}</div>
               ) : null}
             </ComboboxPrimitive.Empty>
-            {error && onRetry ? (
-              <ListButton onClick={onRetry}>{labels.retry}</ListButton>
-            ) : null}
+            {error && onRetry ? <ListButton onClick={onRetry}>{labels.retry}</ListButton> : null}
             {hasMore && onLoadMore && !loading && !error ? (
               <ListButton onClick={onLoadMore}>{labels.loadMore}</ListButton>
             ) : null}
@@ -184,7 +179,8 @@ const comboboxGroupClasses = cn(
 );
 
 interface ComboboxProps
-  extends ComboboxAsyncProps,
+  extends
+    ComboboxAsyncProps,
     Omit<
       ComboboxPrimitive.Root.Props<ComboboxOption, false>,
       | 'items'
@@ -317,7 +313,7 @@ function Combobox({
             aria-invalid={ariaInvalid}
             dir={hasText || selected ? 'auto' : undefined}
             data-slot="combobox-input"
-            className="h-full min-w-0 flex-1 bg-transparent text-b1 text-text-primary outline-none placeholder:text-text-muted disabled:cursor-not-allowed"
+            className="text-b1 text-text-primary placeholder:text-text-muted h-full min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
           />
           {clearable ? (
             <ComboboxPrimitive.Clear

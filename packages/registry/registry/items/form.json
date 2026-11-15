@@ -1,0 +1,8 @@
+{
+  "name": "form",
+  "type": "ui",
+  "category": "form",
+  "title": "Form",
+  "description": "react-hook-form + zod 4 helpers: Form, FormField (renders Field with its error) and useZodForm.",
+  "files": ["ui/form.tsx"]
+}

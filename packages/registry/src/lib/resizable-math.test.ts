@@ -13,7 +13,9 @@ const sum = (sizes: number[]) => sizes.reduce((total, size) => total + size, 0);
 
 describe('initialSizes', () => {
   it('splits evenly when nothing is specified', () => {
-    expect(initialSizes([undefined, undefined, undefined, undefined], [open, open, open, open])).toEqual([25, 25, 25, 25]);
+    expect(
+      initialSizes([undefined, undefined, undefined, undefined], [open, open, open, open]),
+    ).toEqual([25, 25, 25, 25]);
   });
 
   it('gives unspecified panels what the others leave', () => {
@@ -28,7 +30,10 @@ describe('initialSizes', () => {
   it('clamps to the limits and hands the difference to panels with room', () => {
     const sizes = initialSizes(
       [80, 20],
-      [{ minSize: 10, maxSize: 60 }, { minSize: 10, maxSize: 100 }],
+      [
+        { minSize: 10, maxSize: 60 },
+        { minSize: 10, maxSize: 100 },
+      ],
     );
     expect(sizes).toEqual([60, 40]);
     expect(sum(sizes)).toBeCloseTo(100);
@@ -84,8 +89,12 @@ describe('resizePanels', () => {
   });
 
   it('snaps to the limit for infinite deltas', () => {
-    expect(resizePanels([40, 40, 20], 0, Number.NEGATIVE_INFINITY, constraints)).toEqual([20, 60, 20]);
-    expect(resizePanels([40, 40, 20], 0, Number.POSITIVE_INFINITY, constraints)).toEqual([70, 10, 20]);
+    expect(resizePanels([40, 40, 20], 0, Number.NEGATIVE_INFINITY, constraints)).toEqual([
+      20, 60, 20,
+    ]);
+    expect(resizePanels([40, 40, 20], 0, Number.POSITIVE_INFINITY, constraints)).toEqual([
+      70, 10, 20,
+    ]);
   });
 
   it('preserves the total and returns the same array when nothing moves', () => {
@@ -99,7 +108,10 @@ describe('resizePanels', () => {
 
 describe('resizeRange', () => {
   it('reports the reachable span for aria-valuemin/max', () => {
-    const constraints: PanelConstraints[] = [{ minSize: 20, maxSize: 70 }, { minSize: 10, maxSize: 60 }];
+    const constraints: PanelConstraints[] = [
+      { minSize: 20, maxSize: 70 },
+      { minSize: 10, maxSize: 60 },
+    ];
     expect(resizeRange([40, 60], 0, constraints)).toEqual({ min: 40, max: 70 });
   });
 

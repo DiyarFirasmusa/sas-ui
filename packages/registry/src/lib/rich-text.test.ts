@@ -10,19 +10,29 @@ import {
 } from '@/lib/rich-text';
 
 describe('isRichTextEmpty', () => {
-  it.each([undefined, null, '', '<p></p>', '<p> </p>', '<p><br></p>', '<p>&nbsp;</p>', '<p></p><p></p>'])(
-    'treats %j as empty',
-    (value) => {
-      expect(isRichTextEmpty(value)).toBe(true);
-    },
-  );
+  it.each([
+    undefined,
+    null,
+    '',
+    '<p></p>',
+    '<p> </p>',
+    '<p><br></p>',
+    '<p>&nbsp;</p>',
+    '<p></p><p></p>',
+  ])('treats %j as empty', (value) => {
+    expect(isRichTextEmpty(value)).toBe(true);
+  });
 
-  it.each(['<p>a</p>', '<h1>Title</h1>', '<p>مرحبا</p>', '<hr>', '<img src="x">', '<table></table>'])(
-    'treats %j as content',
-    (value) => {
-      expect(isRichTextEmpty(value)).toBe(false);
-    },
-  );
+  it.each([
+    '<p>a</p>',
+    '<h1>Title</h1>',
+    '<p>مرحبا</p>',
+    '<hr>',
+    '<img src="x">',
+    '<table></table>',
+  ])('treats %j as content', (value) => {
+    expect(isRichTextEmpty(value)).toBe(false);
+  });
 });
 
 describe('normalizeRichText', () => {
@@ -33,7 +43,9 @@ describe('normalizeRichText', () => {
   });
 
   it('removes blank paragraphs from the ends but keeps spacing inside', () => {
-    expect(normalizeRichText('<p></p><p>a</p><p></p><p>b</p><p> </p>')).toBe('<p>a</p><p></p><p>b</p>');
+    expect(normalizeRichText('<p></p><p>a</p><p></p><p>b</p><p> </p>')).toBe(
+      '<p>a</p><p></p><p>b</p>',
+    );
   });
 
   it('leaves normal content untouched', () => {
@@ -42,7 +54,9 @@ describe('normalizeRichText', () => {
   });
 
   it('keeps a paragraph with attributes that has text', () => {
-    expect(normalizeRichText('<p style="text-align: center">x</p>')).toBe('<p style="text-align: center">x</p>');
+    expect(normalizeRichText('<p style="text-align: center">x</p>')).toBe(
+      '<p style="text-align: center">x</p>',
+    );
   });
 });
 
@@ -84,7 +98,8 @@ describe('normalizeLinkUrl', () => {
 
 describe('sanitizeRichText', () => {
   it('keeps editor formatting', () => {
-    const html = '<h2>Title</h2><p style="text-align: center"><strong>a</strong> <em>b</em> <u>c</u></p><ul><li>x</li></ul>';
+    const html =
+      '<h2>Title</h2><p style="text-align: center"><strong>a</strong> <em>b</em> <u>c</u></p><ul><li>x</li></ul>';
     expect(sanitizeRichText(html)).toBe(html);
   });
 
@@ -96,7 +111,9 @@ describe('sanitizeRichText', () => {
   });
 
   it('only keeps text-align from inline styles', () => {
-    expect(sanitizeRichText('<p style="color:red; text-align: right">a</p>')).toBe('<p style="text-align: right">a</p>');
+    expect(sanitizeRichText('<p style="color:red; text-align: right">a</p>')).toBe(
+      '<p style="text-align: right">a</p>',
+    );
     expect(sanitizeRichText('<p style="color:red">a</p>')).toBe('<p>a</p>');
   });
 

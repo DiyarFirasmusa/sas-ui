@@ -111,7 +111,9 @@ describe('seriesConfigFor', () => {
 
   it('reads the category name from the item or its row', () => {
     expect(seriesConfigFor(config, { name: 'mobile' }, 'name')).toEqual(config.mobile);
-    expect(seriesConfigFor(config, { payload: { browser: 'desktop' } }, 'browser')).toEqual(config.desktop);
+    expect(seriesConfigFor(config, { payload: { browser: 'desktop' } }, 'browser')).toEqual(
+      config.desktop,
+    );
   });
 
   it('returns undefined for unknown keys and non-objects', () => {

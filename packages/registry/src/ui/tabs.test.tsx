@@ -2,10 +2,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Tabs, TabsContent, TabsList, TabsTrigger, type TabsProps } from '@/components/ui/tabs';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
-function Example({ variant, onValueChange }: { variant?: TabsProps['variant']; onValueChange?: (value: unknown) => void }) {
+function Example({
+  variant,
+  onValueChange,
+}: {
+  variant?: TabsProps['variant'];
+  onValueChange?: (value: unknown) => void;
+}) {
   return (
     <Tabs defaultValue="account" variant={variant} onValueChange={onValueChange}>
       <TabsList aria-label="Settings">
@@ -58,6 +64,21 @@ describe('Tabs', () => {
     expect(screen.getByRole('tab', { name: 'Billing' })).toHaveFocus();
     await userEvent.keyboard('{ArrowRight}');
     expect(screen.getByRole('tab', { name: 'Account' })).toHaveFocus();
+  });
+
+  it('lets dir override the locale for keys and layout', async () => {
+    render(
+      <Tabs defaultValue="a" dir="rtl">
+        <TabsList aria-label="x">
+          <TabsTrigger value="a">A</TabsTrigger>
+          <TabsTrigger value="b">B</TabsTrigger>
+        </TabsList>
+      </Tabs>,
+    );
+    await userEvent.tab();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(screen.getByRole('tab', { name: 'B' })).toHaveFocus();
+    expect(screen.getByRole('tablist').parentElement).toHaveAttribute('dir', 'rtl');
   });
 
   it('does not select a disabled tab', async () => {

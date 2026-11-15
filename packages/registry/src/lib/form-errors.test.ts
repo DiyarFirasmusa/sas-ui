@@ -17,7 +17,10 @@ function recorder() {
 describe('applyServerErrors: field maps', () => {
   it('maps a list of messages per field', () => {
     const { setError, messages } = recorder();
-    const result = applyServerErrors(setError, { email: ['Already taken'], name: ['Required'] });
+    const result = applyServerErrors(setError, {
+      email: ['Already taken'],
+      name: ['Required'],
+    });
     expect(messages()).toEqual({ email: 'Already taken', name: 'Required' });
     expect(result).toEqual({ formMessage: null, fields: ['email', 'name'] });
   });
@@ -30,7 +33,9 @@ describe('applyServerErrors: field maps', () => {
 
   it('joins several messages for one field', () => {
     const { setError, messages } = recorder();
-    applyServerErrors(setError, { password: ['Too short.', 'Needs a digit.', 'Too short.'] });
+    applyServerErrors(setError, {
+      password: ['Too short.', 'Needs a digit.', 'Too short.'],
+    });
     expect(messages()).toEqual({ password: 'Too short. Needs a digit.' });
   });
 
@@ -55,7 +60,12 @@ describe('applyServerErrors: field maps', () => {
 
   it('ignores empty and non-text values', () => {
     const { setError, calls } = recorder();
-    const result = applyServerErrors(setError, { email: [], age: 12, ok: null, name: '  ' });
+    const result = applyServerErrors(setError, {
+      email: [],
+      age: 12,
+      ok: null,
+      name: '  ',
+    });
     expect(calls).toEqual([]);
     expect(result).toEqual({ formMessage: null, fields: [] });
   });
@@ -71,7 +81,10 @@ describe('applyServerErrors: errors list', () => {
         { field: 'name', message: 'Too short' },
       ],
     });
-    expect(messages()).toEqual({ email: 'Already taken', name: 'Required Too short' });
+    expect(messages()).toEqual({
+      email: 'Already taken',
+      name: 'Required Too short',
+    });
     expect(result.fields).toEqual(['email', 'name']);
   });
 
@@ -83,7 +96,10 @@ describe('applyServerErrors: errors list', () => {
         { name: 'phone', messages: ['Bad format', 'Too long'] },
       ],
     });
-    expect(messages()).toEqual({ 'address.city': 'Unknown', phone: 'Bad format Too long' });
+    expect(messages()).toEqual({
+      'address.city': 'Unknown',
+      phone: 'Bad format Too long',
+    });
   });
 
   it('treats entries without a field as form-level', () => {
@@ -92,7 +108,10 @@ describe('applyServerErrors: errors list', () => {
       errors: [{ message: 'Account locked' }, 'Try later', { field: 'email', message: 'Taken' }],
     });
     expect(result.formMessage).toBe('Account locked Try later');
-    expect(messages()).toEqual({ email: 'Taken', 'root.server': 'Account locked Try later' });
+    expect(messages()).toEqual({
+      email: 'Taken',
+      'root.server': 'Account locked Try later',
+    });
   });
 
   it('maps a Laravel-style envelope and still returns its message', () => {
@@ -105,7 +124,10 @@ describe('applyServerErrors: errors list', () => {
       email: 'Taken',
       'root.server': 'The given data was invalid.',
     });
-    expect(result).toEqual({ formMessage: 'The given data was invalid.', fields: ['email'] });
+    expect(result).toEqual({
+      formMessage: 'The given data was invalid.',
+      fields: ['email'],
+    });
   });
 
   it('accepts a bare array of errors', () => {
@@ -134,7 +156,11 @@ describe('applyServerErrors: form-level messages', () => {
 
   it('skips response metadata such as status codes', () => {
     const { setError, messages } = recorder();
-    const result = applyServerErrors(setError, { status: 'error', statusCode: 422, email: ['Taken'] });
+    const result = applyServerErrors(setError, {
+      status: 'error',
+      statusCode: 422,
+      email: ['Taken'],
+    });
     expect(messages()).toEqual({ email: 'Taken' });
     expect(result.formMessage).toBeNull();
   });
@@ -147,7 +173,11 @@ describe('applyServerErrors: form-level messages', () => {
 
   it('treats a declared field named like a message key as a field', () => {
     const { setError, messages } = recorder();
-    const result = applyServerErrors(setError, { message: 'Too long' }, { fieldNames: ['message'] });
+    const result = applyServerErrors(
+      setError,
+      { message: 'Too long' },
+      { fieldNames: ['message'] },
+    );
     expect(messages()).toEqual({ message: 'Too long' });
     expect(result.formMessage).toBeNull();
   });
@@ -161,17 +191,27 @@ describe('applyServerErrors: form-level messages', () => {
     expect(a.calls).toHaveLength(1);
 
     const b = recorder();
-    const withField = applyServerErrors(b.setError, { email: ['Taken'] }, { fallbackMessage: 'Try again' });
+    const withField = applyServerErrors(
+      b.setError,
+      { email: ['Taken'] },
+      { fallbackMessage: 'Try again' },
+    );
     expect(withField.formMessage).toBeNull();
 
     const c = recorder();
-    expect(applyServerErrors(c.setError, {})).toEqual({ formMessage: null, fields: [] });
+    expect(applyServerErrors(c.setError, {})).toEqual({
+      formMessage: null,
+      fields: [],
+    });
     expect(c.calls).toEqual([]);
   });
 
   it.each([undefined, 42, true, []])('does not fail on the payload %j', (payload) => {
     const { setError, calls } = recorder();
-    expect(applyServerErrors(setError, payload)).toEqual({ formMessage: null, fields: [] });
+    expect(applyServerErrors(setError, payload)).toEqual({
+      formMessage: null,
+      fields: [],
+    });
     expect(calls).toEqual([]);
   });
 });
@@ -201,7 +241,10 @@ describe('applyServerErrors: options', () => {
   it('focuses only the first field, unless focus is off', () => {
     const on = recorder();
     applyServerErrors(on.setError, { a: ['x'], b: ['y'] });
-    expect(on.calls.map(([, , options]) => options)).toEqual([{ shouldFocus: true }, { shouldFocus: false }]);
+    expect(on.calls.map(([, , options]) => options)).toEqual([
+      { shouldFocus: true },
+      { shouldFocus: false },
+    ]);
 
     const off = recorder();
     applyServerErrors(off.setError, { a: ['x'] }, { focus: false });

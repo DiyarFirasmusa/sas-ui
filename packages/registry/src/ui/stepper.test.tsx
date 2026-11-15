@@ -2,8 +2,8 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Stepper, type StepperStep } from '@/components/ui/stepper';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 const steps: StepperStep[] = [
   { label: 'Account', description: 'Your details' },
@@ -26,7 +26,9 @@ describe('Stepper', () => {
 
   it('marks only the current step with aria-current="step"', () => {
     render(<Stepper steps={steps} current={2} />);
-    const marked = screen.getAllByRole('listitem').filter((item) => item.hasAttribute('aria-current'));
+    const marked = screen
+      .getAllByRole('listitem')
+      .filter((item) => item.hasAttribute('aria-current'));
     expect(marked).toHaveLength(1);
     expect(marked[0]).toHaveAttribute('aria-current', 'step');
     expect(marked[0]).toHaveTextContent('Review');
@@ -41,7 +43,9 @@ describe('Stepper', () => {
   });
 
   it('shows an error step distinctly and keeps it announced', () => {
-    render(<Stepper steps={[{ label: 'Account' }, { label: 'Payment', error: true }]} current={1} />);
+    render(
+      <Stepper steps={[{ label: 'Account' }, { label: 'Payment', error: true }]} current={1} />,
+    );
     const items = screen.getAllByRole('listitem');
     expect(items[1]).toHaveAttribute('data-state', 'error');
     expect(items[1]).toHaveTextContent('has an error');
@@ -80,14 +84,21 @@ describe('Stepper', () => {
 
   it('supports the vertical orientation', () => {
     const { container } = render(<Stepper steps={steps} current={0} orientation="vertical" />);
-    expect(container.querySelector('[data-slot="stepper"]')).toHaveAttribute('data-orientation', 'vertical');
+    expect(container.querySelector('[data-slot="stepper"]')).toHaveAttribute(
+      'data-orientation',
+      'vertical',
+    );
     expect(container.querySelectorAll('[data-slot="stepper-connector"]')).toHaveLength(3);
   });
 
   it('draws completed connectors in the primary colour and none after the last step', () => {
     const { container } = render(<Stepper steps={steps} current={2} />);
     const connectors = [...container.querySelectorAll('[data-slot="stepper-connector"]')];
-    expect(connectors.map((connector) => connector.classList.contains('bg-primary'))).toEqual([true, true, false]);
+    expect(connectors.map((connector) => connector.classList.contains('bg-primary'))).toEqual([
+      true,
+      true,
+      false,
+    ]);
   });
 
   it('positions connectors with logical offsets, so they follow RTL', () => {

@@ -31,7 +31,10 @@ export function rememberOptions(
 }
 
 /** Looks a value up in the memory; an unknown value is shown by its raw text. */
-export function optionFor(memory: ReadonlyMap<string, ComboboxOption>, value: string): ComboboxOption {
+export function optionFor(
+  memory: ReadonlyMap<string, ComboboxOption>,
+  value: string,
+): ComboboxOption {
   return memory.get(value) ?? { value, label: value };
 }
 

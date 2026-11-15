@@ -11,7 +11,13 @@ describe('NumberInput', () => {
   it('steps with the buttons within min and max', async () => {
     const onValueChange = vi.fn();
     render(
-      <NumberInput aria-label="Qty" defaultValue={4} min={3} max={5} onValueChange={onValueChange} />,
+      <NumberInput
+        aria-label="Qty"
+        defaultValue={4}
+        min={3}
+        max={5}
+        onValueChange={onValueChange}
+      />,
     );
     const input = screen.getByRole('textbox', { name: 'Qty' });
     await userEvent.click(screen.getByRole('button', { name: 'Increase' }));
@@ -83,7 +89,9 @@ describe('NumberInput', () => {
   });
 
   it('shows Latin, left-to-right digits and Arabic stepper labels in Arabic', async () => {
-    renderWithLocale(<NumberInput aria-label="الكمية" defaultValue={1234} />, { locale: 'ar' });
+    renderWithLocale(<NumberInput aria-label="الكمية" defaultValue={1234} />, {
+      locale: 'ar',
+    });
     const input = screen.getByRole('textbox', { name: 'الكمية' });
     expect(input).toHaveValue('1,234');
     expect(input).toHaveAttribute('dir', 'ltr');

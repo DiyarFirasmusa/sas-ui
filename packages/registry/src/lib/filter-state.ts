@@ -100,7 +100,9 @@ export function sanitizeFilterValue(definition: FilterDefinition, raw: unknown):
       if (!Array.isArray(raw)) {
         return undefined;
       }
-      const values = [...new Set(raw.filter((item): item is string => typeof item === 'string' && item !== ''))];
+      const values = [
+        ...new Set(raw.filter((item): item is string => typeof item === 'string' && item !== '')),
+      ];
       return values.length > 0 ? values : undefined;
     }
     case 'boolean': {
@@ -152,7 +154,8 @@ export function countActiveFilters(
   definitions: readonly FilterDefinition[],
   values: FilterValues,
 ): number {
-  return definitions.filter((definition) => isFilterActive(definition, values[definition.key])).length;
+  return definitions.filter((definition) => isFilterActive(definition, values[definition.key]))
+    .length;
 }
 
 /**
@@ -282,18 +285,31 @@ export function getFilterChips(
         break;
       case 'select': {
         const option = definition.options.find((candidate) => candidate.value === clean);
-        chips.push({ ...base, id: definition.key, text: option?.label ?? String(clean) });
+        chips.push({
+          ...base,
+          id: definition.key,
+          text: option?.label ?? String(clean),
+        });
         break;
       }
       case 'multi-select': {
         for (const item of isStringArray(clean) ? clean : []) {
           const option = definition.options.find((candidate) => candidate.value === item);
-          chips.push({ ...base, id: `${definition.key}:${item}`, optionValue: item, text: option?.label ?? item });
+          chips.push({
+            ...base,
+            id: `${definition.key}:${item}`,
+            optionValue: item,
+            text: option?.label ?? item,
+          });
         }
         break;
       }
       case 'boolean':
-        chips.push({ ...base, id: definition.key, text: clean ? texts.yes : texts.no });
+        chips.push({
+          ...base,
+          id: definition.key,
+          text: clean ? texts.yes : texts.no,
+        });
         break;
       case 'number-range': {
         const range = isNumberRange(clean) ? clean : {};
@@ -310,7 +326,11 @@ export function getFilterChips(
       }
       case 'date-range': {
         const range = isDateRange(clean) ? clean : {};
-        chips.push({ ...base, id: definition.key, text: rangeText(texts, range.from, range.to) });
+        chips.push({
+          ...base,
+          id: definition.key,
+          text: rangeText(texts, range.from, range.to),
+        });
         break;
       }
     }
@@ -402,10 +422,16 @@ export function parseFilters(
         break;
       }
       case 'number-range':
-        raw = { min: params.get(`${definition.key}_min`), max: params.get(`${definition.key}_max`) };
+        raw = {
+          min: params.get(`${definition.key}_min`),
+          max: params.get(`${definition.key}_max`),
+        };
         break;
       case 'date-range':
-        raw = { from: params.get(`${definition.key}_from`), to: params.get(`${definition.key}_to`) };
+        raw = {
+          from: params.get(`${definition.key}_from`),
+          to: params.get(`${definition.key}_to`),
+        };
         break;
       default:
         raw = params.get(definition.key) ?? undefined;

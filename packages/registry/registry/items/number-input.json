@@ -4,7 +4,5 @@
   "category": "form",
   "title": "Number input",
   "description": "Number field with stepper buttons, min/max/step and Latin digits in every language.",
-  "files": [
-    "ui/number-input.tsx"
-  ]
+  "files": ["ui/number-input.tsx"]
 }

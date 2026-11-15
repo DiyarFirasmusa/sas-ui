@@ -8,8 +8,8 @@ import {
   AccordionTrigger,
   type AccordionProps,
 } from '@/components/ui/accordion';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Example(props: Partial<AccordionProps>) {
   return (
@@ -45,15 +45,27 @@ describe('Accordion', () => {
   it('closes the open item when another opens (single mode)', async () => {
     render(<Example defaultValue={['a']} />);
     await userEvent.click(screen.getByRole('button', { name: 'Returns' }));
-    expect(screen.getByRole('button', { name: 'Returns' })).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: 'Returns' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
+    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
   });
 
   it('keeps several items open with multiple', async () => {
     render(<Example multiple defaultValue={['a']} />);
     await userEvent.click(screen.getByRole('button', { name: 'Returns' }));
-    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByRole('button', { name: 'Returns' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
+    expect(screen.getByRole('button', { name: 'Returns' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
   });
 
   it('toggles with Enter and Space from the keyboard', async () => {
@@ -61,15 +73,24 @@ describe('Accordion', () => {
     await userEvent.tab();
     expect(screen.getByRole('button', { name: 'Shipping' })).toHaveFocus();
     await userEvent.keyboard('{Enter}');
-    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
     await userEvent.keyboard(' ');
-    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: 'Shipping' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
   });
 
   it('does not open a disabled item', async () => {
     render(<Example />);
     await userEvent.click(screen.getByRole('button', { name: 'Warranty' }));
-    expect(screen.getByRole('button', { name: 'Warranty' })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: 'Warranty' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
   });
 
   it('wires the chevron rotation and motion-safe height transition', () => {

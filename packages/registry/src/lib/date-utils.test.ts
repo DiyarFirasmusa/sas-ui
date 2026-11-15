@@ -32,6 +32,7 @@ import {
   startOfDay,
   startOfMonth,
   startOfWeek,
+  stepToMultiple,
   stepWithin,
   to12Hour,
   to24Hour,
@@ -61,7 +62,17 @@ describe('ISO parsing and formatting', () => {
   });
 
   it('rejects malformed and impossible dates', () => {
-    for (const bad of ['', '2026-1-1', '2026/01/01', '2026-02-30', '2026-13-01', '2026-00-10', '2025-02-29', 'abcd-ef-gh', '2026-11-16T10:00']) {
+    for (const bad of [
+      '',
+      '2026-1-1',
+      '2026/01/01',
+      '2026-02-30',
+      '2026-13-01',
+      '2026-00-10',
+      '2025-02-29',
+      'abcd-ef-gh',
+      '2026-11-16T10:00',
+    ]) {
       expect(parseISODate(bad), bad).toBeNull();
     }
     expect(parseISODate(null)).toBeNull();
@@ -173,7 +184,10 @@ describe('bounds and ranges', () => {
     expect(nextRange(started, d20)).toEqual({ from: d14, to: d20 });
     expect(nextRange(started, d10)).toEqual({ from: d10, to: d14 });
     expect(nextRange(started, d14)).toEqual({ from: d14, to: d14 });
-    expect(nextRange({ from: d10, to: d14 }, d20)).toEqual({ from: d20, to: null });
+    expect(nextRange({ from: d10, to: d14 }, d20)).toEqual({
+      from: d20,
+      to: null,
+    });
   });
 });
 
@@ -212,7 +226,9 @@ describe('getMonthGrid', () => {
     for (const weekStart of [0, 1, 6] as const) {
       const days = getMonthGrid(2024, 1, weekStart).flat();
       const inMonth = days.filter((day) => day.getMonth() === 1);
-      expect(inMonth.map((day) => day.getDate())).toEqual(Array.from({ length: 29 }, (_, i) => i + 1));
+      expect(inMonth.map((day) => day.getDate())).toEqual(
+        Array.from({ length: 29 }, (_, i) => i + 1),
+      );
       days.slice(1).forEach((day, index) => {
         expect(differenceInDays(days[index]!, day)).toBe(1);
       });
@@ -270,7 +286,9 @@ describe('locale and numerals', () => {
   it('formats ranges and collapses equal ends', () => {
     const from = createDate(2026, 10, 16);
     const to = createDate(2026, 10, 20);
-    expect(formatDateRange(from, to, { locale: 'en', dateStyle: 'medium' })).toMatch(/Nov 16\s*[–-]\s*20, 2026/);
+    expect(formatDateRange(from, to, { locale: 'en', dateStyle: 'medium' })).toMatch(
+      /Nov 16\s*[–-]\s*20, 2026/,
+    );
     expect(formatDateRange(from, from, { locale: 'en' })).toBe('November 16, 2026');
     expect(formatDateRange(from, null, { locale: 'en' })).toBe('November 16, 2026');
     expect(formatDateRange(to, from, { locale: 'en', dateStyle: 'medium' })).toBe(
@@ -284,7 +302,13 @@ describe('getWeekdays', () => {
   it('orders names from the week start, taken from Intl', () => {
     const en = getWeekdays(0, { locale: 'en' });
     expect(en.map((day) => day.long)).toEqual([
-      'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
     ]);
     expect(en[0]).toMatchObject({ index: 0, narrow: 'S' });
     const ar = getWeekdays(6, { locale: 'ar' });
@@ -335,8 +359,24 @@ describe('time helpers', () => {
     expect(stepWithin(5, -15, 0, 59)).toBe(50);
   });
 
+  it('steps minutes on a grid, wrapping at both ends', () => {
+    expect(stepToMultiple(0, 1, 1)).toBe(1);
+    expect(stepToMultiple(59, 1, 1)).toBe(0);
+    expect(stepToMultiple(0, -1, 1)).toBe(59);
+    expect(stepToMultiple(0, 1, 15)).toBe(15);
+    expect(stepToMultiple(45, 1, 15)).toBe(0);
+    expect(stepToMultiple(0, -1, 15)).toBe(45);
+    expect(stepToMultiple(7, 1, 15)).toBe(15);
+    expect(stepToMultiple(7, -1, 15)).toBe(0);
+    expect(stepToMultiple(20, -1, 15)).toBe(15);
+    expect(stepToMultiple(50, 1, 10)).toBe(0);
+  });
+
   it('reads AM/PM labels from Intl', () => {
-    expect(getDayPeriodLabels({ locale: 'en' })).toEqual({ am: 'AM', pm: 'PM' });
+    expect(getDayPeriodLabels({ locale: 'en' })).toEqual({
+      am: 'AM',
+      pm: 'PM',
+    });
     expect(getDayPeriodLabels({ locale: 'ar' })).toEqual({ am: 'ص', pm: 'م' });
   });
 });

@@ -1,0 +1,8 @@
+{
+  "name": "resizable-math",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Resizable math",
+  "description": "Pure size calculations behind the resizable panels.",
+  "files": ["lib/resizable-math.ts"]
+}

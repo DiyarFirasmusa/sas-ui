@@ -31,7 +31,8 @@ export const TYPE_DIRECTORY: Record<ItemType, string> = {
 };
 
 const KEBAB_FILE = /^[a-z0-9]+(-[a-z0-9]+)*\.(ts|tsx)$/;
-const IMPORT_PATTERN = /(?:import|export)\s[^'"]*?from\s+['"]([^'"]+)['"]|import\s+['"]([^'"]+)['"]/g;
+const IMPORT_PATTERN =
+  /(?:import|export)\s[^'"]*?from\s+['"]([^'"]+)['"]|import\s+['"]([^'"]+)['"]/g;
 
 export class RegistryError extends Error {}
 
@@ -53,7 +54,7 @@ export function parseManifest(raw: unknown, source: string): ItemManifest {
   if (!isRecord(raw)) {
     throw new RegistryError(`${source}: manifest must be an object`);
   }
-  const { name, type, category, title, description, files, tier } = raw;
+  const { name, type, category, title, description, files, tier, extraDevDependencies } = raw;
   if (typeof name !== 'string' || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name)) {
     throw new RegistryError(`${source}: "name" must be kebab-case`);
   }
@@ -71,7 +72,11 @@ export function parseManifest(raw: unknown, source: string): ItemManifest {
   if (typeof title !== 'string' || typeof description !== 'string') {
     throw new RegistryError(`${source}: "title" and "description" are required`);
   }
-  if (!Array.isArray(files) || files.length === 0 || !files.every((file) => typeof file === 'string')) {
+  if (
+    !Array.isArray(files) ||
+    files.length === 0 ||
+    !files.every((file) => typeof file === 'string')
+  ) {
     throw new RegistryError(`${source}: "files" must be a non-empty string array`);
   }
   return {
@@ -82,6 +87,9 @@ export function parseManifest(raw: unknown, source: string): ItemManifest {
     description,
     files: files.filter((file): file is string => typeof file === 'string'),
     tier: tier === 'extra' ? 'extra' : 'core',
+    extraDevDependencies: Array.isArray(extraDevDependencies)
+      ? extraDevDependencies.filter((entry): entry is string => typeof entry === 'string')
+      : [],
   };
 }
 
@@ -110,7 +118,12 @@ export function collectFiles(manifest: ItemManifest, srcDir = SRC_DIR): ItemFile
       throw new RegistryError(`${manifest.name}: ${path} does not exist`);
     }
     const type = typeOfPath(path);
-    files.push({ path, type, role: 'source', content: readFileSync(absolute, 'utf8') });
+    files.push({
+      path,
+      type,
+      role: 'source',
+      content: readFileSync(absolute, 'utf8'),
+    });
     const testPath = testPathFor(path);
     if (existsSync(join(srcDir, testPath))) {
       files.push({
@@ -164,7 +177,9 @@ export function buildItems(
     for (const file of files.filter((entry) => entry.role === 'source')) {
       const key = file.path.replace(/\.(ts|tsx)$/, '');
       if (owners.has(key)) {
-        throw new RegistryError(`${file.path} is claimed by both "${owners.get(key)}" and "${manifest.name}"`);
+        throw new RegistryError(
+          `${file.path} is claimed by both "${owners.get(key)}" and "${manifest.name}"`,
+        );
       }
       owners.set(key, manifest.name);
     }
@@ -179,35 +194,56 @@ export function buildItems(
     const dependencies: Record<string, string> = {};
     const devDependencies: Record<string, string> = {};
     const registryDependencies = new Set<string>();
-    for (const file of files.filter((entry) => entry.role === 'source')) {
+    const testRegistryDependencies = new Set<string>();
+    for (const file of files) {
+      const isTest = file.role === 'test';
       for (const specifier of importsOf(file.content)) {
         if (specifier.startsWith('.')) {
-          throw new RegistryError(`${file.path}: use the @/ aliases, not relative import "${specifier}"`);
+          throw new RegistryError(
+            `${file.path}: use the @/ aliases, not relative import "${specifier}"`,
+          );
         }
         const target = aliasTarget(specifier);
         if (target !== undefined) {
           const owner = owners.get(target);
           if (!owner) {
-            throw new RegistryError(`${file.path}: imports "${specifier}" which no registry item provides`);
+            throw new RegistryError(
+              `${file.path}: imports "${specifier}" which no registry item provides`,
+            );
           }
           if (owner !== manifest.name) {
-            registryDependencies.add(owner);
+            (isTest ? testRegistryDependencies : registryDependencies).add(owner);
           }
         } else if (!specifier.startsWith('@/') && !specifier.startsWith('node:')) {
           const name = packageName(specifier);
           if (PEER_PACKAGES.has(name)) {
             continue;
           }
-          const isDevOnly = manifest.type === 'test';
+          const isDevOnly = manifest.type === 'test' || isTest;
           const version = isDevOnly
             ? (packageJson.devDependencies?.[name] ?? packageJson.dependencies?.[name])
             : packageJson.dependencies?.[name];
           if (!version) {
-            throw new RegistryError(`${file.path}: imports "${name}" which is not in @sas-ui/registry dependencies`);
+            throw new RegistryError(
+              `${file.path}: imports "${name}" which is not in @sas-ui/registry dependencies`,
+            );
           }
           (isDevOnly ? devDependencies : dependencies)[name] = version;
         }
       }
+    }
+    for (const owner of registryDependencies) {
+      testRegistryDependencies.delete(owner);
+    }
+    testRegistryDependencies.delete('test-utils');
+    for (const extra of manifest.extraDevDependencies ?? []) {
+      const version = packageJson.devDependencies?.[extra] ?? packageJson.dependencies?.[extra];
+      if (!version) {
+        throw new RegistryError(
+          `${manifest.name}: extraDevDependencies "${extra}" is not in @sas-ui/registry package.json`,
+        );
+      }
+      devDependencies[extra] = version;
     }
     return {
       name: manifest.name,
@@ -219,6 +255,7 @@ export function buildItems(
       dependencies,
       devDependencies,
       registryDependencies: [...registryDependencies].sort(),
+      testRegistryDependencies: [...testRegistryDependencies].sort(),
       files,
     };
   });
@@ -232,7 +269,10 @@ export function buildIndex(
   return {
     version,
     presets,
-    items: items.map(({ files, ...entry }) => ({ ...entry, fileCount: files.length })),
+    items: items.map(({ files, ...entry }) => ({
+      ...entry,
+      fileCount: files.length,
+    })),
   };
 }
 

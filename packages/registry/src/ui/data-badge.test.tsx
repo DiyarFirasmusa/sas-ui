@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { DataBadge, type DataBadgeStatus } from '@/components/ui/data-badge';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 const statusMap: Record<string, DataBadgeStatus> = {
   PAID: { tone: 'green', label: 'Paid' },

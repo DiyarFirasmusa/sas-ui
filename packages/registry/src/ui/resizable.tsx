@@ -125,7 +125,10 @@ function ResizablePanelGroup({
       panelIndex += 1;
     }
     return (
-      <IndexContext key={isValidElement(node) && node.key !== null ? node.key : position} value={Math.max(panelIndex, 0)}>
+      <IndexContext
+        key={isValidElement(node) && node.key !== null ? node.key : position}
+        value={Math.max(panelIndex, 0)}
+      >
         {node}
       </IndexContext>
     );
@@ -295,7 +298,7 @@ function ResizableHandle({ withHandle = false, label, className, ...props }: Res
       {withHandle ? (
         <span
           aria-hidden="true"
-          className="z-10 flex h-5 w-3.5 items-center justify-center rounded-sm border border-stroke bg-surface text-text-muted"
+          className="border-stroke bg-surface text-text-muted z-10 flex h-5 w-3.5 items-center justify-center rounded-sm border"
         >
           <GripVerticalIcon className={cn('size-3', !horizontal && 'rotate-90')} />
         </span>

@@ -8,7 +8,11 @@ import {
   type FocusEventHandler,
   type Ref,
 } from 'react';
-import { Calendar, type CalendarCommonProps, type CalendarLabelKey } from '@/components/ui/calendar';
+import {
+  Calendar,
+  type CalendarCommonProps,
+  type CalendarLabelKey,
+} from '@/components/ui/calendar';
 import { CalendarIcon, CloseIcon } from '@/components/ui/icons';
 import { controlClasses } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -17,8 +21,16 @@ import { useLabels, useLocale, type Messages } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 
 const messages: Messages<'placeholder' | 'clear' | 'chooseDate'> = {
-  en: { placeholder: 'Select a date', clear: 'Clear date', chooseDate: 'Choose a date' },
-  ar: { placeholder: 'اختر تاريخاً', clear: 'مسح التاريخ', chooseDate: 'اختيار التاريخ' },
+  en: {
+    placeholder: 'Select a date',
+    clear: 'Clear date',
+    chooseDate: 'Choose a date',
+  },
+  ar: {
+    placeholder: 'اختر تاريخاً',
+    clear: 'مسح التاريخ',
+    chooseDate: 'اختيار التاريخ',
+  },
 };
 
 type DatePickerLabelKey = keyof typeof messages.en;
@@ -59,11 +71,15 @@ function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
   }
 }
 
-interface TriggerButtonProps
-  extends Omit<DatePickerTriggerProps, 'id' | 'name' | 'ref' | 'clearable' | 'onClear' | 'clearLabel'> {
+interface TriggerButtonProps extends Omit<
+  DatePickerTriggerProps,
+  'id' | 'name' | 'ref' | 'clearable' | 'onClear' | 'clearLabel'
+> {
   /** Leave room at the end for the clear button. */
   reserveClear: boolean;
-  controlProps: ButtonHTMLAttributes<HTMLButtonElement> & { ref?: Ref<HTMLButtonElement> };
+  controlProps: ButtonHTMLAttributes<HTMLButtonElement> & {
+    ref?: Ref<HTMLButtonElement>;
+  };
   forwardedRef?: Ref<HTMLButtonElement>;
   nodeRef: { current: HTMLButtonElement | null };
 }
@@ -106,7 +122,8 @@ function TriggerButton({
 
   // Name = field label (or aria-label) followed by the current value, so a screen
   // reader says "Birth date, 16 November 2026" instead of just the label.
-  const labelIds = ariaLabelledBy ?? buttonProps['aria-labelledby'] ?? (ariaLabel ? buttonProps.id : undefined);
+  const labelIds =
+    ariaLabelledBy ?? buttonProps['aria-labelledby'] ?? (ariaLabel ? buttonProps.id : undefined);
   const hasValue = display !== null;
 
   return (
@@ -135,7 +152,7 @@ function TriggerButton({
       <span
         id={valueId}
         data-placeholder={hasValue ? undefined : ''}
-        className="min-w-0 flex-1 truncate text-start data-[placeholder]:text-text-muted"
+        className="data-[placeholder]:text-text-muted min-w-0 flex-1 truncate text-start"
       >
         {display ?? placeholder}
       </span>

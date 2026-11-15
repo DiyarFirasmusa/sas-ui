@@ -10,6 +10,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { ChevronLeftIcon, ChevronRightIcon } from '@/components/ui/icons';
 import {
+  useMultipleSelection,
+  useRangeSelection,
+  useSingleSelection,
+  type CalendarMultipleProps,
+  type CalendarRangeProps,
+  type CalendarSingleProps,
+  type DateRangeValue,
+  type Selection,
+} from '@/hooks/use-calendar-selection';
+import {
   addDays,
   addMonths,
   addYears,
@@ -25,15 +35,12 @@ import {
   isOutOfBounds,
   isSameDay,
   isSameMonth,
-  isWithinRange,
-  nextRange,
   parseISODate,
   startOfDay,
   startOfMonth,
   startOfWeek,
   toISODate,
   type DateNumerals,
-  type DayRange,
   type WeekStart,
 } from '@/lib/date-utils';
 import { useLabels, useLocale, type Messages } from '@/lib/locale';
@@ -46,14 +53,10 @@ const messages: Messages<'previousMonth' | 'nextMonth'> = {
 
 type CalendarLabelKey = keyof typeof messages.en;
 
-/** A date range as ISO `yyyy-mm-dd` strings; `to` is null while the user is still picking. */
-interface DateRangeValue {
-  from: string | null;
-  to: string | null;
-}
-
-interface CalendarCommonProps
-  extends Omit<ComponentProps<'div'>, 'defaultValue' | 'onChange' | 'dir'> {
+interface CalendarCommonProps extends Omit<
+  ComponentProps<'div'>,
+  'defaultValue' | 'onChange' | 'dir'
+> {
   /** Any ISO day inside the month to show (controlled). */
   month?: string;
   defaultMonth?: string;
@@ -77,129 +80,8 @@ interface CalendarCommonProps
   labels?: Partial<Record<CalendarLabelKey, string>>;
 }
 
-interface CalendarSingleProps {
-  mode?: 'single';
-  value?: string | null;
-  defaultValue?: string | null;
-  onValueChange?: (value: string | null) => void;
-}
-
-interface CalendarMultipleProps {
-  mode: 'multiple';
-  value?: string[];
-  defaultValue?: string[];
-  onValueChange?: (value: string[]) => void;
-}
-
-interface CalendarRangeProps {
-  mode: 'range';
-  value?: DateRangeValue | null;
-  defaultValue?: DateRangeValue | null;
-  onValueChange?: (value: DateRangeValue) => void;
-}
-
 type CalendarProps = CalendarCommonProps &
   (CalendarSingleProps | CalendarMultipleProps | CalendarRangeProps);
-
-interface DayState {
-  selected: boolean;
-  rangeStart?: boolean;
-  rangeEnd?: boolean;
-  rangeMiddle?: boolean;
-}
-
-/** What the grid needs from a selection mode, so the grid itself is mode-agnostic. */
-interface Selection {
-  /** Where the grid first opens and takes focus: the earliest selected day. */
-  anchor: Date | null;
-  multiple: boolean;
-  select: (date: Date) => void;
-  stateOf: (date: Date) => DayState;
-}
-
-function useSingleSelection({
-  value,
-  defaultValue = null,
-  onValueChange,
-}: Omit<CalendarSingleProps, 'mode'>): Selection {
-  const [inner, setInner] = useState<string | null>(defaultValue);
-  const current = value === undefined ? inner : value;
-  return {
-    anchor: parseISODate(current),
-    multiple: false,
-    select(date) {
-      const next = toISODate(date);
-      setInner(next);
-      onValueChange?.(next);
-    },
-    stateOf: (date) => ({ selected: toISODate(date) === current }),
-  };
-}
-
-function useMultipleSelection({
-  value,
-  defaultValue,
-  onValueChange,
-}: Omit<CalendarMultipleProps, 'mode'>): Selection {
-  const [inner, setInner] = useState<string[]>(defaultValue ?? []);
-  const current = value ?? inner;
-  const first = [...current].sort()[0];
-  return {
-    anchor: parseISODate(first),
-    multiple: true,
-    select(date) {
-      const iso = toISODate(date);
-      const next = current.includes(iso)
-        ? current.filter((entry) => entry !== iso)
-        : [...current, iso].sort();
-      setInner(next);
-      onValueChange?.(next);
-    },
-    stateOf: (date) => ({ selected: current.includes(toISODate(date)) }),
-  };
-}
-
-function useRangeSelection({
-  value,
-  defaultValue,
-  onValueChange,
-}: Omit<CalendarRangeProps, 'mode'>): Selection {
-  const [inner, setInner] = useState<DateRangeValue | null>(defaultValue ?? null);
-  const current = value === undefined ? inner : value;
-  const range: DayRange = {
-    from: parseISODate(current?.from),
-    to: parseISODate(current?.to),
-  };
-  // A value written backwards (to < from) is still one range; draw it ordered.
-  const [start, end] =
-    range.from && range.to && compareDays(range.from, range.to) > 0
-      ? [range.to, range.from]
-      : [range.from, range.to];
-  return {
-    anchor: start,
-    multiple: true,
-    select(date) {
-      const next = nextRange(range, date);
-      const result = {
-        from: next.from ? toISODate(next.from) : null,
-        to: next.to ? toISODate(next.to) : null,
-      };
-      setInner(result);
-      onValueChange?.(result);
-    },
-    stateOf(date) {
-      const selected = isWithinRange(date, start, end);
-      const isStart = isSameDay(date, start);
-      const isEnd = isSameDay(date, end);
-      return {
-        selected,
-        rangeStart: isStart && !!end && !isSameDay(start, end),
-        rangeEnd: isEnd && !!start && !isSameDay(start, end),
-        rangeMiddle: selected && !isStart && !isEnd,
-      };
-    },
-  };
-}
 
 const dayClasses = cn(
   'relative flex size-10 items-center justify-center rounded-md text-b2 tabular-nums sm:size-9',
@@ -278,7 +160,9 @@ function CalendarView({
     clampDate(selection.anchor ?? today, minDate, maxDate),
   );
 
-  const months = Array.from({ length: numberOfMonths }, (_, index) => addMonths(displayMonth, index));
+  const months = Array.from({ length: numberOfMonths }, (_, index) =>
+    addMonths(displayMonth, index),
+  );
   const firstVisible = months[0] ?? displayMonth;
   const lastVisible = months[months.length - 1] ?? displayMonth;
   const isVisible = (date: Date) =>
@@ -292,9 +176,7 @@ function CalendarView({
       return;
     }
     pendingFocus.current = false;
-    gridRef.current
-      ?.querySelector<HTMLElement>(`[data-date="${toISODate(focused)}"]`)
-      ?.focus();
+    gridRef.current?.querySelector<HTMLElement>(`[data-date="${toISODate(focused)}"]`)?.focus();
   });
 
   function showMonth(next: Date) {
@@ -374,9 +256,7 @@ function CalendarView({
         handleKeyDown(event);
       }}
     >
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between"
-      >
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between">
         <Button
           type="button"
           variant="ghost"
@@ -403,11 +283,11 @@ function CalendarView({
       {months.map((monthStart, monthIndex) => {
         const captionId = `${baseId}-caption-${monthIndex}`;
         return (
-          <div key={toISODate(monthStart)} className="flex flex-col gap-field">
+          <div key={toISODate(monthStart)} className="gap-field flex flex-col">
             <div
               id={captionId}
               aria-live="polite"
-              className="flex h-9 items-center justify-center text-h5 text-text-primary"
+              className="text-h5 text-text-primary flex h-9 items-center justify-center"
             >
               {formatMonthYear(monthStart, format)}
             </div>
@@ -427,7 +307,7 @@ function CalendarView({
                         key={weekday.index}
                         scope="col"
                         aria-label={weekday.long}
-                        className="size-10 p-0 text-center text-b3 text-text-muted sm:size-9"
+                        className="text-b3 text-text-muted size-10 p-0 text-center sm:size-9"
                       >
                         {weekday.narrow}
                       </th>
@@ -505,7 +385,11 @@ function MultipleCalendar({
   onValueChange,
   ...rest
 }: CalendarCommonProps & CalendarMultipleProps) {
-  const selection = useMultipleSelection({ value, defaultValue, onValueChange });
+  const selection = useMultipleSelection({
+    value,
+    defaultValue,
+    onValueChange,
+  });
   return <CalendarView selection={selection} {...rest} />;
 }
 

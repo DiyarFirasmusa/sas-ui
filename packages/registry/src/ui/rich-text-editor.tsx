@@ -14,9 +14,7 @@ import { useLabels, useLocale, type Messages } from '@/lib/locale';
 import { normalizeRichText, richTextLength } from '@/lib/rich-text';
 import { cn } from '@/lib/utils';
 
-const messages: Messages<
-  keyof RichTextToolbarLabels | 'editor' | 'characters'
-> = {
+const messages: Messages<keyof RichTextToolbarLabels | 'editor' | 'characters'> = {
   en: {
     editor: 'Rich text editor',
     toolbar: 'Formatting',
@@ -213,7 +211,8 @@ function RichTextEditorImpl({
   const invalid = invalidProp || field.invalid;
   const id = idProp ?? field.id;
   const ariaLabelledBy = ariaLabelledByProp ?? field.labelledBy;
-  const ariaDescribedBy = [ariaDescribedByProp, field.describedBy].filter(Boolean).join(' ') || undefined;
+  const ariaDescribedBy =
+    [ariaDescribedByProp, field.describedBy].filter(Boolean).join(' ') || undefined;
   const editable = !readOnly && !disabled;
   const fieldRef = field.ref;
   const setRoot = useCallback(
@@ -323,7 +322,7 @@ function RichTextEditorImpl({
           {state?.empty && placeholder && editable ? (
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute start-inline top-field mt-1.5 text-b1 text-text-muted"
+              className="start-inline top-field text-b1 text-text-muted pointer-events-none absolute mt-1.5"
             >
               {placeholder}
             </span>
@@ -340,7 +339,7 @@ function RichTextEditorImpl({
           <p
             id={countId}
             data-over-limit={overLimit || undefined}
-            className="flex justify-end gap-1 border-t border-stroke px-inline py-1 text-b3 text-text-muted data-[over-limit]:text-danger"
+            className="border-stroke px-inline text-b3 text-text-muted data-[over-limit]:text-danger flex justify-end gap-1 border-t py-1"
           >
             <span dir="ltr" className="tabular-nums">
               {maxLength === undefined ? state?.length : `${state?.length ?? 0} / ${maxLength}`}

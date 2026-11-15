@@ -1,14 +1,19 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Timeline, TimelineItem } from '@/components/ui/timeline';
 import { CheckIcon } from '@/components/ui/icons';
-import { renderWithLocale } from '@/test/render';
+import { Timeline, TimelineItem } from '@/components/ui/timeline';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Example() {
   return (
     <Timeline aria-label="History">
-      <TimelineItem title="Submitted" time="Mon 9:00" dateTime="2026-01-05T09:00" description="By Layla" />
+      <TimelineItem
+        title="Submitted"
+        time="Mon 9:00"
+        dateTime="2026-01-05T09:00"
+        description="By Layla"
+      />
       <TimelineItem title="Approved" tone="success" icon={<CheckIcon />} statusLabel="Done" />
       <TimelineItem title="Paid" tone="primary" />
     </Timeline>

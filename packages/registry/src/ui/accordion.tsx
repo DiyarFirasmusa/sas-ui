@@ -35,7 +35,8 @@ const accordionTriggerVariants = variants(
   {
     variants: {
       variant: {
-        default: 'min-h-11 rounded-md px-1 py-row text-h5 text-text-primary hover:text-primary-text',
+        default:
+          'min-h-11 rounded-md px-1 py-row text-h5 text-text-primary hover:text-primary-text',
         sidebar:
           'min-h-11 rounded-md px-inline text-b1 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground sm:min-h-9',
       },
@@ -116,16 +117,10 @@ function AccordionContent({ className, children, ...props }: AccordionPrimitive.
       )}
       {...props}
     >
-      <div className={variant === 'sidebar' ? 'ps-row pt-1' : 'px-1 pb-row'}>{children}</div>
+      <div className={variant === 'sidebar' ? 'ps-row pt-1' : 'pb-row px-1'}>{children}</div>
     </AccordionPrimitive.Panel>
   );
 }
 
-export {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  accordionTriggerVariants,
-};
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger, accordionTriggerVariants };
 export type { AccordionProps, AccordionVariant };

@@ -64,7 +64,14 @@ describe('Tree structure', () => {
 describe('Tree expansion', () => {
   it('opens and closes branches from the chevron and reports it', async () => {
     const onExpandedChange = vi.fn();
-    render(<Tree nodes={nodes} aria-label="Org" selectionMode="none" onExpandedChange={onExpandedChange} />);
+    render(
+      <Tree
+        nodes={nodes}
+        aria-label="Org"
+        selectionMode="none"
+        onExpandedChange={onExpandedChange}
+      />,
+    );
     const chevron = item('Headquarters').querySelector('[data-slot="tree-toggle"]');
     expect(chevron).not.toBeNull();
     await userEvent.click(chevron as Element);
@@ -83,10 +90,14 @@ describe('Tree expansion', () => {
   it('can be controlled', async () => {
     function Controlled() {
       const [expanded, setExpanded] = useState<string[]>([]);
-      return <Tree nodes={nodes} aria-label="Org" expanded={expanded} onExpandedChange={setExpanded} />;
+      return (
+        <Tree nodes={nodes} aria-label="Org" expanded={expanded} onExpandedChange={setExpanded} />
+      );
     }
     render(<Controlled />);
-    await userEvent.click(item('Headquarters').querySelector('[data-slot="tree-toggle"]') as Element);
+    await userEvent.click(
+      item('Headquarters').querySelector('[data-slot="tree-toggle"]') as Element,
+    );
     expect(item('Headquarters')).toHaveAttribute('aria-expanded', 'true');
   });
 });
@@ -194,7 +205,14 @@ describe('Tree selection', () => {
 
   it('ignores disabled rows', async () => {
     const onSelectedChange = vi.fn();
-    render(<Tree nodes={nodes} aria-label="Org" defaultExpanded={['hq']} onSelectedChange={onSelectedChange} />);
+    render(
+      <Tree
+        nodes={nodes}
+        aria-label="Org"
+        defaultExpanded={['hq']}
+        onSelectedChange={onSelectedChange}
+      />,
+    );
     expect(item('Human resources')).toHaveAttribute('aria-disabled', 'true');
     await userEvent.click(item('Human resources'));
     expect(onSelectedChange).not.toHaveBeenCalled();
@@ -208,7 +226,9 @@ describe('Tree selection', () => {
   it('does not select when clicking the chevron', async () => {
     const onSelectedChange = vi.fn();
     render(<Tree nodes={nodes} aria-label="Org" onSelectedChange={onSelectedChange} />);
-    await userEvent.click(item('Headquarters').querySelector('[data-slot="tree-toggle"]') as Element);
+    await userEvent.click(
+      item('Headquarters').querySelector('[data-slot="tree-toggle"]') as Element,
+    );
     expect(onSelectedChange).not.toHaveBeenCalled();
   });
 });
@@ -217,7 +237,13 @@ describe('Tree checkboxes', () => {
   it('shows tri-state parents through aria-checked', async () => {
     const onCheckedChange = vi.fn();
     render(
-      <Tree nodes={nodes} aria-label="Org" checkable defaultExpanded={['hq', 'fin']} onCheckedChange={onCheckedChange} />,
+      <Tree
+        nodes={nodes}
+        aria-label="Org"
+        checkable
+        defaultExpanded={['hq', 'fin']}
+        onCheckedChange={onCheckedChange}
+      />,
     );
     expect(screen.getByRole('tree')).toHaveAttribute('aria-multiselectable', 'true');
     await userEvent.click(item('Payables'));
@@ -241,7 +267,15 @@ describe('Tree checkboxes', () => {
 
   it('checks with Space and keeps disabled children untouched', async () => {
     const onCheckedChange = vi.fn();
-    render(<Tree nodes={nodes} aria-label="Org" checkable defaultExpanded={['hq']} onCheckedChange={onCheckedChange} />);
+    render(
+      <Tree
+        nodes={nodes}
+        aria-label="Org"
+        checkable
+        defaultExpanded={['hq']}
+        onCheckedChange={onCheckedChange}
+      />,
+    );
     item('Headquarters').focus();
     await userEvent.keyboard(' ');
     const ids: string[] = onCheckedChange.mock.lastCall?.[0] ?? [];
@@ -251,7 +285,15 @@ describe('Tree checkboxes', () => {
   });
 
   it('reflects a controlled value and works with collapseChecked', () => {
-    render(<Tree nodes={nodes} aria-label="Org" checkable checked={['fin']} defaultExpanded={['hq', 'fin']} />);
+    render(
+      <Tree
+        nodes={nodes}
+        aria-label="Org"
+        checkable
+        checked={['fin']}
+        defaultExpanded={['hq', 'fin']}
+      />,
+    );
     expect(item('Payables')).toHaveAttribute('aria-checked', 'true');
     expect(collapseChecked(nodes, ['ap', 'ar'])).toEqual(['fin']);
   });
@@ -280,8 +322,18 @@ describe('Tree lazy loading', () => {
           resolve = done;
         }),
     );
-    render(<Tree nodes={lazyNodes} aria-label="Org" loadChildren={loadChildren} defaultExpanded={['root']} />);
-    expect(await screen.findByRole('treeitem', { name: 'Loading…' })).toHaveAttribute('aria-busy', 'true');
+    render(
+      <Tree
+        nodes={lazyNodes}
+        aria-label="Org"
+        loadChildren={loadChildren}
+        defaultExpanded={['root']}
+      />,
+    );
+    expect(await screen.findByRole('treeitem', { name: 'Loading…' })).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
     resolve([{ id: 'kid', label: 'Kid' }]);
     expect(await screen.findByRole('treeitem', { name: 'Kid' })).toBeInTheDocument();
     expect(screen.queryByRole('treeitem', { name: 'Loading…' })).not.toBeInTheDocument();
@@ -292,8 +344,17 @@ describe('Tree lazy loading', () => {
       .fn()
       .mockRejectedValueOnce(new Error('offline'))
       .mockResolvedValueOnce([{ id: 'kid', label: 'Kid' }]);
-    render(<Tree nodes={lazyNodes} aria-label="Org" loadChildren={loadChildren} defaultExpanded={['root']} />);
-    const errorRow = await screen.findByRole('treeitem', { name: /Could not load/ });
+    render(
+      <Tree
+        nodes={lazyNodes}
+        aria-label="Org"
+        loadChildren={loadChildren}
+        defaultExpanded={['root']}
+      />,
+    );
+    const errorRow = await screen.findByRole('treeitem', {
+      name: /Could not load/,
+    });
     errorRow.focus();
     await userEvent.keyboard('{Enter}');
     expect(await screen.findByRole('treeitem', { name: 'Kid' })).toBeInTheDocument();
@@ -302,7 +363,14 @@ describe('Tree lazy loading', () => {
 
   it('turns a branch with no children into a leaf', async () => {
     const loadChildren = vi.fn().mockResolvedValue([]);
-    render(<Tree nodes={lazyNodes} aria-label="Org" loadChildren={loadChildren} defaultExpanded={['root']} />);
+    render(
+      <Tree
+        nodes={lazyNodes}
+        aria-label="Org"
+        loadChildren={loadChildren}
+        defaultExpanded={['root']}
+      />,
+    );
     await waitFor(() => expect(item('Root')).not.toHaveAttribute('aria-expanded'));
   });
 
@@ -311,8 +379,20 @@ describe('Tree lazy loading', () => {
       { id: 'a', label: 'A' },
       { id: 'b', label: 'B' },
     ]);
-    render(<Tree nodes={lazyNodes} aria-label="Org" checkable defaultChecked={['root']} loadChildren={loadChildren} defaultExpanded={['root']} />);
-    expect(await screen.findByRole('treeitem', { name: 'A' })).toHaveAttribute('aria-checked', 'true');
+    render(
+      <Tree
+        nodes={lazyNodes}
+        aria-label="Org"
+        checkable
+        defaultChecked={['root']}
+        loadChildren={loadChildren}
+        defaultExpanded={['root']}
+      />,
+    );
+    expect(await screen.findByRole('treeitem', { name: 'A' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
     expect(item('Root')).toHaveAttribute('aria-checked', 'true');
   });
 });
@@ -356,13 +436,26 @@ describe('Tree states', () => {
 
 describe('Tree accessibility', () => {
   it('has no axe violations (single selection)', async () => {
-    const { container } = render(<Tree nodes={nodes} aria-label="Org" defaultExpanded={['hq', 'fin']} defaultSelected={['ap']} />);
+    const { container } = render(
+      <Tree
+        nodes={nodes}
+        aria-label="Org"
+        defaultExpanded={['hq', 'fin']}
+        defaultSelected={['ap']}
+      />,
+    );
     await expectNoA11yViolations(container);
   });
 
   it('has no axe violations (checkable, Arabic)', async () => {
     const { container } = renderWithLocale(
-      <Tree nodes={nodes} aria-label="Org" checkable defaultExpanded={['hq', 'fin']} defaultChecked={['ap']} />,
+      <Tree
+        nodes={nodes}
+        aria-label="Org"
+        checkable
+        defaultExpanded={['hq', 'fin']}
+        defaultChecked={['ap']}
+      />,
       { locale: 'ar' },
     );
     await expectNoA11yViolations(container);

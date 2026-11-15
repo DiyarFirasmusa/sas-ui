@@ -4,8 +4,12 @@
   "category": "foundation",
   "title": "Test utilities",
   "description": "axe helper, jsdom stubs and a locale-aware render for component tests.",
-  "files": [
-    "test/a11y.ts",
-    "test/render.tsx"
+  "files": ["test/a11y.ts", "test/render.tsx", "test/setup.ts"],
+  "extraDevDependencies": [
+    "@testing-library/user-event",
+    "@testing-library/jest-dom",
+    "@testing-library/dom",
+    "jsdom",
+    "vitest"
   ]
 }

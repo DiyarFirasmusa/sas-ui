@@ -87,7 +87,7 @@ function SheetContent({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="absolute end-inline top-inline"
+                className="end-inline top-inline absolute"
                 aria-label={labels.close}
               />
             }
@@ -124,7 +124,10 @@ function SheetFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="sheet-footer"
-      className={cn('mt-auto flex flex-col-reverse gap-field p-card pt-row sm:flex-row sm:justify-end', className)}
+      className={cn(
+        'mt-auto flex flex-col-reverse gap-field p-card pt-row sm:flex-row sm:justify-end',
+        className,
+      )}
       {...props}
     />
   );

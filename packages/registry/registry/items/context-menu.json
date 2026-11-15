@@ -1,0 +1,8 @@
+{
+  "name": "context-menu",
+  "type": "ui",
+  "category": "overlay",
+  "title": "Context menu",
+  "description": "Right-click menu that reuses the dropdown menu items.",
+  "files": ["ui/context-menu.tsx"]
+}

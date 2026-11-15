@@ -104,7 +104,12 @@ describe('DatePicker', () => {
     it('clears the value and keeps focus on the trigger', async () => {
       const onValueChange = vi.fn();
       renderWithLocale(
-        <DatePicker aria-label="Date" clearable defaultValue="2026-11-18" onValueChange={onValueChange} />,
+        <DatePicker
+          aria-label="Date"
+          clearable
+          defaultValue="2026-11-18"
+          onValueChange={onValueChange}
+        />,
       );
       const trigger = screen.getByRole('button', { name: /Date/ });
       await userEvent.click(screen.getByRole('button', { name: 'Clear date' }));
@@ -167,10 +172,18 @@ describe('DatePicker', () => {
       const ref = createRef<HTMLButtonElement>();
       const onBlur = vi.fn();
       const { container } = renderWithLocale(
-        <DatePicker ref={ref} name="start" aria-label="Date" defaultValue="2026-11-18" onBlur={onBlur} />,
+        <DatePicker
+          ref={ref}
+          name="start"
+          aria-label="Date"
+          defaultValue="2026-11-18"
+          onBlur={onBlur}
+        />,
       );
       expect(ref.current).toBe(screen.getByRole('button', { name: /Date/ }));
-      expect(container.querySelector<HTMLInputElement>('input[name="start"]')?.value).toBe('2026-11-18');
+      expect(container.querySelector<HTMLInputElement>('input[name="start"]')?.value).toBe(
+        '2026-11-18',
+      );
       ref.current?.focus();
       ref.current?.blur();
       expect(onBlur).toHaveBeenCalledTimes(1);
@@ -192,7 +205,9 @@ describe('DatePicker', () => {
     it('works with react-hook-form', async () => {
       const seen: unknown[] = [];
       function Form() {
-        const { control, watch } = useForm<{ when: string | null }>({ defaultValues: { when: null } });
+        const { control, watch } = useForm<{ when: string | null }>({
+          defaultValues: { when: null },
+        });
         seen.push(watch('when'));
         return (
           <Controller
@@ -215,7 +230,11 @@ describe('DatePicker', () => {
       }
       render(<Form />);
       await userEvent.click(screen.getByRole('button', { name: /When/ }));
-      await userEvent.click(await screen.findByRole('button', { name: 'Wednesday, November 18, 2026' }));
+      await userEvent.click(
+        await screen.findByRole('button', {
+          name: 'Wednesday, November 18, 2026',
+        }),
+      );
       await waitFor(() => expect(seen.at(-1)).toBe('2026-11-18'));
       expect(screen.getByRole('button', { name: /When/ })).toHaveTextContent('November 18, 2026');
     });
@@ -226,7 +245,9 @@ describe('DatePicker', () => {
       const { unmount } = renderWithLocale(<DatePicker aria-label="التاريخ" />, { locale: 'ar' });
       expect(screen.getByRole('button', { name: /التاريخ/ })).toHaveTextContent('اختر تاريخاً');
       unmount();
-      renderWithLocale(<DatePicker aria-label="التاريخ" value="2026-11-18" />, { locale: 'ar' });
+      renderWithLocale(<DatePicker aria-label="التاريخ" value="2026-11-18" />, {
+        locale: 'ar',
+      });
       const text = screen.getByRole('button', { name: /التاريخ/ }).textContent ?? '';
       expect(text).toContain('تشرين الثاني');
       expect(text).toContain('18');
@@ -235,15 +256,24 @@ describe('DatePicker', () => {
     });
 
     it('uses Arabic-Indic digits only on request', () => {
-      renderWithLocale(<DatePicker aria-label="التاريخ" value="2026-11-18" numerals="locale" />, { locale: 'ar' });
-      expect(ARABIC_INDIC.test(screen.getByRole('button', { name: /التاريخ/ }).textContent ?? '')).toBe(true);
+      renderWithLocale(<DatePicker aria-label="التاريخ" value="2026-11-18" numerals="locale" />, {
+        locale: 'ar',
+      });
+      expect(
+        ARABIC_INDIC.test(screen.getByRole('button', { name: /التاريخ/ }).textContent ?? ''),
+      ).toBe(true);
     });
 
     it('opens an Arabic calendar that starts on Saturday', async () => {
-      renderWithLocale(<DatePicker aria-label="التاريخ" defaultMonth="2026-11-01" clearable value="2026-11-18" />, { locale: 'ar' });
+      renderWithLocale(
+        <DatePicker aria-label="التاريخ" defaultMonth="2026-11-01" clearable value="2026-11-18" />,
+        { locale: 'ar' },
+      );
       expect(screen.getByRole('button', { name: 'مسح التاريخ' })).toBeInTheDocument();
       await userEvent.click(screen.getByRole('button', { name: /^التاريخ/ }));
-      const dialog = await screen.findByRole('dialog', { name: 'اختيار التاريخ' });
+      const dialog = await screen.findByRole('dialog', {
+        name: 'اختيار التاريخ',
+      });
       expect(dialog.querySelectorAll('th')[0]).toHaveAttribute('aria-label', 'السبت');
       expect(screen.getByRole('button', { name: 'الشهر التالي' })).toBeInTheDocument();
     });

@@ -1,0 +1,8 @@
+{
+  "name": "form-fields",
+  "type": "ui",
+  "category": "form",
+  "title": "Form fields",
+  "description": "react-hook-form bound fields: TextField, SelectField, ComboboxField, NumberField, SwitchField, CheckboxField, TextareaField.",
+  "files": ["ui/form-fields.tsx"]
+}

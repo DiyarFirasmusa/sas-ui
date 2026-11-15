@@ -128,7 +128,6 @@ export function seriesConfigFor(
   const row = isRecord(item.payload) ? item.payload : undefined;
   const direct = item[key];
   const nested = row?.[key];
-  const resolved =
-    typeof direct === 'string' ? direct : typeof nested === 'string' ? nested : key;
+  const resolved = typeof direct === 'string' ? direct : typeof nested === 'string' ? nested : key;
   return config[resolved] ?? config[key];
 }

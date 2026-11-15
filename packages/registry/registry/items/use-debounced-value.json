@@ -1,0 +1,8 @@
+{
+  "name": "use-debounced-value",
+  "type": "hook",
+  "category": "foundation",
+  "title": "useDebouncedValue",
+  "description": "Returns a value once it has stopped changing for a delay.",
+  "files": ["hooks/use-debounced-value.ts"]
+}

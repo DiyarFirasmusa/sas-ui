@@ -1,5 +1,12 @@
-import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
-import { useEffect, useRef, useState, type FormEvent, type ReactElement, type ReactNode } from 'react';
+import type { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -111,7 +118,10 @@ function FormDialog({
     }
   }, [open]);
 
-  const handleOpenChange: NonNullable<DialogPrimitive.Root.Props['onOpenChange']> = (next, details) => {
+  const handleOpenChange: NonNullable<DialogPrimitive.Root.Props['onOpenChange']> = (
+    next,
+    details,
+  ) => {
     if (next) {
       onOpenChange?.(next, details);
       return;
@@ -139,7 +149,12 @@ function FormDialog({
 
   return (
     <>
-      <Dialog open={open} defaultOpen={defaultOpen} onOpenChange={handleOpenChange} actionsRef={actions}>
+      <Dialog
+        open={open}
+        defaultOpen={defaultOpen}
+        onOpenChange={handleOpenChange}
+        actionsRef={actions}
+      >
         {trigger ? <DialogTrigger render={trigger} /> : null}
         <DialogContent
           showCloseButton={!isSubmitting}
@@ -161,7 +176,7 @@ function FormDialog({
               <DialogTitle>{title}</DialogTitle>
               {description ? <DialogDescription>{description}</DialogDescription> : null}
             </DialogHeader>
-            <DialogBody className="flex flex-col gap-row">
+            <DialogBody className="gap-row flex flex-col">
               {error ? <Alert variant="danger" description={error} /> : null}
               {children}
             </DialogBody>

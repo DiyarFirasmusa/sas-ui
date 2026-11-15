@@ -42,12 +42,27 @@ export const ChevronDownIcon = createIcon('ChevronDownIcon', <path d="m6 9 6 6 6
 export const ChevronUpIcon = createIcon('ChevronUpIcon', <path d="m18 15-6-6-6 6" />);
 export const ChevronRightIcon = createIcon('ChevronRightIcon', <path d="m9 18 6-6-6-6" />, true);
 export const ChevronLeftIcon = createIcon('ChevronLeftIcon', <path d="m15 18-6-6 6-6" />, true);
-export const ChevronsLeftIcon = createIcon('ChevronsLeftIcon', <path d="m11 17-5-5 5-5M18 17l-5-5 5-5" />, true);
-export const ChevronsRightIcon = createIcon('ChevronsRightIcon', <path d="m6 17 5-5-5-5M13 17l5-5-5-5" />, true);
-export const ChevronsUpDownIcon = createIcon('ChevronsUpDownIcon', <path d="m7 15 5 5 5-5M7 9l5-5 5 5" />);
+export const ChevronsLeftIcon = createIcon(
+  'ChevronsLeftIcon',
+  <path d="m11 17-5-5 5-5M18 17l-5-5 5-5" />,
+  true,
+);
+export const ChevronsRightIcon = createIcon(
+  'ChevronsRightIcon',
+  <path d="m6 17 5-5-5-5M13 17l5-5-5-5" />,
+  true,
+);
+export const ChevronsUpDownIcon = createIcon(
+  'ChevronsUpDownIcon',
+  <path d="m7 15 5 5 5-5M7 9l5-5 5 5" />,
+);
 export const ArrowUpIcon = createIcon('ArrowUpIcon', <path d="m5 12 7-7 7 7M12 19V5" />);
 export const ArrowDownIcon = createIcon('ArrowDownIcon', <path d="m19 12-7 7-7-7M12 5v14" />);
-export const ArrowRightIcon = createIcon('ArrowRightIcon', <path d="M5 12h14m-7-7 7 7-7 7" />, true);
+export const ArrowRightIcon = createIcon(
+  'ArrowRightIcon',
+  <path d="M5 12h14m-7-7 7 7-7 7" />,
+  true,
+);
 export const ArrowLeftIcon = createIcon('ArrowLeftIcon', <path d="M19 12H5m7-7-7 7 7 7" />, true);
 export const SearchIcon = createIcon(
   'SearchIcon',
@@ -99,8 +114,14 @@ export const ClockIcon = createIcon(
     <path d="M12 6v6l4 2" />
   </>,
 );
-export const UploadIcon = createIcon('UploadIcon', <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />);
-export const DownloadIcon = createIcon('DownloadIcon', <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />);
+export const UploadIcon = createIcon(
+  'UploadIcon',
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />,
+);
+export const DownloadIcon = createIcon(
+  'DownloadIcon',
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />,
+);
 export const FileIcon = createIcon(
   'FileIcon',
   <>
@@ -108,8 +129,14 @@ export const FileIcon = createIcon(
     <path d="M14 2v6h6" />
   </>,
 );
-export const TrashIcon = createIcon('TrashIcon', <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />);
-export const PencilIcon = createIcon('PencilIcon', <path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />);
+export const TrashIcon = createIcon(
+  'TrashIcon',
+  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />,
+);
+export const PencilIcon = createIcon(
+  'PencilIcon',
+  <path d="M17 3a2.8 2.8 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />,
+);
 export const EyeIcon = createIcon(
   'EyeIcon',
   <>
@@ -160,8 +187,14 @@ export const CopyIcon = createIcon(
     <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
   </>,
 );
-export const ExternalLinkIcon = createIcon('ExternalLinkIcon', <path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />);
-export const FolderIcon = createIcon('FolderIcon', <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />);
+export const ExternalLinkIcon = createIcon(
+  'ExternalLinkIcon',
+  <path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />,
+);
+export const FolderIcon = createIcon(
+  'FolderIcon',
+  <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />,
+);
 export const SunIcon = createIcon(
   'SunIcon',
   <>
@@ -170,7 +203,10 @@ export const SunIcon = createIcon(
   </>,
 );
 export const MoonIcon = createIcon('MoonIcon', <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />);
-export const HomeIcon = createIcon('HomeIcon', <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2ZM9 22V12h6v10" />);
+export const HomeIcon = createIcon(
+  'HomeIcon',
+  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2ZM9 22V12h6v10" />,
+);
 export const UserIcon = createIcon(
   'UserIcon',
   <>
@@ -185,9 +221,15 @@ export const SettingsIcon = createIcon(
     <path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
   </>,
 );
-export const InboxIcon = createIcon('InboxIcon', <path d="M22 12h-6l-2 3h-4l-2-3H2M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1Z" />);
+export const InboxIcon = createIcon(
+  'InboxIcon',
+  <path d="M22 12h-6l-2 3h-4l-2-3H2M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1Z" />,
+);
 export const CircleIcon = createIcon('CircleIcon', <circle cx="12" cy="12" r="10" />);
-export const DotIcon = createIcon('DotIcon', <circle cx="12" cy="12" r="2.5" fill="currentColor" />);
+export const DotIcon = createIcon(
+  'DotIcon',
+  <circle cx="12" cy="12" r="2.5" fill="currentColor" />,
+);
 export const SidebarIcon = createIcon(
   'SidebarIcon',
   <>

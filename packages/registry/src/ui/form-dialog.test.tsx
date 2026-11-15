@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { FormDialog, type FormDialogProps } from '@/components/ui/form-dialog';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 function Harness(props: Partial<FormDialogProps>) {
   const [open, setOpen] = useState(true);
@@ -129,7 +129,9 @@ describe('FormDialog', () => {
     });
 
     it('asks in Arabic', async () => {
-      renderWithLocale(<Harness confirmDiscard isDirty title="عميل جديد" />, { locale: 'ar' });
+      renderWithLocale(<Harness confirmDiscard isDirty title="عميل جديد" />, {
+        locale: 'ar',
+      });
       await userEvent.click(await screen.findByRole('button', { name: 'إلغاء' }));
       expect(await screen.findByRole('dialog', { name: 'تجاهل التغييرات؟' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'متابعة التعديل' })).toBeInTheDocument();
@@ -138,7 +140,9 @@ describe('FormDialog', () => {
   });
 
   it('uses Arabic footer labels and accepts overrides', async () => {
-    const { unmount } = renderWithLocale(<Harness title="عميل جديد" />, { locale: 'ar' });
+    const { unmount } = renderWithLocale(<Harness title="عميل جديد" />, {
+      locale: 'ar',
+    });
     expect(await screen.findByRole('button', { name: 'حفظ' })).toBeInTheDocument();
     unmount();
     render(<Harness submitLabel="Create" cancelLabel="Back" />);

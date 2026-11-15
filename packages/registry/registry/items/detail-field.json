@@ -4,7 +4,5 @@
   "category": "display",
   "title": "Detail field",
   "description": "Read-only label/value pairs for detail pages, as a description list.",
-  "files": [
-    "ui/detail-field.tsx"
-  ]
+  "files": ["ui/detail-field.tsx"]
 }

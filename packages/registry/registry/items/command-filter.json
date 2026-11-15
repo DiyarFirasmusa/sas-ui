@@ -1,0 +1,8 @@
+{
+  "name": "command-filter",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Command filter",
+  "description": "Accent- and diacritic-insensitive matching used by the command palette.",
+  "files": ["lib/command-filter.ts"]
+}

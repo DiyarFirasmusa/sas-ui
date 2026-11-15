@@ -62,7 +62,11 @@ function DropdownMenuItem({ className, destructive, ...props }: DropdownMenuItem
   return (
     <MenuPrimitive.Item
       data-slot="dropdown-menu-item"
-      className={cn(itemClasses, destructive && 'text-danger data-[highlighted]:bg-tag-red-container', className)}
+      className={cn(
+        itemClasses,
+        destructive && 'text-danger data-[highlighted]:bg-tag-red-container',
+        className,
+      )}
       {...props}
     />
   );
@@ -80,7 +84,7 @@ function DropdownMenuCheckboxItem({
       {...props}
     >
       <MenuPrimitive.CheckboxItemIndicator className="absolute start-2 flex items-center">
-        <CheckIcon className="size-4 text-primary-text" />
+        <CheckIcon className="text-primary-text size-4" />
       </MenuPrimitive.CheckboxItemIndicator>
       {children}
     </MenuPrimitive.CheckboxItem>
@@ -91,11 +95,7 @@ function DropdownMenuRadioGroup(props: MenuPrimitive.RadioGroup.Props) {
   return <MenuPrimitive.RadioGroup data-slot="dropdown-menu-radio-group" {...props} />;
 }
 
-function DropdownMenuRadioItem({
-  className,
-  children,
-  ...props
-}: MenuPrimitive.RadioItem.Props) {
+function DropdownMenuRadioItem({ className, children, ...props }: MenuPrimitive.RadioItem.Props) {
   return (
     <MenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
@@ -103,7 +103,7 @@ function DropdownMenuRadioItem({
       {...props}
     >
       <MenuPrimitive.RadioItemIndicator className="absolute start-2 flex items-center">
-        <CheckIcon className="size-4 text-primary-text" />
+        <CheckIcon className="text-primary-text size-4" />
       </MenuPrimitive.RadioItemIndicator>
       {children}
     </MenuPrimitive.RadioItem>
@@ -150,7 +150,7 @@ function DropdownMenuSubTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="size-4 text-text-muted" />
+      <ChevronRightIcon className="text-text-muted size-4" />
     </MenuPrimitive.SubmenuTrigger>
   );
 }

@@ -2,8 +2,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 /** A promise the test settles by hand. */
 function deferred() {
@@ -18,8 +18,17 @@ function deferred() {
 
 describe('ConfirmDialog', () => {
   it('shows the title, description and default labels', async () => {
-    render(<ConfirmDialog open title="Delete invoice?" description="This cannot be undone." onConfirm={() => {}} />);
-    const dialog = await screen.findByRole('dialog', { name: 'Delete invoice?' });
+    render(
+      <ConfirmDialog
+        open
+        title="Delete invoice?"
+        description="This cannot be undone."
+        onConfirm={() => {}}
+      />,
+    );
+    const dialog = await screen.findByRole('dialog', {
+      name: 'Delete invoice?',
+    });
     expect(dialog).toHaveAccessibleDescription('This cannot be undone.');
     expect(screen.getByRole('button', { name: 'Confirm' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
@@ -27,7 +36,13 @@ describe('ConfirmDialog', () => {
 
   it('opens from its trigger and closes after a synchronous confirm', async () => {
     const onConfirm = vi.fn();
-    render(<ConfirmDialog trigger={<button type="button">Open</button>} title="Sure?" onConfirm={onConfirm} />);
+    render(
+      <ConfirmDialog
+        trigger={<button type="button">Open</button>}
+        title="Sure?"
+        onConfirm={onConfirm}
+      />,
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await userEvent.click(await screen.findByRole('button', { name: 'Confirm' }));
     expect(onConfirm).toHaveBeenCalledTimes(1);
@@ -47,7 +62,14 @@ describe('ConfirmDialog', () => {
 
   it('uses custom labels and the destructive tone', async () => {
     render(
-      <ConfirmDialog open destructive title="Delete?" confirmLabel="Delete" cancelLabel="Keep" onConfirm={() => {}} />,
+      <ConfirmDialog
+        open
+        destructive
+        title="Delete?"
+        confirmLabel="Delete"
+        cancelLabel="Keep"
+        onConfirm={() => {}}
+      />,
     );
     expect(await screen.findByRole('button', { name: 'Delete' })).toHaveClass('bg-danger');
     expect(screen.getByRole('button', { name: 'Keep' })).toBeInTheDocument();
@@ -79,7 +101,14 @@ describe('ConfirmDialog', () => {
     it('shows loading, blocks Cancel and Escape, and stays open until it resolves', async () => {
       const pending = deferred();
       const onOpenChange = vi.fn();
-      render(<ConfirmDialog open onOpenChange={onOpenChange} title="Pay?" onConfirm={() => pending.promise} />);
+      render(
+        <ConfirmDialog
+          open
+          onOpenChange={onOpenChange}
+          title="Pay?"
+          onConfirm={() => pending.promise}
+        />,
+      );
       const confirm = await screen.findByRole('button', { name: 'Confirm' });
       await userEvent.click(confirm);
       expect(confirm).toHaveAttribute('aria-busy', 'true');
@@ -118,27 +147,48 @@ describe('ConfirmDialog', () => {
 
     it('surfaces the error prop instead of the rejection message', async () => {
       const onConfirm = vi.fn().mockRejectedValue(new Error('raw 500'));
-      render(<ConfirmDialog open title="Pay?" error="Payment failed, try another card." onConfirm={onConfirm} />);
+      render(
+        <ConfirmDialog
+          open
+          title="Pay?"
+          error="Payment failed, try another card."
+          onConfirm={onConfirm}
+        />,
+      );
       await userEvent.click(await screen.findByRole('button', { name: 'Confirm' }));
-      expect(await screen.findByRole('alert')).toHaveTextContent('Payment failed, try another card.');
+      expect(await screen.findByRole('alert')).toHaveTextContent(
+        'Payment failed, try another card.',
+      );
     });
 
     it('falls back to a localized message for non-Error rejections', async () => {
       const onConfirm = vi.fn().mockRejectedValue('nope');
-      renderWithLocale(<ConfirmDialog open title="هل أنت متأكد؟" onConfirm={onConfirm} />, { locale: 'ar' });
+      renderWithLocale(<ConfirmDialog open title="هل أنت متأكد؟" onConfirm={onConfirm} />, {
+        locale: 'ar',
+      });
       await userEvent.click(await screen.findByRole('button', { name: 'تأكيد' }));
       expect(await screen.findByRole('alert')).toHaveTextContent('حدث خطأ ما. حاول مرة أخرى.');
     });
   });
 
   it('uses Arabic labels', async () => {
-    renderWithLocale(<ConfirmDialog open title="حذف الفاتورة؟" onConfirm={() => {}} />, { locale: 'ar' });
+    renderWithLocale(<ConfirmDialog open title="حذف الفاتورة؟" onConfirm={() => {}} />, {
+      locale: 'ar',
+    });
     expect(await screen.findByRole('button', { name: 'تأكيد' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'إلغاء' })).toBeInTheDocument();
   });
 
   it('has no axe violations', async () => {
-    render(<ConfirmDialog open destructive title="Delete?" description="Gone for good." onConfirm={() => {}} />);
+    render(
+      <ConfirmDialog
+        open
+        destructive
+        title="Delete?"
+        description="Gone for good."
+        onConfirm={() => {}}
+      />,
+    );
     await screen.findByRole('dialog');
     await expectNoA11yViolations();
   });

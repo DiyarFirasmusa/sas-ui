@@ -47,8 +47,7 @@ function Timeline({ className, children, empty, ...props }: TimelineProps) {
 }
 
 interface TimelineItemProps
-  extends Omit<React.ComponentProps<'li'>, 'title'>,
-    VariantProps<typeof markerVariants> {
+  extends Omit<React.ComponentProps<'li'>, 'title'>, VariantProps<typeof markerVariants> {
   title: ReactNode;
   /** When it happened, in display form. */
   time?: ReactNode;
@@ -74,15 +73,20 @@ function TimelineItem({
   ...props
 }: TimelineItemProps) {
   return (
-    <li data-slot="timeline-item" data-tone={tone ?? 'neutral'} className={cn('group/item flex gap-inline', className)} {...props}>
+    <li
+      data-slot="timeline-item"
+      data-tone={tone ?? 'neutral'}
+      className={cn('group/item flex gap-inline', className)}
+      {...props}
+    >
       <div className="flex flex-col items-center">
         <span aria-hidden="true" data-slot="timeline-marker" className={markerVariants({ tone })}>
           {icon ?? <DotIcon />}
         </span>
-        <span aria-hidden="true" className="mt-1 w-px flex-1 bg-stroke group-last/item:hidden" />
+        <span aria-hidden="true" className="bg-stroke mt-1 w-px flex-1 group-last/item:hidden" />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-1 pb-card pt-1 group-last/item:pb-0">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-inline gap-y-0.5">
+      <div className="pb-card flex min-w-0 flex-1 flex-col gap-1 pt-1 group-last/item:pb-0">
+        <div className="gap-x-inline flex flex-wrap items-baseline justify-between gap-y-0.5">
           <p className="text-h5 text-text-primary">
             {statusLabel ? <span className="sr-only">{statusLabel}: </span> : null}
             {title}

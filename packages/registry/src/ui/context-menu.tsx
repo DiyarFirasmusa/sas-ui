@@ -79,7 +79,12 @@ const ContextMenuSubTrigger = DropdownMenuSubTrigger;
 function ContextMenuSubContent({ className, ...props }: MenuPrimitive.Popup.Props) {
   return (
     <MenuPrimitive.Portal>
-      <MenuPrimitive.Positioner side="inline-end" align="start" sideOffset={2} className="z-50 outline-none">
+      <MenuPrimitive.Positioner
+        side="inline-end"
+        align="start"
+        sideOffset={2}
+        className="z-50 outline-none"
+      >
         <MenuPrimitive.Popup
           data-slot="context-menu-sub-content"
           className={cn(

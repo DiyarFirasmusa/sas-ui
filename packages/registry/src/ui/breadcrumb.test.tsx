@@ -11,8 +11,8 @@ import {
   BreadcrumbTrail,
   type BreadcrumbTrailItem,
 } from '@/components/ui/breadcrumb';
-import { renderWithLocale } from '@/test/render';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 const longTrail: BreadcrumbTrailItem[] = [
   { label: 'Home', href: '/' },
@@ -44,7 +44,9 @@ describe('Breadcrumb', () => {
   });
 
   it('hides separators from assistive tech', () => {
-    const { container } = render(<BreadcrumbTrail items={[{ label: 'A', href: '/a' }, { label: 'B' }]} />);
+    const { container } = render(
+      <BreadcrumbTrail items={[{ label: 'A', href: '/a' }, { label: 'B' }]} />,
+    );
     const separator = container.querySelector('[data-slot="breadcrumb-separator"]');
     expect(separator).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getAllByRole('listitem')).toHaveLength(2);
@@ -60,7 +62,10 @@ describe('Breadcrumb', () => {
         </BreadcrumbList>
       </Breadcrumb>,
     );
-    expect(screen.getByRole('button', { name: 'Home' })).toHaveAttribute('data-slot', 'breadcrumb-link');
+    expect(screen.getByRole('button', { name: 'Home' })).toHaveAttribute(
+      'data-slot',
+      'breadcrumb-link',
+    );
   });
 
   it('collapses the middle of a long trail into an ellipsis menu', async () => {
@@ -72,7 +77,10 @@ describe('Breadcrumb', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'More pages' }));
     const menu = await screen.findByRole('menu');
-    expect(within(menu).getByRole('menuitem', { name: 'Projects' })).toHaveAttribute('href', '/projects');
+    expect(within(menu).getByRole('menuitem', { name: 'Projects' })).toHaveAttribute(
+      'href',
+      '/projects',
+    );
     expect(within(menu).getByRole('menuitem', { name: 'Archive' })).toBeInTheDocument();
   });
 
@@ -101,7 +109,9 @@ describe('Breadcrumb', () => {
       { locale: 'ar' },
     );
     expect(screen.getByRole('navigation', { name: 'مسار التنقل' })).toBeInTheDocument();
-    expect(container.querySelector('[data-slot="breadcrumb-separator"] svg')).toHaveClass('rtl:-scale-x-100');
+    expect(container.querySelector('[data-slot="breadcrumb-separator"] svg')).toHaveClass(
+      'rtl:-scale-x-100',
+    );
   });
 
   it('names the ellipsis button in Arabic', () => {

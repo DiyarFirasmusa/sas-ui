@@ -4,7 +4,5 @@
   "category": "form",
   "title": "Select",
   "description": "Single-choice dropdown driven by an options array.",
-  "files": [
-    "ui/select.tsx"
-  ]
+  "files": ["ui/select.tsx"]
 }

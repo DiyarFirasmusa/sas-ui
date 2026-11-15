@@ -100,8 +100,13 @@ describe('sanitizeFilterValue', () => {
   });
 
   it('accepts numeric strings in ranges and keeps zero', () => {
-    expect(sanitizeFilterValue(definition('price'), { min: '10', max: 20 })).toEqual({ min: 10, max: 20 });
-    expect(sanitizeFilterValue(definition('price'), { min: 0 })).toEqual({ min: 0 });
+    expect(sanitizeFilterValue(definition('price'), { min: '10', max: 20 })).toEqual({
+      min: 10,
+      max: 20,
+    });
+    expect(sanitizeFilterValue(definition('price'), { min: 0 })).toEqual({
+      min: 0,
+    });
     expect(sanitizeFilterValue(definition('price'), { min: '', max: 'abc' })).toBeUndefined();
     expect(sanitizeFilterValue(definition('price'), { min: Number.NaN })).toBeUndefined();
     expect(sanitizeFilterValue(definition('price'), 5)).toBeUndefined();
@@ -110,14 +115,27 @@ describe('sanitizeFilterValue', () => {
   it('validates dates and date ranges', () => {
     expect(sanitizeFilterValue(definition('due'), '2024-05-01')).toBe('2024-05-01');
     expect(sanitizeFilterValue(definition('due'), '2024-02-31')).toBeUndefined();
-    expect(sanitizeFilterValue(definition('created'), { from: '2024-01-01', to: 'nope' })).toEqual({ from: '2024-01-01' });
+    expect(
+      sanitizeFilterValue(definition('created'), {
+        from: '2024-01-01',
+        to: 'nope',
+      }),
+    ).toEqual({ from: '2024-01-01' });
     expect(sanitizeFilterValue(definition('created'), { from: '', to: '' })).toBeUndefined();
   });
 });
 
 describe('isFilterActive / countActiveFilters', () => {
   it('counts only set filters and never the search text', () => {
-    const values = { q: 'hotel', name: 'Ali', status: '', tags: ['a', 'b'], paid: false, price: {}, extra: 1 };
+    const values = {
+      q: 'hotel',
+      name: 'Ali',
+      status: '',
+      tags: ['a', 'b'],
+      paid: false,
+      price: {},
+      extra: 1,
+    };
     expect(isFilterActive(definition('tags'), values.tags)).toBe(true);
     expect(countActiveFilters(definitions, values)).toBe(3);
   });
@@ -139,7 +157,10 @@ describe('applyFilterValues / clearFilters / removeFilter', () => {
   });
 
   it('clears every filter but keeps search and unrelated keys', () => {
-    expect(clearFilters(definitions, { q: 'x', page: 2, name: 'Ali', paid: true })).toEqual({ q: 'x', page: 2 });
+    expect(clearFilters(definitions, { q: 'x', page: 2, name: 'Ali', paid: true })).toEqual({
+      q: 'x',
+      page: 2,
+    });
   });
 
   it('removes one key without touching the input', () => {
@@ -160,7 +181,9 @@ describe('search helpers', () => {
   });
 
   it('honours a custom key', () => {
-    expect(setSearch({}, 'x', { searchKey: 'search' })).toEqual({ search: 'x' });
+    expect(setSearch({}, 'x', { searchKey: 'search' })).toEqual({
+      search: 'x',
+    });
     expect(getSearch({ search: 'x' }, { searchKey: 'search' })).toBe('x');
   });
 });
@@ -223,7 +246,9 @@ describe('getFilterChips / removeChip', () => {
 
   it('removes a whole single-value filter', () => {
     const chip = getFilterChips(definitions, { name: 'Ali', status: 'open' }, texts)[0]!;
-    expect(removeChip({ name: 'Ali', status: 'open' }, chip)).toEqual({ status: 'open' });
+    expect(removeChip({ name: 'Ali', status: 'open' }, chip)).toEqual({
+      status: 'open',
+    });
   });
 });
 
@@ -245,7 +270,15 @@ describe('serializeFilters', () => {
   });
 
   it('omits empty and invalid values', () => {
-    expect(serializeFilters(definitions, { q: '  ', name: '', tags: [], price: { min: 'x' }, due: 'bad' }).toString()).toBe('');
+    expect(
+      serializeFilters(definitions, {
+        q: '  ',
+        name: '',
+        tags: [],
+        price: { min: 'x' },
+        due: 'bad',
+      }).toString(),
+    ).toBe('');
   });
 
   it('escapes special characters and keeps Arabic text', () => {
@@ -255,11 +288,15 @@ describe('serializeFilters', () => {
   });
 
   it('writes zero and negative numbers', () => {
-    expect(serializeFilters(definitions, { price: { min: 0, max: -1 } }).toString()).toBe('price_min=0&price_max=-1');
+    expect(serializeFilters(definitions, { price: { min: 0, max: -1 } }).toString()).toBe(
+      'price_min=0&price_max=-1',
+    );
   });
 
   it('uses a custom search key', () => {
-    expect(serializeFilters(definitions, { search: 'x' }, { searchKey: 'search' }).toString()).toBe('search=x');
+    expect(serializeFilters(definitions, { search: 'x' }, { searchKey: 'search' }).toString()).toBe(
+      'search=x',
+    );
   });
 });
 
@@ -280,7 +317,10 @@ describe('parseFilters', () => {
   });
 
   it('ignores unknown parameters and drops invalid values', () => {
-    const parsed = parseFilters(definitions, 'page=2&paid=maybe&due=2024-02-31&price_min=abc&name=%20&tags=');
+    const parsed = parseFilters(
+      definitions,
+      'page=2&paid=maybe&due=2024-02-31&price_min=abc&name=%20&tags=',
+    );
     expect(parsed).toEqual({});
   });
 
@@ -289,7 +329,9 @@ describe('parseFilters', () => {
   });
 
   it('decodes Arabic text', () => {
-    expect(parseFilters(definitions, `name=${encodeURIComponent('مكتب')}`)).toEqual({ name: 'مكتب' });
+    expect(parseFilters(definitions, `name=${encodeURIComponent('مكتب')}`)).toEqual({
+      name: 'مكتب',
+    });
   });
 
   it('returns nothing for an empty query', () => {

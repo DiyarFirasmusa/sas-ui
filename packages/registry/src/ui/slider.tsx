@@ -8,8 +8,10 @@ const messages: Messages<'minimum' | 'maximum'> = {
   ar: { minimum: 'الحد الأدنى', maximum: 'الحد الأعلى' },
 };
 
-interface SliderProps
-  extends Omit<SliderPrimitive.Root.Props<number | readonly number[]>, 'children' | 'orientation'> {
+interface SliderProps extends Omit<
+  SliderPrimitive.Root.Props<number | readonly number[]>,
+  'children' | 'orientation'
+> {
   /** Show the current value (or "from – to" for a range) above the track. */
   showValue?: boolean;
   /** Overrides for the range thumbs' accessible names. */
@@ -60,7 +62,7 @@ function Slider({
           data-slot="slider-control"
           className="flex min-h-11 w-full touch-none items-center select-none data-[disabled]:cursor-not-allowed"
         >
-          <SliderPrimitive.Track className="relative h-1.5 w-full rounded-pill bg-stroke select-none">
+          <SliderPrimitive.Track className="rounded-pill bg-stroke relative h-1.5 w-full select-none">
             <SliderPrimitive.Indicator
               className={cn(
                 'rounded-pill bg-primary select-none',

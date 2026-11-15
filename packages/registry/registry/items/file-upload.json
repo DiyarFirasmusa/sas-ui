@@ -1,0 +1,13 @@
+{
+  "name": "file-upload",
+  "type": "ui",
+  "category": "form",
+  "title": "File upload",
+  "description": "Keyboard-accessible dropzone with browse and drag-and-drop, per-file validation messages, caller-driven progress states and image previews.",
+  "files": [
+    "ui/file-upload.tsx",
+    "ui/file-upload-row.tsx",
+    "hooks/use-preview-url.ts",
+    "lib/file-upload-messages.ts"
+  ]
+}

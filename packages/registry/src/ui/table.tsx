@@ -54,7 +54,10 @@ function Table({ className, containerClassName, stickyHeader = false, ...props }
       <table
         data-slot="table"
         data-sticky-header={stickyHeader ? '' : undefined}
-        className={cn('group/table w-full caption-bottom border-collapse text-b1 text-text-primary', className)}
+        className={cn(
+          'group/table w-full caption-bottom border-collapse text-b1 text-text-primary',
+          className,
+        )}
         {...props}
       />
     </div>
@@ -62,11 +65,23 @@ function Table({ className, containerClassName, stickyHeader = false, ...props }
 }
 
 function TableHeader({ className, ...props }: ComponentProps<'thead'>) {
-  return <thead data-slot="table-header" className={cn('[&_tr]:border-b [&_tr]:border-stroke', className)} {...props} />;
+  return (
+    <thead
+      data-slot="table-header"
+      className={cn('[&_tr]:border-b [&_tr]:border-stroke', className)}
+      {...props}
+    />
+  );
 }
 
 function TableBody({ className, ...props }: ComponentProps<'tbody'>) {
-  return <tbody data-slot="table-body" className={cn('[&_tr:last-child]:border-b-0', className)} {...props} />;
+  return (
+    <tbody
+      data-slot="table-body"
+      className={cn('[&_tr:last-child]:border-b-0', className)}
+      {...props}
+    />
+  );
 }
 
 function TableFooter({ className, ...props }: ComponentProps<'tfoot'>) {
@@ -99,12 +114,20 @@ function TableRow({ className, selected = false, ...props }: TableRowProps) {
   );
 }
 
-interface TableHeadProps extends Omit<ComponentProps<'th'>, 'align'>, Omit<CellVariantProps, 'sticky'> {
+interface TableHeadProps
+  extends Omit<ComponentProps<'th'>, 'align'>, Omit<CellVariantProps, 'sticky'> {
   /** Pins the column to the start or end edge while the table scrolls sideways. */
   sticky?: StickySide;
 }
 
-function TableHead({ className, align = 'start', numeric, sticky, scope = 'col', ...props }: TableHeadProps) {
+function TableHead({
+  className,
+  align = 'start',
+  numeric,
+  sticky,
+  scope = 'col',
+  ...props
+}: TableHeadProps) {
   return (
     <th
       data-slot="table-head"
@@ -113,7 +136,7 @@ function TableHead({ className, align = 'start', numeric, sticky, scope = 'col',
         'h-11 whitespace-nowrap bg-surface-dim px-inline align-middle text-table-header text-text-secondary',
         'group-data-[sticky-header]/table:sticky group-data-[sticky-header]/table:top-0 group-data-[sticky-header]/table:z-10',
         cellVariants({ align, numeric, sticky }),
-        sticky && 'z-20 group-data-[sticky-header]/table:z-20',
+        sticky && 'z-20 bg-surface-dim group-data-[sticky-header]/table:z-20',
         className,
       )}
       {...props}
@@ -121,7 +144,8 @@ function TableHead({ className, align = 'start', numeric, sticky, scope = 'col',
   );
 }
 
-interface TableCellProps extends Omit<ComponentProps<'td'>, 'align'>, Omit<CellVariantProps, 'sticky'> {
+interface TableCellProps
+  extends Omit<ComponentProps<'td'>, 'align'>, Omit<CellVariantProps, 'sticky'> {
   sticky?: StickySide;
 }
 
@@ -129,7 +153,11 @@ function TableCell({ className, align = 'start', numeric, sticky, ...props }: Ta
   return (
     <td
       data-slot="table-cell"
-      className={cn('px-inline py-field align-middle', cellVariants({ align, numeric, sticky }), className)}
+      className={cn(
+        'px-inline py-field align-middle',
+        cellVariants({ align, numeric, sticky }),
+        className,
+      )}
       {...props}
     />
   );
@@ -145,14 +173,5 @@ function TableCaption({ className, ...props }: ComponentProps<'caption'>) {
   );
 }
 
-export {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-};
+export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };
 export type { StickySide, TableCellProps, TableHeadProps, TableProps, TableRowProps };

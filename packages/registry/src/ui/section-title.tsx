@@ -28,9 +28,12 @@ function SectionTitle({
       className={cn('flex items-start justify-between gap-row', className)}
       {...props}
     >
-      <div className="flex min-w-0 items-start gap-inline">
+      <div className="gap-inline flex min-w-0 items-start">
         {icon ? (
-          <span aria-hidden="true" className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-light text-primary-text [&>svg]:size-5">
+          <span
+            aria-hidden="true"
+            className="bg-primary-light text-primary-text grid size-9 shrink-0 place-items-center rounded-lg [&>svg]:size-5"
+          >
             {icon}
           </span>
         ) : null}

@@ -1,0 +1,8 @@
+{
+  "name": "separator",
+  "type": "ui",
+  "category": "layout",
+  "title": "Separator",
+  "description": "Horizontal or vertical divider, optionally decorative.",
+  "files": ["ui/separator.tsx"]
+}

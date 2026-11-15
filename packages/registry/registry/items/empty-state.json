@@ -4,7 +4,5 @@
   "category": "feedback",
   "title": "Empty state",
   "description": "Centred icon, title, description and actions for empty lists, with a no-results preset and compact/page sizes.",
-  "files": [
-    "ui/empty-state.tsx"
-  ]
+  "files": ["ui/empty-state.tsx"]
 }

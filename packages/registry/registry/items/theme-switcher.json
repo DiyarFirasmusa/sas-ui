@@ -1,0 +1,8 @@
+{
+  "name": "theme-switcher",
+  "type": "ui",
+  "category": "foundation",
+  "title": "Theme switcher",
+  "description": "Appearance controls for ThemeProvider: preset swatches, light/dark/system and language, as a compact menu or inline segmented controls.",
+  "files": ["ui/theme-switcher.tsx"]
+}

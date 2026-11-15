@@ -1,0 +1,8 @@
+{
+  "name": "tabs",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Tabs",
+  "description": "Tabs with underline and pill variants, RTL-aware keyboard and a scrollable list.",
+  "files": ["ui/tabs.tsx"]
+}

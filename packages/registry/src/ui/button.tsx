@@ -19,7 +19,8 @@ const buttonVariants = variants(
         default: 'bg-primary text-primary-foreground hover:bg-primary-hover',
         secondary: 'bg-primary-light text-primary-text hover:bg-primary-light/70',
         outline: 'border border-stroke-strong bg-surface text-text-primary hover:bg-hover-row',
-        'outline-primary': 'border border-primary-text bg-transparent text-primary-text hover:bg-primary-tint',
+        'outline-primary':
+          'border border-primary-text bg-transparent text-primary-text hover:bg-primary-tint',
         ghost: 'text-text-primary hover:bg-hover-row',
         destructive: 'bg-danger text-danger-foreground hover:bg-danger/90',
         'destructive-soft': 'bg-tag-red-container text-tag-red hover:bg-tag-red-container/70',
@@ -74,9 +75,7 @@ function Button({
       onClick={loading ? undefined : onClick}
       {...props}
     >
-      {loading ? (
-        <LoaderIcon className="animate-spin motion-reduce:animate-none" />
-      ) : null}
+      {loading ? <LoaderIcon className="animate-spin motion-reduce:animate-none" /> : null}
       {children}
     </ButtonPrimitive>
   );

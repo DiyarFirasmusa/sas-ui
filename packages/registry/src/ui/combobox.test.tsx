@@ -40,7 +40,12 @@ describe('Combobox (static options)', () => {
       const [value, setValue] = useState<string | null>('jo');
       return (
         <>
-          <Combobox aria-label="Country" options={countries} value={value} onValueChange={setValue} />
+          <Combobox
+            aria-label="Country"
+            options={countries}
+            value={value}
+            onValueChange={setValue}
+          />
           <button type="button" onClick={() => setValue('eg')}>
             set
           </button>
@@ -56,7 +61,13 @@ describe('Combobox (static options)', () => {
   it('clears the selection when clearable', async () => {
     const onValueChange = vi.fn();
     render(
-      <Combobox aria-label="Country" options={countries} defaultValue="eg" clearable onValueChange={onValueChange} />,
+      <Combobox
+        aria-label="Country"
+        options={countries}
+        defaultValue="eg"
+        clearable
+        onValueChange={onValueChange}
+      />,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
     expect(onValueChange).toHaveBeenCalledWith(null);
@@ -94,7 +105,14 @@ describe('Combobox (static options)', () => {
     const ref = createRef<HTMLInputElement>();
     const onBlur = vi.fn();
     const { container } = render(
-      <Combobox aria-label="Country" options={countries} ref={ref} name="country" defaultValue="eg" onBlur={onBlur} />,
+      <Combobox
+        aria-label="Country"
+        options={countries}
+        ref={ref}
+        name="country"
+        defaultValue="eg"
+        onBlur={onBlur}
+      />,
     );
     expect(ref.current).toBe(screen.getByRole('combobox'));
     expect(container.querySelector('input[name="country"]')).toHaveValue('eg');
@@ -221,7 +239,10 @@ describe('Combobox (async)', () => {
     await userEvent.click(screen.getByRole('combobox'));
     expect(await screen.findByText('Loading…')).toBeInTheDocument();
     expect(screen.queryByText('No results')).not.toBeInTheDocument();
-    expect(document.querySelector('[data-slot="combobox-content"]')).toHaveAttribute('aria-busy', 'true');
+    expect(document.querySelector('[data-slot="combobox-content"]')).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
   });
 
   it('shows the error row with a retry button', async () => {
@@ -291,7 +312,12 @@ describe('Combobox (async)', () => {
 
   it('has no axe violations while open and loading', async () => {
     render(
-      <Combobox aria-label="User" options={[{ value: '1', label: 'Ahmed' }]} onSearchChange={() => {}} loading />,
+      <Combobox
+        aria-label="User"
+        options={[{ value: '1', label: 'Ahmed' }]}
+        onSearchChange={() => {}}
+        loading
+      />,
     );
     await userEvent.click(screen.getByRole('combobox'));
     await screen.findByRole('listbox');

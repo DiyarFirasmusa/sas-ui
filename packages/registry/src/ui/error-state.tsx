@@ -18,11 +18,13 @@ const messages: Messages<
   en: {
     retry: 'Try again',
     errorTitle: 'Something went wrong',
-    errorDescription: 'We could not load this. Try again, and contact support if it keeps happening.',
+    errorDescription:
+      'We could not load this. Try again, and contact support if it keeps happening.',
     notFoundTitle: 'Page not found',
     notFoundDescription: 'The page you are looking for does not exist or has been moved.',
     forbiddenTitle: 'Access denied',
-    forbiddenDescription: 'You do not have permission to view this. Ask an administrator for access.',
+    forbiddenDescription:
+      'You do not have permission to view this. Ask an administrator for access.',
   },
   ar: {
     retry: 'إعادة المحاولة',
@@ -105,7 +107,7 @@ function ErrorState({
       }
       {...props}
     >
-      {details ? <p className="max-w-md text-b3 text-text-muted">{details}</p> : null}
+      {details ? <p className="text-b3 text-text-muted max-w-md">{details}</p> : null}
       {children}
     </EmptyState>
   );

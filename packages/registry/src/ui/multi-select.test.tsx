@@ -89,7 +89,10 @@ describe('MultiSelect (static options)', () => {
     expect(more).toHaveTextContent('+2');
     await userEvent.click(more);
     expect(screen.getByRole('button', { name: 'Remove Legal' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Show less' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: 'Show less' })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    );
   });
 
   it('does not show +N when everything fits', () => {
@@ -180,7 +183,13 @@ describe('MultiSelect (static options)', () => {
       { value: 'c', label: 'قانوني' },
     ];
     renderWithLocale(
-      <MultiSelect aria-label="الوسوم" options={arabic} defaultValue={['a', 'b', 'c']} maxChips={1} clearable />,
+      <MultiSelect
+        aria-label="الوسوم"
+        options={arabic}
+        defaultValue={['a', 'b', 'c']}
+        maxChips={1}
+        clearable
+      />,
       { locale: 'ar' },
     );
     expect(screen.getByRole('button', { name: 'إزالة عاجل' })).toBeInTheDocument();
@@ -194,7 +203,12 @@ describe('MultiSelect (static options)', () => {
   it('has no axe violations', async () => {
     const { container } = render(
       <Field label="Tags" description="Used for routing">
-        <MultiSelect options={tags} defaultValue={['urgent', 'billing', 'legal']} maxChips={2} clearable />
+        <MultiSelect
+          options={tags}
+          defaultValue={['urgent', 'billing', 'legal']}
+          maxChips={2}
+          clearable
+        />
       </Field>,
     );
     await expectNoA11yViolations(container);
@@ -212,7 +226,9 @@ describe('MultiSelect (async)', () => {
           options={options}
           onSearchChange={(query) => {
             onSearchChange(query);
-            setOptions(query === 'sa' ? [{ value: '2', label: 'Sara' }] : [{ value: '1', label: 'Ahmed' }]);
+            setOptions(
+              query === 'sa' ? [{ value: '2', label: 'Sara' }] : [{ value: '1', label: 'Ahmed' }],
+            );
           }}
         />
       );
@@ -249,7 +265,15 @@ describe('MultiSelect (async)', () => {
     await userEvent.click(screen.getByRole('combobox'));
     expect(await screen.findByText('Loading…')).toBeInTheDocument();
 
-    rerender(<MultiSelect aria-label="People" options={[]} onSearchChange={() => {}} error onRetry={onRetry} />);
+    rerender(
+      <MultiSelect
+        aria-label="People"
+        options={[]}
+        onSearchChange={() => {}}
+        error
+        onRetry={onRetry}
+      />,
+    );
     await userEvent.click(await screen.findByRole('button', { name: 'Try again' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
 

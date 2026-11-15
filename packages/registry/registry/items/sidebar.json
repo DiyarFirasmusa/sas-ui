@@ -1,0 +1,8 @@
+{
+  "name": "sidebar",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Sidebar",
+  "description": "Token-coloured sidebar with brand, footer and a data-driven nav: links, expandable groups, badges, active state and a renderLink prop for any router.",
+  "files": ["ui/sidebar.tsx", "ui/sidebar-nav.tsx", "lib/nav-utils.ts"]
+}

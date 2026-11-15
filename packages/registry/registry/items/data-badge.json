@@ -4,7 +4,5 @@
   "category": "display",
   "title": "Data badge",
   "description": "Maps a backend status value to a toned badge with a label, falling back to a neutral badge with the raw value.",
-  "files": [
-    "ui/data-badge.tsx"
-  ]
+  "files": ["ui/data-badge.tsx"]
 }

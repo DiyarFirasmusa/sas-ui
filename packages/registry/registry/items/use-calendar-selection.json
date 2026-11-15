@@ -1,0 +1,8 @@
+{
+  "name": "use-calendar-selection",
+  "type": "hook",
+  "category": "foundation",
+  "title": "useCalendarSelection",
+  "description": "Single, multiple and range selection state for the calendar, over ISO date strings.",
+  "files": ["hooks/use-calendar-selection.ts"]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "time-picker",
+  "type": "ui",
+  "category": "form",
+  "title": "Time picker",
+  "description": "Segmented hour/minute (and AM/PM) spinbutton field with minute step; value is HH:mm with Latin digits.",
+  "files": ["ui/time-picker.tsx"]
+}

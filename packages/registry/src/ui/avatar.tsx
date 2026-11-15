@@ -31,7 +31,8 @@ function hueIndexForName(name: string): number {
 }
 
 function firstGrapheme(word: string): string {
-  const first = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(word)[Symbol.iterator]().next();
+  const segments = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(word);
+  const first = segments[Symbol.iterator]().next();
   return first.done ? '' : first.value.segment;
 }
 
@@ -41,11 +42,7 @@ function firstGrapheme(word: string): string {
  */
 function getInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
-  return words
-    .slice(0, 2)
-    .map(firstGrapheme)
-    .join('')
-    .toLocaleUpperCase();
+  return words.slice(0, 2).map(firstGrapheme).join('').toLocaleUpperCase();
 }
 
 const avatarVariants = variants(
@@ -65,8 +62,7 @@ const avatarVariants = variants(
 );
 
 interface AvatarProps
-  extends Omit<AvatarPrimitive.Root.Props, 'children'>,
-    VariantProps<typeof avatarVariants> {
+  extends Omit<AvatarPrimitive.Root.Props, 'children'>, VariantProps<typeof avatarVariants> {
   /** Full name: gives the avatar its accessible name, its initials and its colour. */
   name?: string;
   /** Image URL; the initials show while it loads or if it fails. */
@@ -87,14 +83,13 @@ function Avatar({ className, size, name, src, fallback, ...props }: AvatarProps)
       {...props}
     >
       {src ? (
-        <AvatarPrimitive.Image
-          src={src}
-          alt=""
-          className="aspect-square size-full object-cover"
-        />
+        <AvatarPrimitive.Image src={src} alt="" className="aspect-square size-full object-cover" />
       ) : null}
       <AvatarPrimitive.Fallback
-        className={cn('flex size-full items-center justify-center font-medium', name ? hue : 'bg-surface-dim text-text-muted')}
+        className={cn(
+          'flex size-full items-center justify-center font-medium',
+          name ? hue : 'bg-surface-dim text-text-muted',
+        )}
       >
         {initials ? <span aria-hidden="true">{initials}</span> : (fallback ?? <UserIcon />)}
       </AvatarPrimitive.Fallback>
@@ -102,7 +97,8 @@ function Avatar({ className, size, name, src, fallback, ...props }: AvatarProps)
   );
 }
 
-interface AvatarGroupProps extends React.ComponentProps<'div'>, VariantProps<typeof avatarVariants> {
+interface AvatarGroupProps
+  extends React.ComponentProps<'div'>, VariantProps<typeof avatarVariants> {
   /** People to show, in order. */
   people: { name: string; src?: string }[];
   /** Avatars shown before collapsing the rest into "+N". Default 4. */

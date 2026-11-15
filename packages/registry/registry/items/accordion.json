@@ -1,0 +1,8 @@
+{
+  "name": "accordion",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Accordion",
+  "description": "Collapsible sections with animated height, single or multiple open, plus a sidebar variant.",
+  "files": ["ui/accordion.tsx"]
+}
