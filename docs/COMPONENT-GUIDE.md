@@ -6,14 +6,14 @@ Read one finished component first: `ui/button.tsx`, `ui/field.tsx`,
 
 ## Where things go
 
-| What | Path |
-| ---- | ---- |
-| Component source | `packages/registry/src/ui/<name>.tsx` (multi-file: `<name>.tsx`, `<name>-row.tsx`, … all flat, kebab-case) |
-| Pure logic (no JSX) | `packages/registry/src/lib/<topic>.ts` |
-| Hooks | `packages/registry/src/hooks/use-<topic>.ts` |
-| Test (required) | beside the source: `<name>.test.tsx` |
-| Registry manifest (required) | `packages/registry/registry/items/<name>.json` |
-| Docs examples (required) | `apps/docs/src/examples/<name>.tsx` |
+| What                         | Path                                                                                                       |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Component source             | `packages/registry/src/ui/<name>.tsx` (multi-file: `<name>.tsx`, `<name>-row.tsx`, … all flat, kebab-case) |
+| Pure logic (no JSX)          | `packages/registry/src/lib/<topic>.ts`                                                                     |
+| Hooks                        | `packages/registry/src/hooks/use-<topic>.ts`                                                               |
+| Test (required)              | beside the source: `<name>.test.tsx`                                                                       |
+| Registry manifest (required) | `packages/registry/registry/items/<name>.json`                                                             |
+| Docs examples (required)     | `apps/docs/src/examples/<name>.tsx`                                                                        |
 
 No barrels, no `index.ts`. A file never imports its siblings relatively:
 always the aliases `@/components/ui/<file>`, `@/lib/<file>`, `@/hooks/<file>`,
@@ -46,9 +46,7 @@ package, write the small helper yourself or report it in your summary).
 import { Button } from '@/components/ui/button';
 import type { Example } from '../example-types';
 
-export const examples: Example[] = [
-  { title: 'Default', render: () => <Button>Save</Button> },
-];
+export const examples: Example[] = [{ title: 'Default', render: () => <Button>Save</Button> }];
 ```
 
 Show the realistic variants and states (disabled, invalid, loading, empty,
@@ -84,11 +82,20 @@ localised defaults.
 7. **States**: loading, error, empty (and disabled) are designed, not skipped.
 8. **Form controls** work inside `Field` and react-hook-form (forward
    `ref`, `name`, `onBlur`, `aria-invalid`).
-9. Files stay under 500 lines. Comments explain *why*. No dead code, no
+9. Files stay under 500 lines. Comments explain _why_. No dead code, no
    `console.log`, no TODOs.
 10. Copyable: no cross-component magic, no global registries, no CSS files per
     component — Tailwind utilities in the file (extract a `variants()` when a
     component has variants).
+
+## Direction
+
+Base UI reads text direction from its own `DirectionProvider`, not from
+`<html dir>`. `LocaleProvider` (and the `ThemeProvider`) wrap their children in
+one, so popups, sliders and arrow-key navigation mirror correctly in Arabic.
+Always render library components under one of them (the docs app and
+`renderWithLocale` do), and keep `lib/locale.tsx` as the single place that
+decides direction.
 
 ## Tests
 

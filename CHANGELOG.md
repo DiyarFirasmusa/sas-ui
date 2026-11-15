@@ -14,5 +14,7 @@ All notable changes are recorded here. The format follows
 - `@sas-ui/registry`: copy-in component sources with tests and a registry builder
   that derives dependencies from imports and enforces the house rules.
 - `@sas-ui/cli`: `init`, `add`, `diff`, `list`, `theme`.
+- 87 registry items covering forms, overlays, navigation, data (DataTable, FilterBar, Tree), feedback,
+  charts, rich text, app shell and theming UI.
 - Docs/preview app: every component with live examples across presets, light/dark,
   Arabic/English and RTL/LTR.

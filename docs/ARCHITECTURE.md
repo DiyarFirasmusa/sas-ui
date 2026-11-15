@@ -1,6 +1,6 @@
 # Architecture
 
-SAS UI is an *own-the-code* React component library in the spirit of shadcn/ui,
+SAS UI is an _own-the-code_ React component library in the spirit of shadcn/ui,
 extended for dashboards that must be right-to-left first. This document says
 what the pieces are and why they are cut the way they are.
 
@@ -10,7 +10,7 @@ what the pieces are and why they are cut the way they are.
    there is no runtime dependency on SAS UI. A project can edit any line.
 2. **Accessible primitives.** Behaviour comes from `@base-ui/react` (the stack the
    existing dashboards already use) — no Radix, no hand-rolled focus traps.
-3. **Theme as data.** Colour is a token contract plus *presets* (data), switchable
+3. **Theme as data.** Colour is a token contract plus _presets_ (data), switchable
    at runtime and by CLI, validated for WCAG AA by tests.
 4. **RTL first.** Logical CSS only, direction-aware icons, Arabic labels by
    default alongside English, Latin digits by default.
@@ -30,20 +30,20 @@ docs/                          architecture, guides, migration
 scripts/                       end-to-end CLI check against a scratch Vite app
 ```
 
-### Why a registry + CLI *and* packages
+### Why a registry + CLI _and_ packages
 
-| Concern | Delivered as | Why |
-| ------- | ------------ | --- |
-| Components | **Copied source** (registry + CLI) | Ownership, no version lock-in, projects diverge on purpose (the three dashboards will), `diff` shows drift |
-| Tokens / presets | **Package** (`@sas-ui/tokens`) *and* copied CSS | The palette is shared infrastructure that should update centrally (the wine-lapis palette is being redesigned right now), but a project must also be able to freeze it. The CLI copies the generated CSS (frozen, readable); the package is there for tooling, tests and the runtime switcher |
-| Helpers (`cn`, `variants`, `Slot`, locale) | **Copied source** | 40-line files; a dependency would be heavier than the code |
+| Concern                                    | Delivered as                                    | Why                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------ | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Components                                 | **Copied source** (registry + CLI)              | Ownership, no version lock-in, projects diverge on purpose (the three dashboards will), `diff` shows drift                                                                                                                                                                                    |
+| Tokens / presets                           | **Package** (`@sas-ui/tokens`) _and_ copied CSS | The palette is shared infrastructure that should update centrally (the wine-lapis palette is being redesigned right now), but a project must also be able to freeze it. The CLI copies the generated CSS (frozen, readable); the package is there for tooling, tests and the runtime switcher |
+| Helpers (`cn`, `variants`, `Slot`, locale) | **Copied source**                               | 40-line files; a dependency would be heavier than the code                                                                                                                                                                                                                                    |
 
 Rejected alternatives:
 
-- *Pure npm component package* — fast to adopt, but the three dashboards already
+- _Pure npm component package_ — fast to adopt, but the three dashboards already
   fork their primitives per app and want to keep doing so; a package would turn
   every local tweak into a fork or a PR.
-- *Pure shadcn registry format* — we do speak the same idea (items with files,
+- _Pure shadcn registry format_ — we do speak the same idea (items with files,
   derived dependencies, `add`), but shadcn's tooling assumes Radix, `components.json`
   aliases and a fixed token set; the manifest here is smaller and adds `category`,
   `tier` and a build that enforces our house rules.
@@ -92,7 +92,7 @@ every swatch, the type ramp, radii, elevation and the live contrast matrix.
 ## Theming
 
 See [`THEMING.md`](THEMING.md). In one paragraph: a preset is a TypeScript object
-with a *light* and a *dark* map of ~78 core tokens; the generator derives the
+with a _light_ and a _dark_ map of ~78 core tokens; the generator derives the
 shadcn-style aliases (`--card`, `--border`, `--ring` …) as `var()` references and
 emits CSS scoped by `:root[data-preset="…"]`. `theme.css` maps every token to a
 Tailwind utility through `@theme inline`, so utilities such as `bg-surface` or

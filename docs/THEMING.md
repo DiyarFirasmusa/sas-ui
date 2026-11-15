@@ -5,18 +5,18 @@
 Every preset defines the same ~78 colour tokens for **light** and **dark**, in
 groups (`packages/tokens/src/token-names.ts`):
 
-| Group | Tokens |
-| ----- | ------ |
-| surfaces | `background surface surface-dim surface-elevated popover secondary hover-row surface-solid-secondary kbd switch-off scrim` |
-| text | `text-primary text-secondary text-muted text-inactive` |
-| brand | `primary primary-foreground primary-hover primary-container primary-text primary-highlight primary-light primary-tint brand-light brand-dark` |
-| borders | `stroke stroke-subtle stroke-strong` |
-| status | `success warning danger info` + `*-foreground` |
-| tags | 8 hues (`green red yellow orange cyan purple blue neutral`), each a text colour and a translucent container |
-| neutral | `neutral-700 … neutral-50` |
-| sidebar | `sidebar sidebar-foreground sidebar-accent(-foreground) sidebar-selected(-foreground) sidebar-border sidebar-ring` |
-| accents | `gold coral auth-panel-from/to brand-tile(-foreground)` |
-| charts | `chart-1 … chart-5` |
+| Group    | Tokens                                                                                                                                        |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| surfaces | `background surface surface-dim surface-elevated popover secondary hover-row surface-solid-secondary kbd switch-off scrim`                    |
+| text     | `text-primary text-secondary text-muted text-inactive`                                                                                        |
+| brand    | `primary primary-foreground primary-hover primary-container primary-text primary-highlight primary-light primary-tint brand-light brand-dark` |
+| borders  | `stroke stroke-subtle stroke-strong`                                                                                                          |
+| status   | `success warning danger info` + `*-foreground`                                                                                                |
+| tags     | 8 hues (`green red yellow orange cyan purple blue neutral`), each a text colour and a translucent container                                   |
+| neutral  | `neutral-700 … neutral-50`                                                                                                                    |
+| sidebar  | `sidebar sidebar-foreground sidebar-accent(-foreground) sidebar-selected(-foreground) sidebar-border sidebar-ring`                            |
+| accents  | `gold coral auth-panel-from/to brand-tile(-foreground)`                                                                                       |
+| charts   | `chart-1 … chart-5`                                                                                                                           |
 
 The generator also emits shadcn-style aliases as `var()` references
 (`--card → --surface`, `--border → --stroke`, `--ring → --primary-highlight`,
@@ -33,12 +33,12 @@ line-height, weight and family) and the base layer (focus ring, reduced motion).
 
 ## Presets
 
-| Preset | Character | Source |
-| ------ | --------- | ------ |
-| `neutral` | zinc greys, ink primary; default for new projects | new |
-| `wine-lapis` | burgundy wine + lapis navy + gold | `erp-tourism-react` (living: re-import to follow it) |
-| `inventory` | warm burgundy on charcoal | `erp-Inventory-frontend` |
-| `hr` | plum + gold, deep plum sidebar | `erp-hr-frontend` (text-muted and tag-yellow nudged to pass AA — noted in the file header) |
+| Preset       | Character                                         | Source                                                                                     |
+| ------------ | ------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `neutral`    | zinc greys, ink primary; default for new projects | new                                                                                        |
+| `wine-lapis` | burgundy wine + lapis navy + gold                 | `erp-tourism-react` (living: re-import to follow it)                                       |
+| `inventory`  | warm burgundy on charcoal                         | `erp-Inventory-frontend`                                                                   |
+| `hr`         | plum + gold, deep plum sidebar                    | `erp-hr-frontend` (text-muted and tag-yellow nudged to pass AA — noted in the file header) |
 
 ### Using them
 
@@ -52,8 +52,8 @@ Runtime switching (all-presets mode):
 
 ```ts
 import { applyPreset, applyMode, applyDirection } from '@sas-ui/tokens/apply-preset';
-applyPreset('inventory');   // <html data-preset="inventory">
-applyMode('dark');          // <html class="dark">
+applyPreset('inventory'); // <html data-preset="inventory">
+applyMode('dark'); // <html class="dark">
 applyDirection('rtl', 'ar'); // <html dir="rtl" lang="ar">
 ```
 

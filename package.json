@@ -1,11 +1,10 @@
 {
   "name": "sas-ui-monorepo",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "description": "SAS UI — an own-the-code React component library and theme system (Base UI + Tailwind v4, RTL first).",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@11.11.0",
   "scripts": {
     "build:tokens": "pnpm --filter @sas-ui/tokens build",
     "build:registry": "pnpm --filter @sas-ui/registry build",
@@ -24,5 +23,6 @@
     "oxfmt": "^0.78.0",
     "oxlint": "^1.93.0",
     "typescript": "~6.0.3"
-  }
+  },
+  "packageManager": "pnpm@11.11.0"
 }
