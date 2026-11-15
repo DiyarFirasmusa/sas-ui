@@ -1,0 +1,10 @@
+{
+  "name": "page-header",
+  "type": "ui",
+  "category": "layout",
+  "title": "Page header",
+  "description": "Page title row with subtitle, badge, breadcrumb and actions slots, an RTL-mirrored back button and a sticky option.",
+  "files": [
+    "ui/page-header.tsx"
+  ]
+}

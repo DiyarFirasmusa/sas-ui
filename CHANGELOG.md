@@ -1,0 +1,18 @@
+# Changelog
+
+All notable changes are recorded here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
+[Semantic Versioning](https://semver.org/) once 1.0 is published.
+
+## [Unreleased]
+
+### Added
+
+- `@sas-ui/tokens`: colour token contract, four data-driven presets (`neutral`,
+  `wine-lapis`, `inventory`, `hr`), CSS generator, runtime preset/mode/direction
+  switcher, WCAG AA contrast checks, CSS importer for existing palettes.
+- `@sas-ui/registry`: copy-in component sources with tests and a registry builder
+  that derives dependencies from imports and enforces the house rules.
+- `@sas-ui/cli`: `init`, `add`, `diff`, `list`, `theme`.
+- Docs/preview app: every component with live examples across presets, light/dark,
+  Arabic/English and RTL/LTR.

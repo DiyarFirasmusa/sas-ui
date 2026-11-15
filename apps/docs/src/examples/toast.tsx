@@ -1,0 +1,63 @@
+import { Button } from '@/components/ui/button';
+import { notify, Toaster } from '@/components/ui/toast';
+import type { Example } from '../example-types';
+
+const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+export const examples: Example[] = [
+  {
+    title: 'Notify helpers',
+    description: 'Mount <Toaster /> once at the app root; call notify anywhere. The docs app already mounts one.',
+    render: () => (
+      <div className="flex flex-wrap gap-field">
+        <Toaster />
+        <Button variant="outline" onClick={() => notify.success('Saved')}>Success</Button>
+        <Button variant="outline" onClick={() => notify.error('Could not save', { description: 'Check your connection.' })}>
+          Error
+        </Button>
+        <Button variant="outline" onClick={() => notify.warning('Quota almost used')}>Warning</Button>
+        <Button variant="outline" onClick={() => notify.info('New version available')}>Info</Button>
+      </div>
+    ),
+  },
+  {
+    title: 'Promise',
+    description: 'Loading, then success or error; the promise is returned so callers can still await it.',
+    render: () => (
+      <div className="flex flex-wrap gap-field">
+        <Toaster />
+        <Button
+          onClick={() => {
+            void notify.promise(wait(1200), { loading: 'Saving…', success: 'Saved', error: 'Could not save' });
+          }}
+        >
+          Save
+        </Button>
+        <Button
+          variant="destructive-soft"
+          onClick={() => {
+            const failing = wait(1200).then(() => Promise.reject(new Error('Server unavailable')));
+            failing.catch(() => {});
+            void notify.promise(failing, {
+              loading: 'Saving…',
+              success: 'Saved',
+              error: (error) => (error instanceof Error ? error.message : 'Could not save'),
+            });
+          }}
+        >
+          Save (fails)
+        </Button>
+      </div>
+    ),
+  },
+  {
+    title: 'Placement',
+    description: 'The default bottom-end corner mirrors in RTL: bottom-left under the Arabic locale.',
+    render: () => (
+      <div className="flex flex-wrap gap-field">
+        <Toaster position="top-center" />
+        <Button variant="outline" onClick={() => notify.info('Top centre')}>Top centre</Button>
+      </div>
+    ),
+  },
+];

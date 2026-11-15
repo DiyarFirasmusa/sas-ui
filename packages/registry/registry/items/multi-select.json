@@ -1,0 +1,10 @@
+{
+  "name": "multi-select",
+  "type": "ui",
+  "category": "form",
+  "title": "Multi-select",
+  "description": "Searchable multiple select with removable chips, +N overflow and async or paged options.",
+  "files": [
+    "ui/multi-select.tsx"
+  ]
+}

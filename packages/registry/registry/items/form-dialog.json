@@ -1,0 +1,10 @@
+{
+  "name": "form-dialog",
+  "type": "ui",
+  "category": "overlay",
+  "title": "Form dialog",
+  "description": "Dialog wrapping a form with a localized submit/cancel footer, submitting state and an optional discard-changes guard.",
+  "files": [
+    "ui/form-dialog.tsx"
+  ]
+}

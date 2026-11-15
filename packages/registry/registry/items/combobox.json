@@ -1,0 +1,10 @@
+{
+  "name": "combobox",
+  "type": "ui",
+  "category": "form",
+  "title": "Combobox",
+  "description": "Searchable single select with static or async/paged options, loading, error and empty states.",
+  "files": [
+    "ui/combobox.tsx"
+  ]
+}

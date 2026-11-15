@@ -1,0 +1,10 @@
+{
+  "name": "section-title",
+  "type": "ui",
+  "category": "layout",
+  "title": "Section title",
+  "description": "Section heading with icon, description and action slot.",
+  "files": [
+    "ui/section-title.tsx"
+  ]
+}

@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -239,12 +240,24 @@ function CalendarView({
   labels: labelOverrides,
   className,
   onKeyDown,
+  ref,
   ...rootProps
 }: CalendarViewProps) {
   const { locale, direction } = useLocale();
   const labels = useLabels(messages, labelOverrides);
   const baseId = useId();
-  const gridRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const setRootRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      gridRef.current = node;
+      if (typeof ref === 'function') {
+        ref(node);
+      } else if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref],
+  );
   const pendingFocus = useRef(false);
 
   const minDate = parseBound(min);
@@ -353,7 +366,7 @@ function CalendarView({
   return (
     <div
       data-slot="calendar"
-      ref={gridRef}
+      ref={setRootRef}
       className={cn('relative flex w-fit flex-col gap-row sm:flex-row sm:gap-card', className)}
       {...rootProps}
       onKeyDown={(event) => {
@@ -524,4 +537,4 @@ function Calendar(props: CalendarProps) {
 }
 
 export { Calendar };
-export type { CalendarLabelKey, CalendarProps, DateRangeValue };
+export type { CalendarCommonProps, CalendarLabelKey, CalendarProps, DateRangeValue };

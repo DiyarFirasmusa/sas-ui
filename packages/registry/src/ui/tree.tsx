@@ -59,6 +59,12 @@ type TreeRow<TData> =
 
 interface TreeProps<TData = unknown> {
   nodes: readonly TreeNode<TData>[];
+  /**
+   * The complete tree behind a filtered `nodes` view. Check states and
+   * toggles are computed on it, so a parent never looks fully checked just
+   * because its unchecked children are hidden by a search.
+   */
+  checkNodes?: readonly TreeNode<TData>[];
   'aria-label'?: string;
   'aria-labelledby'?: string;
   /** Expanded node ids (controlled). */
@@ -119,6 +125,7 @@ const EMPTY_IDS: readonly string[] = [];
  */
 function Tree<TData = unknown>({
   nodes,
+  checkNodes,
   expanded: expandedProp,
   defaultExpanded = EMPTY_IDS,
   onExpandedChange,
@@ -166,9 +173,13 @@ function Tree<TData = unknown>({
   const effectiveNodes = useMemo(() => attachChildren(nodes, loaded), [nodes, loaded]);
   const expandedSet = useMemo(() => new Set(expandedIds), [expandedIds]);
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const checkBase = useMemo(
+    () => (checkNodes ? attachChildren(checkNodes, loaded) : effectiveNodes),
+    [checkNodes, effectiveNodes, loaded],
+  );
   const checkStates = useMemo(
-    () => (checkable ? getCheckStates(effectiveNodes, checkedIds) : new Map<string, CheckState>()),
-    [checkable, effectiveNodes, checkedIds],
+    () => (checkable ? getCheckStates(checkBase, checkedIds) : new Map<string, CheckState>()),
+    [checkable, checkBase, checkedIds],
   );
 
   const rows = useMemo(() => {
@@ -259,7 +270,7 @@ function Tree<TData = unknown>({
       return;
     }
     if (checkable) {
-      setCheckedIds([...toggleChecked(effectiveNodes, checkedIds, node.id)]);
+      setCheckedIds([...toggleChecked(checkBase, checkedIds, node.id)]);
     } else if (selectionMode === 'single') {
       setSelectedIds([node.id]);
     } else if (selectionMode === 'multiple') {

@@ -12,7 +12,7 @@ function operations(before: string[], after: string[]): Operation[] {
   // LCS table; registry files stay under 500 lines so O(n·m) is fine.
   const rows = before.length + 1;
   const columns = after.length + 1;
-  const table: number[] = new Array<number>(rows * columns).fill(0);
+  const table: number[] = Array.from({ length: rows * columns }, () => 0);
   const at = (row: number, column: number) => table[row * columns + column] ?? 0;
   for (let row = before.length - 1; row >= 0; row -= 1) {
     for (let column = after.length - 1; column >= 0; column -= 1) {
@@ -55,7 +55,7 @@ export function unifiedDiff(before: string, after: string): DiffResult {
     return { changed: false, text: '', added: 0, removed: 0 };
   }
   const steps = operations(before.split('\n'), after.split('\n'));
-  const keep = new Array<boolean>(steps.length).fill(false);
+  const keep = Array.from({ length: steps.length }, () => false);
   steps.forEach((step, index) => {
     if (step.kind !== ' ') {
       for (let near = Math.max(0, index - CONTEXT); near <= Math.min(steps.length - 1, index + CONTEXT); near += 1) {

@@ -99,7 +99,7 @@ function TableRow({ className, selected = false, ...props }: TableRowProps) {
   );
 }
 
-interface TableHeadProps extends ComponentProps<'th'>, Omit<CellVariantProps, 'sticky'> {
+interface TableHeadProps extends Omit<ComponentProps<'th'>, 'align'>, Omit<CellVariantProps, 'sticky'> {
   /** Pins the column to the start or end edge while the table scrolls sideways. */
   sticky?: StickySide;
 }
@@ -121,7 +121,7 @@ function TableHead({ className, align = 'start', numeric, sticky, scope = 'col',
   );
 }
 
-interface TableCellProps extends ComponentProps<'td'>, Omit<CellVariantProps, 'sticky'> {
+interface TableCellProps extends Omit<ComponentProps<'td'>, 'align'>, Omit<CellVariantProps, 'sticky'> {
   sticky?: StickySide;
 }
 

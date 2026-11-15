@@ -1,0 +1,10 @@
+{
+  "name": "state-wrapper",
+  "type": "ui",
+  "category": "feedback",
+  "title": "State wrapper",
+  "description": "One place for loading, error, empty and success, with a TanStack Query adapter.",
+  "files": [
+    "ui/state-wrapper.tsx"
+  ]
+}

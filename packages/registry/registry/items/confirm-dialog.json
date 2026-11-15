@@ -1,0 +1,10 @@
+{
+  "name": "confirm-dialog",
+  "type": "ui",
+  "category": "overlay",
+  "title": "Confirm dialog",
+  "description": "Single-flight confirmation dialog: async onConfirm with loading, blocked dismissal while pending, error surface and destructive tone.",
+  "files": [
+    "ui/confirm-dialog.tsx"
+  ]
+}
