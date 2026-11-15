@@ -37,14 +37,23 @@ export const examples: Example[] = [
     title: 'Sticky',
     description: 'Pins to the top of the nearest scroll container.',
     render: () => (
-      <div className="h-48 overflow-auto rounded-xl border border-stroke bg-background px-row">
+      <div className="border-stroke bg-background px-row h-48 overflow-auto rounded-xl border">
         <PageHeader sticky title="Reports" actions={<Button size="sm">Refresh</Button>} />
-        <div className="h-96 py-row text-b2 text-text-secondary">Scroll to see the header stay in place.</div>
+        <div className="py-row text-b2 text-text-secondary h-96">
+          Scroll to see the header stay in place.
+        </div>
       </div>
     ),
   },
   {
     title: 'Arabic',
-    render: () => <PageHeader title="الفواتير" subtitle="جميع مستندات الفوترة" onBack={() => {}} actions={<Button>فاتورة جديدة</Button>} />,
+    render: () => (
+      <PageHeader
+        title="الفواتير"
+        subtitle="جميع مستندات الفوترة"
+        onBack={() => {}}
+        actions={<Button>فاتورة جديدة</Button>}
+      />
+    ),
   },
 ];

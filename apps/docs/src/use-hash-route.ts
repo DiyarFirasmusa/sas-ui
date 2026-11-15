@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export type Route =
-  | { page: 'home' }
-  | { page: 'tokens' }
-  | { page: 'component'; name: string };
+export type Route = { page: 'home' } | { page: 'tokens' } | { page: 'component'; name: string };
 
 export function parseRoute(hash: string): Route {
   const path = hash.replace(/^#\/?/, '');

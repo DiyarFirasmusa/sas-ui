@@ -9,7 +9,7 @@ export const examples: Example[] = [
   {
     title: 'Tones',
     render: () => (
-      <div className="flex flex-col gap-row">
+      <div className="gap-row flex flex-col">
         <Progress value={100} tone="success" label="Import complete" />
         <Progress value={82} tone="warning" label="Quota" />
         <Progress value={35} tone="danger" label="Failed rows" />

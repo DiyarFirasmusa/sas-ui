@@ -16,7 +16,10 @@
           var root = document.documentElement;
           root.setAttribute('data-preset', localStorage.getItem('sas-ui:preset') || 'neutral');
           var mode = localStorage.getItem('sas-ui:mode') || 'system';
-          if (mode === 'dark' || (mode === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          if (
+            mode === 'dark' ||
+            (mode === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+          ) {
             root.classList.add('dark');
           }
           var lang = localStorage.getItem('sas-ui:lang') || 'en';

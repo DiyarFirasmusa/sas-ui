@@ -5,9 +5,9 @@ export const examples: Example[] = [
   {
     title: 'Block',
     render: () => (
-      <div className="flex items-center gap-inline">
-        <Skeleton className="size-12 rounded-pill" />
-        <div className="flex flex-col gap-field">
+      <div className="gap-inline flex items-center">
+        <Skeleton className="rounded-pill size-12" />
+        <div className="gap-field flex flex-col">
           <Skeleton className="h-4 w-40" />
           <Skeleton className="h-3 w-24" />
         </div>

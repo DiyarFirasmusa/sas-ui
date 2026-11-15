@@ -7,28 +7,47 @@ const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, 
 export const examples: Example[] = [
   {
     title: 'Notify helpers',
-    description: 'Mount <Toaster /> once at the app root; call notify anywhere. The docs app already mounts one.',
+    description:
+      'Mount <Toaster /> once at the app root; call notify anywhere. The docs app already mounts one.',
     render: () => (
-      <div className="flex flex-wrap gap-field">
+      <div className="gap-field flex flex-wrap">
         <Toaster />
-        <Button variant="outline" onClick={() => notify.success('Saved')}>Success</Button>
-        <Button variant="outline" onClick={() => notify.error('Could not save', { description: 'Check your connection.' })}>
+        <Button variant="outline" onClick={() => notify.success('Saved')}>
+          Success
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() =>
+            notify.error('Could not save', {
+              description: 'Check your connection.',
+            })
+          }
+        >
           Error
         </Button>
-        <Button variant="outline" onClick={() => notify.warning('Quota almost used')}>Warning</Button>
-        <Button variant="outline" onClick={() => notify.info('New version available')}>Info</Button>
+        <Button variant="outline" onClick={() => notify.warning('Quota almost used')}>
+          Warning
+        </Button>
+        <Button variant="outline" onClick={() => notify.info('New version available')}>
+          Info
+        </Button>
       </div>
     ),
   },
   {
     title: 'Promise',
-    description: 'Loading, then success or error; the promise is returned so callers can still await it.',
+    description:
+      'Loading, then success or error; the promise is returned so callers can still await it.',
     render: () => (
-      <div className="flex flex-wrap gap-field">
+      <div className="gap-field flex flex-wrap">
         <Toaster />
         <Button
           onClick={() => {
-            void notify.promise(wait(1200), { loading: 'Saving…', success: 'Saved', error: 'Could not save' });
+            void notify.promise(wait(1200), {
+              loading: 'Saving…',
+              success: 'Saved',
+              error: 'Could not save',
+            });
           }}
         >
           Save
@@ -52,11 +71,14 @@ export const examples: Example[] = [
   },
   {
     title: 'Placement',
-    description: 'The default bottom-end corner mirrors in RTL: bottom-left under the Arabic locale.',
+    description:
+      'The default bottom-end corner mirrors in RTL: bottom-left under the Arabic locale.',
     render: () => (
-      <div className="flex flex-wrap gap-field">
+      <div className="gap-field flex flex-wrap">
         <Toaster position="top-center" />
-        <Button variant="outline" onClick={() => notify.info('Top centre')}>Top centre</Button>
+        <Button variant="outline" onClick={() => notify.info('Top centre')}>
+          Top centre
+        </Button>
       </div>
     ),
   },

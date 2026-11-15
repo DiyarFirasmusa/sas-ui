@@ -13,9 +13,10 @@ const team = [
 export const examples: Example[] = [
   {
     title: 'Initials fallback',
-    description: 'First letters of the first two words; the colour comes from the name, so it is stable.',
+    description:
+      'First letters of the first two words; the colour comes from the name, so it is stable.',
     render: () => (
-      <div className="flex items-center gap-inline">
+      <div className="gap-inline flex items-center">
         <Avatar name="Layla Hassan" />
         <Avatar name="محمد علي" />
         <Avatar name="Grace" />
@@ -26,7 +27,7 @@ export const examples: Example[] = [
   {
     title: 'Sizes',
     render: () => (
-      <div className="flex items-center gap-inline">
+      <div className="gap-inline flex items-center">
         {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((size) => (
           <Avatar key={size} name="Layla Hassan" size={size} />
         ))}

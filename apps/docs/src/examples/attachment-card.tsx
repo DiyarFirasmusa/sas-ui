@@ -6,8 +6,14 @@ export const examples: Example[] = [
     title: 'Actions and metadata',
     wide: true,
     render: () => (
-      <div className="flex w-full max-w-md flex-col gap-field">
-        <AttachmentCard name="license-renewal.pdf" size={2_411_724} meta="Uploaded today" onDownload={() => {}} onRemove={() => {}} />
+      <div className="gap-field flex w-full max-w-md flex-col">
+        <AttachmentCard
+          name="license-renewal.pdf"
+          size={2_411_724}
+          meta="Uploaded today"
+          onDownload={() => {}}
+          onRemove={() => {}}
+        />
         <AttachmentCard name="شهادة-التسجيل.pdf" size={184_320} onDownload={() => {}} />
         <AttachmentCard name="no-size.txt" />
       </div>

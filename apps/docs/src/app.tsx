@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { SidebarNav } from './sidebar-nav';
-import { Toolbar } from './toolbar';
-import { useHashRoute } from './use-hash-route';
 import { ComponentPage } from './pages/component-page';
 import { HomePage } from './pages/home-page';
 import { TokensPage } from './pages/tokens-page';
+import { SidebarNav } from './sidebar-nav';
+import { Toolbar } from './toolbar';
+import { useHashRoute } from './use-hash-route';
 
 export function App() {
   const route = useHashRoute();
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="bg-background text-foreground min-h-screen">
       <Toolbar onMenu={() => setMenuOpen((open) => !open)} />
       <div className="flex">
         <aside
@@ -23,7 +23,7 @@ export function App() {
         >
           <SidebarNav route={route} onNavigate={() => setMenuOpen(false)} />
         </aside>
-        <main className="min-w-0 flex-1 p-row md:p-card">
+        <main className="p-row md:p-card min-w-0 flex-1">
           {route.page === 'home' ? <HomePage /> : null}
           {route.page === 'tokens' ? <TokensPage /> : null}
           {route.page === 'component' ? <ComponentPage key={route.name} name={route.name} /> : null}

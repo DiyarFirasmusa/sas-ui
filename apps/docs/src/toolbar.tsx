@@ -5,10 +5,12 @@ import { PRESET_OPTIONS, useDocsSettings } from './docs-settings';
 
 /** Preset, colour mode, language and direction — everything a component must survive. */
 export function Toolbar({ onMenu }: { onMenu: () => void }) {
-  const { preset, setPreset, mode, setMode, locale, setLocale, direction, setDirection } = useDocsSettings();
-  const isDark = mode === 'dark' || (mode === 'system' && document.documentElement.classList.contains('dark'));
+  const { preset, setPreset, mode, setMode, locale, setLocale, direction, setDirection } =
+    useDocsSettings();
+  const isDark =
+    mode === 'dark' || (mode === 'system' && document.documentElement.classList.contains('dark'));
   return (
-    <header className="sticky top-0 z-30 flex flex-wrap items-center gap-field border-b border-stroke bg-surface px-row py-inline">
+    <header className="gap-field border-stroke bg-surface px-row py-inline sticky top-0 z-30 flex flex-wrap items-center border-b">
       <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Menu" onClick={onMenu}>
         <MenuIcon />
       </Button>
@@ -30,7 +32,11 @@ export function Toolbar({ onMenu }: { onMenu: () => void }) {
       >
         {isDark ? <SunIcon /> : <MoonIcon />}
       </Button>
-      <Button variant="outline" aria-pressed={locale === 'ar'} onClick={() => setLocale(locale === 'ar' ? 'en' : 'ar')}>
+      <Button
+        variant="outline"
+        aria-pressed={locale === 'ar'}
+        onClick={() => setLocale(locale === 'ar' ? 'en' : 'ar')}
+      >
         {locale === 'ar' ? 'العربية' : 'English'}
       </Button>
       <Button variant="outline" onClick={() => setDirection(direction === 'rtl' ? 'ltr' : 'rtl')}>

@@ -8,7 +8,7 @@ const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, 
 function AsyncDelete() {
   const [deleted, setDeleted] = useState(false);
   return (
-    <div className="flex items-center gap-inline">
+    <div className="gap-inline flex items-center">
       <ConfirmDialog
         trigger={<Button variant="destructive">Delete invoice</Button>}
         destructive
@@ -39,7 +39,8 @@ export const examples: Example[] = [
   },
   {
     title: 'Destructive and async',
-    description: 'Confirm shows a spinner and is single-flight; the dialog stays open until the promise resolves.',
+    description:
+      'Confirm shows a spinner and is single-flight; the dialog stays open until the promise resolves.',
     render: () => <AsyncDelete />,
   },
   {

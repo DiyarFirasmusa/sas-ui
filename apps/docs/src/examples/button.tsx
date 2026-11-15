@@ -53,7 +53,10 @@ export const examples: Example[] = [
   {
     title: 'As a link',
     render: () => (
-      <a href="#/components/button" className="inline-flex h-9.5 items-center rounded-control bg-primary px-row text-button-1 text-primary-foreground">
+      <a
+        href="#/components/button"
+        className="rounded-control bg-primary px-row text-button-1 text-primary-foreground inline-flex h-9.5 items-center"
+      >
         Link styled as a button
       </a>
     ),

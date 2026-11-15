@@ -40,7 +40,10 @@ export const CATEGORY_ORDER = [
   'layout',
 ] as const;
 
-export function itemsByCategory(): { category: string; items: ItemManifest[] }[] {
+export function itemsByCategory(): {
+  category: string;
+  items: ItemManifest[];
+}[] {
   return CATEGORY_ORDER.map((category) => ({
     category,
     items: items.filter((item) => item.category === category),

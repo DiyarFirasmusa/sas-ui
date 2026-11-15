@@ -13,7 +13,7 @@ export const examples: Example[] = [
     title: 'Status map',
     description: 'Each backend value resolves to a tone and a label.',
     render: () => (
-      <div className="flex flex-wrap gap-field">
+      <div className="gap-field flex flex-wrap">
         {Object.keys(statusMap).map((value) => (
           <DataBadge key={value} value={value} statusMap={statusMap} />
         ))}
@@ -24,7 +24,7 @@ export const examples: Example[] = [
     title: 'Unknown and empty values',
     description: 'A value the map does not know shows as a neutral badge with the raw value.',
     render: () => (
-      <div className="flex flex-wrap gap-field">
+      <div className="gap-field flex flex-wrap">
         <DataBadge value="ARCHIVED" statusMap={statusMap} />
         <DataBadge value={null} statusMap={statusMap} />
       </div>
@@ -33,7 +33,7 @@ export const examples: Example[] = [
   {
     title: 'Arabic labels',
     render: () => (
-      <div className="flex flex-wrap gap-field">
+      <div className="gap-field flex flex-wrap">
         <DataBadge value="PAID" statusMap={{ PAID: { tone: 'green', label: 'مدفوع' } }} />
         <DataBadge value="OVERDUE" statusMap={{ OVERDUE: { tone: 'red', label: 'متأخر' } }} />
       </div>

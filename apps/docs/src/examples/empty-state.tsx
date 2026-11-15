@@ -22,10 +22,22 @@ export const examples: Example[] = [
   },
   {
     title: 'Page size',
-    render: () => <EmptyState size="page" title="Your inbox is empty" description="New messages will show up here." />,
+    render: () => (
+      <EmptyState
+        size="page"
+        title="Your inbox is empty"
+        description="New messages will show up here."
+      />
+    ),
   },
   {
     title: 'Arabic',
-    render: () => <EmptyState title="لا توجد فواتير بعد" description="أنشئ أول فاتورة لبدء تتبع المدفوعات." actions={<Button>فاتورة جديدة</Button>} />,
+    render: () => (
+      <EmptyState
+        title="لا توجد فواتير بعد"
+        description="أنشئ أول فاتورة لبدء تتبع المدفوعات."
+        actions={<Button>فاتورة جديدة</Button>}
+      />
+    ),
   },
 ];

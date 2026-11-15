@@ -1,6 +1,13 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { applyDirection, applyMode, applyPreset, getStoredMode, getStoredPreset, type ColorMode } from '@sas-ui/tokens/apply-preset';
 import { PRESETS } from '@sas-ui/tokens/all-presets';
+import {
+  applyDirection,
+  applyMode,
+  applyPreset,
+  getStoredMode,
+  getStoredPreset,
+  type ColorMode,
+} from '@sas-ui/tokens/apply-preset';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { LocaleProvider, type Direction, type Locale } from '@/lib/locale';
 
 interface DocsSettings {
@@ -37,10 +44,16 @@ function writeStored(key: string, value: string): void {
 export function DocsSettingsProvider({ children }: { children: ReactNode }) {
   const [preset, setPreset] = useState(() => getStoredPreset('neutral'));
   const [mode, setMode] = useState<ColorMode>(() => getStoredMode());
-  const [locale, setLocale] = useState<Locale>(() => (readStored('sas-ui:lang') === 'ar' ? 'ar' : 'en'));
+  const [locale, setLocale] = useState<Locale>(() =>
+    readStored('sas-ui:lang') === 'ar' ? 'ar' : 'en',
+  );
   const [direction, setDirection] = useState<Direction>(() => {
     const stored = readStored('sas-ui:dir');
-    return stored === 'rtl' || stored === 'ltr' ? stored : readStored('sas-ui:lang') === 'ar' ? 'rtl' : 'ltr';
+    return stored === 'rtl' || stored === 'ltr'
+      ? stored
+      : readStored('sas-ui:lang') === 'ar'
+        ? 'rtl'
+        : 'ltr';
   });
   const [themeVersion, setThemeVersion] = useState(0);
 
@@ -101,4 +114,7 @@ export function useDocsSettings(): DocsSettings {
   return context;
 }
 
-export const PRESET_OPTIONS = PRESETS.map((preset) => ({ value: preset.name, label: preset.label.en }));
+export const PRESET_OPTIONS = PRESETS.map((preset) => ({
+  value: preset.name,
+  label: preset.label.en,
+}));

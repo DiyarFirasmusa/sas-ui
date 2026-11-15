@@ -43,7 +43,8 @@ function NewClient({ confirmDiscard }: { confirmDiscard?: boolean }) {
 export const examples: Example[] = [
   {
     title: 'Default',
-    description: 'The dialog never closes by itself; the handler closes it after a successful save.',
+    description:
+      'The dialog never closes by itself; the handler closes it after a successful save.',
     render: () => <NewClient />,
   },
   {

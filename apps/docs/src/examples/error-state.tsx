@@ -25,7 +25,13 @@ export const examples: Example[] = [
   },
   {
     title: 'Not found (page)',
-    render: () => <ErrorState kind="not-found" size="page" actions={<Button variant="outline">Go home</Button>} />,
+    render: () => (
+      <ErrorState
+        kind="not-found"
+        size="page"
+        actions={<Button variant="outline">Go home</Button>}
+      />
+    ),
   },
   {
     title: 'Forbidden',
