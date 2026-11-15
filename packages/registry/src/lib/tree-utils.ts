@@ -188,7 +188,12 @@ export function attachChildren<TData>(
     if (!base) {
       return node;
     }
-    return { ...node, children: attachChildren(base, childrenById) };
+    // Once children are attached the branch is no longer lazy, even when empty.
+    return {
+      ...node,
+      children: attachChildren(base, childrenById),
+      hasChildren: loaded ? false : node.hasChildren,
+    };
   });
 }
 

@@ -7,3 +7,4 @@ coverage
 packages/registry/registry-out
 packages/cli/registry
 packages/tokens/css
+.claude/

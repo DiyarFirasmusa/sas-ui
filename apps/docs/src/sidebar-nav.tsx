@@ -1,0 +1,44 @@
+import { cn } from '@/lib/utils';
+import { itemsByCategory } from './catalog';
+import type { Route } from './use-hash-route';
+
+function link(active: boolean) {
+  return cn(
+    'block rounded-md px-inline py-1.5 text-b2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+    active && 'bg-sidebar-selected font-semibold text-sidebar-selected-foreground hover:bg-sidebar-selected hover:text-sidebar-selected-foreground',
+  );
+}
+
+export function SidebarNav({ route, onNavigate }: { route: Route; onNavigate: () => void }) {
+  return (
+    <nav aria-label="Documentation" className="flex flex-col gap-row p-row">
+      <div className="flex flex-col gap-1">
+        <a href="#/" onClick={onNavigate} className={link(route.page === 'home')} aria-current={route.page === 'home' ? 'page' : undefined}>
+          Getting started
+        </a>
+        <a href="#/tokens" onClick={onNavigate} className={link(route.page === 'tokens')} aria-current={route.page === 'tokens' ? 'page' : undefined}>
+          Tokens & presets
+        </a>
+      </div>
+      {itemsByCategory().map((group) => (
+        <div key={group.category} className="flex flex-col gap-1">
+          <h2 className="px-inline text-label text-sidebar-foreground/70 capitalize">{group.category}</h2>
+          {group.items.map((item) => {
+            const active = route.page === 'component' && route.name === item.name;
+            return (
+              <a
+                key={item.name}
+                href={`#/components/${item.name}`}
+                onClick={onNavigate}
+                className={link(active)}
+                aria-current={active ? 'page' : undefined}
+              >
+                {item.title}
+              </a>
+            );
+          })}
+        </div>
+      ))}
+    </nav>
+  );
+}

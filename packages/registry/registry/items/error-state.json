@@ -1,0 +1,10 @@
+{
+  "name": "error-state",
+  "type": "ui",
+  "category": "feedback",
+  "title": "Error state",
+  "description": "Alert-role failure panel with localized retry button and error, not-found and forbidden presets.",
+  "files": [
+    "ui/error-state.tsx"
+  ]
+}

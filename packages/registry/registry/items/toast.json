@@ -1,0 +1,10 @@
+{
+  "name": "toast",
+  "type": "ui",
+  "category": "feedback",
+  "title": "Toast",
+  "description": "Token-themed sonner Toaster with RTL-aware placement and a typed notify helper (success, error, warning, info, promise).",
+  "files": [
+    "ui/toast.tsx"
+  ]
+}

@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import '../../../packages/tokens/css/theme.css';
+@import '../../../packages/tokens/css/presets.css';
+
+/* The docs render the registry sources, so Tailwind must scan them too. */
+@source '../../../packages/registry/src';

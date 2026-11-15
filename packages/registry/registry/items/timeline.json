@@ -1,0 +1,10 @@
+{
+  "name": "timeline",
+  "type": "ui",
+  "category": "display",
+  "title": "Timeline",
+  "description": "Vertical ordered list of events with toned markers, times and descriptions; the rail mirrors in RTL.",
+  "files": [
+    "ui/timeline.tsx"
+  ]
+}

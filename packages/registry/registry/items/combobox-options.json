@@ -1,0 +1,10 @@
+{
+  "name": "combobox-options",
+  "type": "lib",
+  "category": "form",
+  "title": "Combobox options",
+  "description": "Option type and pure helpers shared by Combobox and Multi-select (label templates, option memory for async lists).",
+  "files": [
+    "lib/combobox-options.ts"
+  ]
+}

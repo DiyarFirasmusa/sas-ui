@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-preset="neutral">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SAS UI — components</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          root.setAttribute('data-preset', localStorage.getItem('sas-ui:preset') || 'neutral');
+          var mode = localStorage.getItem('sas-ui:mode') || 'system';
+          if (mode === 'dark' || (mode === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+            root.classList.add('dark');
+          }
+          var lang = localStorage.getItem('sas-ui:lang') || 'en';
+          root.lang = lang;
+          root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        } catch (error) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
