@@ -52,3 +52,20 @@ each one needs a side-by-side check against the Figma and the app's e2e/axe run.
 4. `dialog`, `sheet`, `dropdown-menu`, `tabs`, `tooltip`, `avatar`, `table`, `chart`.
 5. Tokens: `sas-ui init --preset wine-lapis`, delete `tokens-colors.css` and the `@theme` colour block.
 6. Fields, `data-table`, `filter-bar`, dialogs, layout.
+
+## Step 2 — first primitives (2026-11-16)
+
+Added with `sas-ui add label scroll-area --overwrite`, then tailored to the app's existing look (the app's design wins):
+
+| App file                        | Result                                                                                                                                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `components/ui/label.tsx`       | library `Label` shape (`required` prop) with the app's classes (`gap-2`, inherited colour, `group-data-[disabled]`) and the app's `RequiredMark` export kept — every existing import still works |
+| `components/ui/scroll-area.tsx` | library `ScrollArea`: direction-aware (follows `<html lang>` through `lib/locale.tsx`), focusable viewport, `orientation` prop; scrollbars kept always visible like before                       |
+| `lib/locale.tsx`                | new (the library's tiny locale context; falls back to `<html lang>`, so no provider is needed in the app)                                                                                        |
+
+`separator` and `kbd` do not exist in the app and nothing uses them, so they were not added. Gates after the change:
+typecheck, lint, fmt, build and the 1,872 unit tests pass, same as the baseline.
+
+Lesson for the next batches: a clean `add --overwrite` changes visuals (label colour, scrollbar visibility, shimmer), so each
+swap is "add, then restore the app's look in the copy, then `sas-ui diff` documents what is left". Next candidates:
+`tooltip`, `avatar`, `skeleton` (needs the shimmer), then the form controls with their CSS sheets.
