@@ -27,6 +27,12 @@ describe('cn', () => {
     expect(cn('shadow-small shadow-large')).toBe('shadow-large');
   });
 
+  it('knows the extra ramp and radius names the existing dashboards use', () => {
+    expect(cn('text-display text-text-muted')).toBe('text-display text-text-muted');
+    expect(cn('text-table-id text-h4')).toBe('text-h4');
+    expect(cn('rounded-nav rounded-kpi')).toBe('rounded-kpi');
+  });
+
   it('keeps logical utilities apart from each other', () => {
     expect(cn('ps-2 pe-4')).toBe('ps-2 pe-4');
     expect(cn('ps-2 ps-4')).toBe('ps-4');

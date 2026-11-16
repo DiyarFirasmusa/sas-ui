@@ -21,8 +21,10 @@ const TYPE_RAMP = [
   'button-2',
   'label',
   'table-header',
+  'table-id',
   'kpi',
   'metric',
+  'display',
 ];
 const SPACING_ROLES = ['field', 'inline', 'row', 'panel', 'card', 'page'];
 
@@ -32,7 +34,7 @@ const twMerge = extendTailwindMerge({
     classGroups: {
       'font-size': [{ text: TYPE_RAMP }],
       shadow: [{ shadow: ['small', 'mid', 'large', 'xlarge', 'primary'] }],
-      rounded: [{ rounded: ['control', 'modal', 'pill'] }],
+      rounded: [{ rounded: ['control', 'modal', 'pill', 'nav', 'kpi', 'pagination', 'kbd'] }],
     },
     conflictingClassGroups: {
       // A ramp utility sets size, line-height and weight together.
