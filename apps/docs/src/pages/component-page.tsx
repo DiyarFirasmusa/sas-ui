@@ -2,7 +2,7 @@ import { Component, Suspense, useEffect, useState, type ErrorInfo, type ReactNod
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { exampleSource, findItem, loadExamples } from '../catalog';
+import { exampleSource, findItem, isComponent, loadExamples, loadRegistrySource } from '../catalog';
 import type { Example } from '../example-types';
 
 class ExampleBoundary extends Component<{ children: ReactNode }, { failed: Error | null }> {
@@ -49,6 +49,53 @@ function ExampleCard({ example }: { example: Example }) {
   );
 }
 
+function HelperSources({ files }: { files: string[] }) {
+  const [sources, setSources] = useState<Record<string, string>>({});
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all(files.map(async (file) => [file, await loadRegistrySource(file)] as const)).then(
+      (entries) => {
+        if (!cancelled) {
+          setSources(
+            Object.fromEntries(
+              entries.flatMap(([file, source]) => (source === undefined ? [] : [[file, source]])),
+            ),
+          );
+        }
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [files]);
+  return (
+    <section className="gap-field flex flex-col">
+      <h2 className="text-h4">Source</h2>
+      <p className="text-b2 text-text-secondary">
+        This is a helper, not a visual component, so there is no live demo. It is copied
+        automatically when a component needs it.
+      </p>
+      {files.map((file) => (
+        <details
+          key={file}
+          className="border-stroke bg-surface rounded-lg border"
+          open={files.length === 1}
+        >
+          <summary dir="ltr" className="p-inline text-b2 cursor-pointer font-mono">
+            {file}
+          </summary>
+          <pre
+            dir="ltr"
+            className="border-stroke bg-surface-dim p-inline text-b3 max-h-128 overflow-auto border-t font-mono"
+          >
+            <code>{sources[file] ?? 'Loading…'}</code>
+          </pre>
+        </details>
+      ))}
+    </section>
+  );
+}
+
 export function ComponentPage({ name }: { name: string }) {
   const item = findItem(name);
   const [examples, setExamples] = useState<Example[] | null>(null);
@@ -74,7 +121,9 @@ export function ComponentPage({ name }: { name: string }) {
     <article className="gap-card mx-auto flex max-w-4xl flex-col">
       <header className="gap-field flex flex-col">
         <div className="gap-field flex flex-wrap items-center">
-          <h1 className="text-h1 text-text-primary">{item.title}</h1>
+          <h1 dir="auto" className="text-h1 text-text-primary">
+            {item.title}
+          </h1>
           <Badge tone="primary">{item.category}</Badge>
           {item.tier === 'extra' ? <Badge tone="orange">extra</Badge> : null}
         </div>
@@ -92,8 +141,11 @@ export function ComponentPage({ name }: { name: string }) {
 
       <Suspense fallback={null}>
         {examples === null ? <p className="text-b2 text-text-muted">Loading examples…</p> : null}
-        {examples !== null && examples.length === 0 ? (
-          <p className="text-b2 text-text-muted">No live examples yet for this item.</p>
+        {examples !== null && examples.length === 0 && !isComponent(item) ? (
+          <HelperSources files={item.files} />
+        ) : null}
+        {examples !== null && examples.length === 0 && isComponent(item) ? (
+          <p className="text-b2 text-text-muted">No live examples yet for this component.</p>
         ) : null}
         {examples?.map((example) => (
           <ExampleCard key={example.title} example={example} />

@@ -43,6 +43,7 @@ export function SidebarNav({ route, onNavigate }: { route: Route; onNavigate: ()
                 key={item.name}
                 href={`#/components/${item.name}`}
                 onClick={onNavigate}
+                dir="auto"
                 className={link(active)}
                 aria-current={active ? 'page' : undefined}
               >

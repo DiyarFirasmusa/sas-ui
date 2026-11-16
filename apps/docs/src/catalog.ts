@@ -25,6 +25,18 @@ const exampleSources = import.meta.glob<string>('./examples/*.tsx', {
   eager: true,
 });
 
+const registrySources = import.meta.glob('../../../packages/registry/src/**/*.{ts,tsx}', {
+  query: '?raw',
+  import: 'default',
+});
+
+/** Raw source of a registry file ("lib/utils.ts"), for pages that have no live demo. */
+export async function loadRegistrySource(path: string): Promise<string | undefined> {
+  const loader = registrySources[`../../../packages/registry/src/${path}`];
+  const source = loader ? await loader() : undefined;
+  return typeof source === 'string' ? source : undefined;
+}
+
 export const items: ItemManifest[] = Object.values(manifestModules)
   .filter(isManifest)
   .sort((a, b) => a.title.localeCompare(b.title));
@@ -40,14 +52,18 @@ export const CATEGORY_ORDER = [
   'layout',
 ] as const;
 
-export function itemsByCategory(): {
-  category: string;
-  items: ItemManifest[];
-}[] {
-  return CATEGORY_ORDER.map((category) => ({
+/** Components people use directly; helpers (lib, hooks, test utilities) are listed apart. */
+export function isComponent(item: ItemManifest): boolean {
+  return item.type === 'ui';
+}
+
+export function itemsByCategory(): { category: string; items: ItemManifest[] }[] {
+  const groups = CATEGORY_ORDER.map((category) => ({
     category,
-    items: items.filter((item) => item.category === category),
+    items: items.filter((item) => isComponent(item) && item.category === category),
   })).filter((group) => group.items.length > 0);
+  const helpers = items.filter((item) => !isComponent(item));
+  return helpers.length > 0 ? [...groups, { category: 'helpers', items: helpers }] : groups;
 }
 
 export function findItem(name: string): ItemManifest | undefined {
