@@ -7,8 +7,8 @@ import {
   type ComponentProps,
   type KeyboardEvent,
 } from 'react';
-import { Button } from '@/components/ui/button';
-import { ChevronLeftIcon, ChevronRightIcon } from '@/components/ui/icons';
+import { CalendarGrid } from '@/components/ui/calendar-grid';
+import { CalendarCaption, CalendarNav, type CaptionLayout } from '@/components/ui/calendar-header';
 import {
   useMultipleSelection,
   useRangeSelection,
@@ -20,24 +20,24 @@ import {
   type Selection,
 } from '@/hooks/use-calendar-selection';
 import {
+  addCalendarMonths,
+  addCalendarYears,
+  calendarMonthStart,
+  endOfCalendarMonth,
+  requireISODate,
+  startOfCalendarMonth,
+  type CalendarSystem,
+} from '@/lib/calendar-systems';
+import {
   addDays,
-  addMonths,
-  addYears,
   clampDate,
   compareDays,
   defaultWeekStartsOn,
   endOfWeek,
-  formatDateLong,
-  formatDayNumber,
-  formatMonthYear,
-  getMonthGrid,
   getWeekdays,
   isOutOfBounds,
-  isSameDay,
-  isSameMonth,
   parseISODate,
   startOfDay,
-  startOfMonth,
   startOfWeek,
   toISODate,
   type DateNumerals,
@@ -46,9 +46,9 @@ import {
 import { useLabels, useLocale, type Messages } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 
-const messages: Messages<'previousMonth' | 'nextMonth'> = {
-  en: { previousMonth: 'Previous month', nextMonth: 'Next month' },
-  ar: { previousMonth: 'الشهر السابق', nextMonth: 'الشهر التالي' },
+const messages: Messages<'previousMonth' | 'nextMonth' | 'month' | 'year'> = {
+  en: { previousMonth: 'Previous month', nextMonth: 'Next month', month: 'Month', year: 'Year' },
+  ar: { previousMonth: 'الشهر السابق', nextMonth: 'الشهر التالي', month: 'الشهر', year: 'السنة' },
 };
 
 type CalendarLabelKey = keyof typeof messages.en;
@@ -71,6 +71,15 @@ interface CalendarCommonProps extends Omit<
   weekStartsOn?: WeekStart;
   /** Latin digits by default; `locale` uses Arabic-Indic digits in Arabic. */
   numerals?: DateNumerals;
+  /**
+   * How days, months and years are counted and named. Values, `min`/`max` and
+   * callbacks stay Gregorian ISO strings whatever the system.
+   */
+  calendarSystem?: CalendarSystem;
+  /** A second, smaller day number under each day in another system (Gregorian under Hijri). */
+  secondaryCalendar?: CalendarSystem | null;
+  /** `dropdowns` puts a month and a year select in the caption. */
+  captionLayout?: CaptionLayout;
   numberOfMonths?: 1 | 2;
   /** Always render six weeks so the height does not jump between months. */
   fixedWeeks?: boolean;
@@ -82,24 +91,6 @@ interface CalendarCommonProps extends Omit<
 
 type CalendarProps = CalendarCommonProps &
   (CalendarSingleProps | CalendarMultipleProps | CalendarRangeProps);
-
-const dayClasses = cn(
-  'relative flex size-10 items-center justify-center rounded-md text-b2 tabular-nums sm:size-9',
-  'cursor-pointer outline-none transition-colors',
-  'hover:bg-hover-row',
-  'focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring',
-  'data-[today]:border data-[today]:border-primary-highlight',
-  'data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:hover:bg-primary-hover',
-  'data-[range-middle]:rounded-none data-[range-middle]:bg-primary-light data-[range-middle]:text-primary-text data-[range-middle]:hover:bg-primary-light',
-  'data-[range-start]:rounded-e-none data-[range-end]:rounded-s-none',
-  'aria-disabled:cursor-not-allowed aria-disabled:text-text-inactive aria-disabled:hover:bg-transparent',
-  'aria-disabled:data-[selected]:bg-primary/50 aria-disabled:data-[selected]:text-primary-foreground',
-  'motion-reduce:transition-none',
-);
-
-function parseBound(value: string | undefined): Date | null {
-  return parseISODate(value);
-}
 
 interface CalendarViewProps extends CalendarCommonProps {
   selection: Selection;
@@ -115,6 +106,9 @@ function CalendarView({
   isDateDisabled,
   weekStartsOn,
   numerals = 'latn',
+  calendarSystem = 'gregory',
+  secondaryCalendar = null,
+  captionLayout = 'buttons',
   numberOfMonths = 1,
   fixedWeeks = false,
   disabled = false,
@@ -142,32 +136,39 @@ function CalendarView({
   );
   const pendingFocus = useRef(false);
 
-  const minDate = parseBound(min);
-  const maxDate = parseBound(max);
+  const system = calendarSystem;
+  const minDate = parseISODate(min);
+  const maxDate = parseISODate(max);
+  const minIso = minDate ? toISODate(minDate) : undefined;
+  const maxIso = maxDate ? toISODate(maxDate) : undefined;
   const weekStart = weekStartsOn ?? defaultWeekStartsOn(locale);
   const format = { locale, numerals };
   const today = startOfDay(new Date());
 
-  const [innerMonth, setInnerMonth] = useState<Date>(() =>
-    startOfMonth(
-      parseISODate(defaultMonth) ?? selection.anchor ?? clampDate(today, minDate, maxDate),
-    ),
+  // Month arithmetic runs in the active calendar system, on Dates the rest of the view already uses.
+  const shiftMonths = (date: Date, amount: number): Date =>
+    requireISODate(addCalendarMonths(toISODate(date), amount, system));
+  const monthStart = (date: Date): Date =>
+    requireISODate(startOfCalendarMonth(toISODate(date), system));
+  const monthEnd = (date: Date): Date =>
+    requireISODate(endOfCalendarMonth(toISODate(date), system));
+
+  const [innerMonth, setInnerMonth] = useState<Date>(
+    () => parseISODate(defaultMonth) ?? selection.anchor ?? clampDate(today, minDate, maxDate),
   );
-  const controlledMonth = parseISODate(month);
-  const displayMonth = controlledMonth ? startOfMonth(controlledMonth) : innerMonth;
+  const displayMonth = monthStart(parseISODate(month) ?? innerMonth);
 
   const [focused, setFocused] = useState<Date>(() =>
     clampDate(selection.anchor ?? today, minDate, maxDate),
   );
 
   const months = Array.from({ length: numberOfMonths }, (_, index) =>
-    addMonths(displayMonth, index),
+    monthStart(shiftMonths(displayMonth, index)),
   );
   const firstVisible = months[0] ?? displayMonth;
-  const lastVisible = months[months.length - 1] ?? displayMonth;
+  const lastVisibleEnd = monthEnd(months[months.length - 1] ?? displayMonth);
   const isVisible = (date: Date) =>
-    compareDays(date, firstVisible) >= 0 &&
-    compareDays(date, addDays(addMonths(lastVisible, 1), -1)) <= 0;
+    compareDays(date, firstVisible) >= 0 && compareDays(date, lastVisibleEnd) <= 0;
   // The one tab stop of the grid: the focused day, or the month's first day when it scrolled away.
   const tabbable = isVisible(focused) ? focused : clampDate(firstVisible, minDate, maxDate);
 
@@ -180,14 +181,28 @@ function CalendarView({
   });
 
   function showMonth(next: Date) {
-    const start = startOfMonth(next);
+    const start = monthStart(next);
     setInnerMonth(start);
     onMonthChange?.(toISODate(start));
   }
 
   function moveMonth(delta: number) {
-    showMonth(addMonths(displayMonth, delta));
-    setFocused(clampDate(addMonths(tabbable, delta), minDate, maxDate));
+    showMonth(shiftMonths(displayMonth, delta));
+    setFocused(clampDate(shiftMonths(tabbable, delta), minDate, maxDate));
+  }
+
+  /** Dropdown choice for the month at `index`; never lands outside the min/max months. */
+  function selectMonth(index: number, year: number, monthNumber: number) {
+    let target = requireISODate(
+      calendarMonthStart(system, year, monthNumber, toISODate(displayMonth)),
+    );
+    if (minDate && compareDays(target, monthStart(minDate)) < 0) {
+      target = monthStart(minDate);
+    }
+    if (maxDate && compareDays(target, monthStart(maxDate)) > 0) {
+      target = monthStart(maxDate);
+    }
+    showMonth(shiftMonths(target, -index));
   }
 
   function isUnavailable(date: Date): boolean {
@@ -208,8 +223,8 @@ function CalendarView({
     pendingFocus.current = true;
     if (compareDays(next, firstVisible) < 0) {
       showMonth(next);
-    } else if (compareDays(next, addDays(addMonths(lastVisible, 1), -1)) > 0) {
-      showMonth(addMonths(next, -(numberOfMonths - 1)));
+    } else if (compareDays(next, lastVisibleEnd) > 0) {
+      showMonth(shiftMonths(monthStart(next), -(numberOfMonths - 1)));
     }
   }
 
@@ -229,8 +244,12 @@ function CalendarView({
       ArrowUp: addDays(current, -7),
       Home: startOfWeek(current, weekStart),
       End: endOfWeek(current, weekStart),
-      PageDown: event.shiftKey ? addYears(current, 1) : addMonths(current, 1),
-      PageUp: event.shiftKey ? addYears(current, -1) : addMonths(current, -1),
+      PageDown: event.shiftKey
+        ? requireISODate(addCalendarYears(toISODate(current), 1, system))
+        : shiftMonths(current, 1),
+      PageUp: event.shiftKey
+        ? requireISODate(addCalendarYears(toISODate(current), -1, system))
+        : shiftMonths(current, -1),
     };
     const target = targets[event.key];
     if (target) {
@@ -243,7 +262,7 @@ function CalendarView({
   const previousDisabled =
     disabled || (!!minDate && compareDays(addDays(firstVisible, -1), minDate) < 0);
   const nextDisabled =
-    disabled || (!!maxDate && compareDays(addMonths(lastVisible, 1), maxDate) > 0);
+    disabled || (!!maxDate && compareDays(addDays(lastVisibleEnd, 1), maxDate) > 0);
 
   return (
     <div
@@ -256,110 +275,50 @@ function CalendarView({
         handleKeyDown(event);
       }}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex h-9 items-center justify-between">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          className="pointer-events-auto"
-          aria-label={labels.previousMonth}
-          disabled={previousDisabled}
-          onClick={() => moveMonth(-1)}
-        >
-          <ChevronLeftIcon />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          className="pointer-events-auto"
-          aria-label={labels.nextMonth}
-          disabled={nextDisabled}
-          onClick={() => moveMonth(1)}
-        >
-          <ChevronRightIcon />
-        </Button>
-      </div>
-      {months.map((monthStart, monthIndex) => {
+      <CalendarNav
+        previousLabel={labels.previousMonth}
+        nextLabel={labels.nextMonth}
+        previousDisabled={previousDisabled}
+        nextDisabled={nextDisabled}
+        onPrevious={() => moveMonth(-1)}
+        onNext={() => moveMonth(1)}
+      />
+      {months.map((monthFirst, monthIndex) => {
         const captionId = `${baseId}-caption-${monthIndex}`;
+        const monthIso = toISODate(monthFirst);
         return (
-          <div key={toISODate(monthStart)} className="gap-field flex flex-col">
-            <div
+          <div key={monthIso} className="gap-field flex flex-col">
+            <CalendarCaption
               id={captionId}
-              aria-live="polite"
-              className="text-h5 text-text-primary flex h-9 items-center justify-center"
-            >
-              {formatMonthYear(monthStart, format)}
-            </div>
-            <div>
-              <table
-                role="grid"
-                aria-labelledby={captionId}
-                aria-multiselectable={selection.multiple || undefined}
-                aria-readonly={readOnly || undefined}
-                aria-disabled={disabled || undefined}
-                className="border-collapse"
-              >
-                <thead>
-                  <tr>
-                    {weekdays.map((weekday) => (
-                      <th
-                        key={weekday.index}
-                        scope="col"
-                        aria-label={weekday.long}
-                        className="text-b3 text-text-muted size-10 p-0 text-center sm:size-9"
-                      >
-                        {weekday.narrow}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {getMonthGrid(
-                    monthStart.getFullYear(),
-                    monthStart.getMonth(),
-                    weekStart,
-                    fixedWeeks,
-                  ).map((week) => (
-                    <tr key={toISODate(week[0] ?? monthStart)}>
-                      {week.map((day) => {
-                        if (!isSameMonth(day, monthStart)) {
-                          return <td key={toISODate(day)} className="p-0" />;
-                        }
-                        const state = selection.stateOf(day);
-                        const unavailable = isUnavailable(day);
-                        return (
-                          <td
-                            key={toISODate(day)}
-                            aria-selected={state.selected}
-                            className="p-0 text-center"
-                          >
-                            <button
-                              type="button"
-                              data-date={toISODate(day)}
-                              data-today={isSameDay(day, today) ? '' : undefined}
-                              data-selected={state.selected ? '' : undefined}
-                              data-range-start={state.rangeStart ? '' : undefined}
-                              data-range-end={state.rangeEnd ? '' : undefined}
-                              data-range-middle={state.rangeMiddle ? '' : undefined}
-                              aria-label={formatDateLong(day, format)}
-                              aria-current={isSameDay(day, today) ? 'date' : undefined}
-                              aria-disabled={unavailable || undefined}
-                              tabIndex={isSameDay(day, tabbable) ? 0 : -1}
-                              onClick={() => chooseDay(day)}
-                              onFocus={() => setFocused(day)}
-                              className={dayClasses}
-                            >
-                              {formatDayNumber(day, format)}
-                            </button>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+              layout={captionLayout}
+              monthIso={monthIso}
+              system={system}
+              format={format}
+              min={minIso}
+              max={maxIso}
+              disabled={disabled}
+              monthLabel={labels.month}
+              yearLabel={labels.year}
+              onSelectMonth={(year, monthNumber) => selectMonth(monthIndex, year, monthNumber)}
+            />
+            <CalendarGrid
+              monthIso={monthIso}
+              captionId={captionId}
+              system={system}
+              secondary={secondaryCalendar}
+              format={format}
+              weekStartsOn={weekStart}
+              weekdays={weekdays}
+              fixedWeeks={fixedWeeks}
+              selection={selection}
+              todayIso={toISODate(today)}
+              tabbableIso={toISODate(tabbable)}
+              readOnly={readOnly}
+              disabled={disabled}
+              isUnavailable={isUnavailable}
+              onChoose={chooseDay}
+              onFocusDay={setFocused}
+            />
           </div>
         );
       })}
@@ -407,7 +366,8 @@ function RangeCalendar({
 /**
  * Month calendar for single, multiple or range selection. An ARIA grid with
  * one tab stop: arrow keys move by day/week (mirrored in RTL), Home/End go to
- * the week's first/last day, PageUp/PageDown change month (Shift: year).
+ * the week's first/last day, PageUp/PageDown change month (Shift: year) in the
+ * active calendar system (Gregorian, or Hijri via `calendarSystem`).
  * Values are ISO `yyyy-mm-dd` strings; days are local, so no timezone drift.
  */
 function Calendar(props: CalendarProps) {

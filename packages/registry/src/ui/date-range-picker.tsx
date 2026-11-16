@@ -12,7 +12,8 @@ import {
   type DatePickerLabelKey,
 } from '@/components/ui/date-picker';
 import { Popover, PopoverContent } from '@/components/ui/popover';
-import { formatDate, formatDateRange, parseISODate, type DateStyle } from '@/lib/date-utils';
+import { formatCalendarDate, formatCalendarDateRange } from '@/lib/calendar-systems';
+import { parseISODate, type DateStyle } from '@/lib/date-utils';
 import { useLabels, useLocale, type Messages } from '@/lib/locale';
 
 const messages: Messages<'placeholder' | 'clear' | 'chooseRange' | 'presets'> = {
@@ -55,7 +56,16 @@ function useWideScreen(): boolean {
 
 type DateRangeCalendarProps = Pick<
   CalendarCommonProps,
-  'min' | 'max' | 'isDateDisabled' | 'weekStartsOn' | 'numerals' | 'fixedWeeks' | 'defaultMonth'
+  | 'min'
+  | 'max'
+  | 'isDateDisabled'
+  | 'weekStartsOn'
+  | 'numerals'
+  | 'fixedWeeks'
+  | 'defaultMonth'
+  | 'calendarSystem'
+  | 'secondaryCalendar'
+  | 'captionLayout'
 >;
 
 interface DateRangePickerProps extends Omit<DateFieldProps, 'name'>, DateRangeCalendarProps {
@@ -170,6 +180,9 @@ function DateRangePicker({
   isDateDisabled,
   weekStartsOn,
   numerals = 'latn',
+  calendarSystem = 'gregory',
+  secondaryCalendar,
+  captionLayout,
   fixedWeeks,
   ...fieldProps
 }: DateRangePickerProps) {
@@ -200,10 +213,13 @@ function DateRangePicker({
 
   const format = { locale, numerals };
   let display: string | null = null;
-  if (from && to) {
-    display = formatDateRange(from, to, { ...format, dateStyle });
-  } else if (from) {
-    display = `${formatDate(from, { ...format, dateStyle })} –`;
+  if (current.from && current.to && from && to) {
+    display = formatCalendarDateRange(current.from, current.to, calendarSystem, {
+      ...format,
+      dateStyle,
+    });
+  } else if (current.from && from) {
+    display = `${formatCalendarDate(current.from, calendarSystem, { ...format, dateStyle })} –`;
   }
 
   return (
@@ -243,6 +259,9 @@ function DateRangePicker({
           isDateDisabled={isDateDisabled}
           weekStartsOn={weekStartsOn}
           numerals={numerals}
+          calendarSystem={calendarSystem}
+          secondaryCalendar={secondaryCalendar}
+          captionLayout={captionLayout}
           fixedWeeks={fixedWeeks}
           onComplete={(range) => {
             commit(range);

@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import {
   DataTableHeaderCell,
+  DataTableHeaderRows,
   DataTableRowCheckbox,
   DataTableSelectAll,
 } from '@/components/ui/data-table-header';
@@ -125,6 +126,43 @@ describe('DataTableHeaderCell', () => {
       <Harness onSortingChange={() => {}} sorting={[{ id: 'name', desc: true }]} />,
     );
     await expectNoA11yViolations(container);
+  });
+});
+
+describe('DataTableHeaderRows', () => {
+  function Rows({ numbered = false }: { numbered?: boolean }) {
+    const table = useReactTable({
+      data: items,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+    });
+    return (
+      <Table aria-label="Items">
+        <DataTableHeaderRows
+          table={table}
+          stickyOf={(columnId) =>
+            columnId === 'name' ? { side: 'start', className: 'pinned' } : {}
+          }
+          rowIndexProps={numbered ? (index) => ({ 'aria-rowindex': index + 1 }) : undefined}
+        />
+      </Table>
+    );
+  }
+
+  it('renders one header cell per column and applies the sticky result', () => {
+    render(<Rows />);
+    expect(screen.getAllByRole('columnheader').map((header) => header.textContent)).toEqual([
+      'Name',
+      'Total',
+      'Fixed',
+    ]);
+    expect(screen.getByRole('columnheader', { name: 'Name' })).toHaveClass('sticky', 'pinned');
+    expect(screen.getByRole('row')).not.toHaveAttribute('aria-rowindex');
+  });
+
+  it('numbers the header row when asked, for windowed bodies', () => {
+    render(<Rows numbered />);
+    expect(screen.getByRole('row')).toHaveAttribute('aria-rowindex', '1');
   });
 });
 

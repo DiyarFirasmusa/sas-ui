@@ -292,3 +292,96 @@ describe('DatePicker', () => {
     await expectNoA11yViolations(document.body);
   });
 });
+
+describe('DatePicker with Hijri and dropdowns', () => {
+  it('formats the trigger in the Hijri calendar while the value stays Gregorian ISO', async () => {
+    const onValueChange = vi.fn();
+    renderWithLocale(
+      <DatePicker
+        aria-label="Date"
+        calendarSystem="islamic-umalqura"
+        defaultMonth="2026-11-16"
+        onValueChange={onValueChange}
+        name="when"
+      />,
+    );
+    const trigger = await openPicker();
+    expect(screen.getByRole('grid', { name: 'Jumada II 1448 AH' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Monday, Jumada II 6, 1448 AH' }));
+    expect(onValueChange).toHaveBeenCalledWith('2026-11-16');
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(trigger).toHaveTextContent('Jumada II 6, 1448 AH');
+    expect(document.querySelector('input[type="hidden"][name="when"]')).toHaveValue('2026-11-16');
+  });
+
+  it('reads a controlled Gregorian value in Hijri and in the short style', () => {
+    renderWithLocale(
+      <DatePicker
+        aria-label="Date"
+        calendarSystem="islamic-umalqura"
+        value="2026-11-16"
+        dateStyle="medium"
+      />,
+    );
+    expect(screen.getByRole('button', { name: /Date/ })).toHaveTextContent('Jum. II 6, 1448 AH');
+  });
+
+  it('passes the secondary calendar and caption layout to the calendar', async () => {
+    renderWithLocale(
+      <DatePicker
+        aria-label="Date"
+        calendarSystem="islamic-umalqura"
+        secondaryCalendar="gregory"
+        captionLayout="dropdowns"
+        defaultValue="2026-11-16"
+      />,
+    );
+    await openPicker(/Date/);
+    expect(document.querySelectorAll('[data-slot="calendar-secondary-day"]')).toHaveLength(29);
+    expect(screen.getByRole('combobox', { name: 'Month' })).toHaveValue('6');
+    expect(screen.getByRole('combobox', { name: 'Year' })).toHaveValue('1448');
+    // Choosing from a native select inside the popover does not close it.
+    await userEvent.selectOptions(screen.getByRole('combobox', { name: 'Month' }), 'Ramadan');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('grid', { name: 'Ramadan 1448 AH' })).toBeInTheDocument();
+  });
+
+  it('shows Arabic Hijri text with Latin digits, and locale digits on request', () => {
+    const { unmount } = renderWithLocale(
+      <DatePicker aria-label="التاريخ" calendarSystem="islamic-umalqura" value="2026-11-16" />,
+      { locale: 'ar' },
+    );
+    const text = screen.getByRole('button', { name: /التاريخ/ }).textContent ?? '';
+    expect(text).toContain('6 جمادى الآخرة 1448');
+    expect(ARABIC_INDIC.test(text)).toBe(false);
+    unmount();
+    renderWithLocale(
+      <DatePicker
+        aria-label="التاريخ"
+        calendarSystem="islamic-umalqura"
+        value="2026-11-16"
+        numerals="locale"
+      />,
+      { locale: 'ar' },
+    );
+    expect(screen.getByRole('button', { name: /التاريخ/ })).toHaveTextContent('٦ جمادى الآخرة ١٤٤٨');
+  });
+
+  it('opens an Arabic Hijri calendar with dropdowns and no axe violations', async () => {
+    renderWithLocale(
+      <DatePicker
+        aria-label="التاريخ"
+        calendarSystem="islamic-umalqura"
+        secondaryCalendar="gregory"
+        captionLayout="dropdowns"
+        value="2026-11-16"
+      />,
+      { locale: 'ar' },
+    );
+    await userEvent.click(screen.getByRole('button', { name: /^التاريخ/ }));
+    await screen.findByRole('dialog', { name: 'اختيار التاريخ' });
+    expect(screen.getByRole('combobox', { name: 'السنة' })).toHaveValue('1448');
+    expect(screen.getByRole('grid', { name: 'جمادى الآخرة 1448 هـ' })).toBeInTheDocument();
+    await expectNoA11yViolations(document.body);
+  });
+});

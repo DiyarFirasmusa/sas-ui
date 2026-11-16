@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Field } from '@/components/ui/field';
+import { LocaleProvider } from '@/lib/locale';
 import type { Example } from '../example-types';
 
 function Controlled() {
@@ -8,6 +9,20 @@ function Controlled() {
   return (
     <Field label="Due date" description={`Value: ${value ?? 'none'}`} className="w-72">
       <DatePicker value={value} onValueChange={setValue} clearable />
+    </Field>
+  );
+}
+
+function Hijri() {
+  const [value, setValue] = useState<string | null>('2026-11-16');
+  return (
+    <Field label="Due date" description={`Value: ${value ?? 'none'}`} className="w-72">
+      <DatePicker
+        calendarSystem="islamic-umalqura"
+        value={value}
+        onValueChange={setValue}
+        clearable
+      />
     </Field>
   );
 }
@@ -71,6 +86,56 @@ export const examples: Example[] = [
           <DatePicker readOnly defaultValue="2026-11-18" />
         </Field>
       </div>
+    ),
+  },
+  {
+    title: 'Hijri',
+    description:
+      'The trigger reads in the chosen calendar; the value stays a Gregorian ISO string (see the description).',
+    render: () => <Hijri />,
+  },
+  {
+    title: 'Hijri with Gregorian underneath',
+    render: () => (
+      <Field label="Date" className="w-72">
+        <DatePicker
+          calendarSystem="islamic-umalqura"
+          secondaryCalendar="gregory"
+          defaultValue="2026-11-16"
+        />
+      </Field>
+    ),
+  },
+  {
+    title: 'Month and year dropdowns',
+    description: 'Useful for far-away dates such as birth dates.',
+    render: () => (
+      <Field label="Birth date" className="w-72">
+        <DatePicker
+          captionLayout="dropdowns"
+          defaultMonth="1990-01-01"
+          min="1920-01-01"
+          max="2026-11-16"
+        />
+      </Field>
+    ),
+  },
+  {
+    title: 'Hijri in Arabic (RTL)',
+    render: () => (
+      <LocaleProvider locale="ar">
+        <div dir="rtl" className="w-72">
+          <Field label="التاريخ">
+            <DatePicker
+              calendarSystem="islamic-umalqura"
+              secondaryCalendar="gregory"
+              captionLayout="dropdowns"
+              defaultValue="2026-11-16"
+              clearable
+            />
+          </Field>
+        </div>
+      </LocaleProvider>
     ),
   },
 ];

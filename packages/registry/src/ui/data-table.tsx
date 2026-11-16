@@ -10,7 +10,8 @@ import {
 import { useEffect, useMemo, type ReactNode } from 'react';
 import { DataTableBody } from '@/components/ui/data-table-body';
 import type { MobileCardContext } from '@/components/ui/data-table-cards';
-import { DataTableHeaderCell } from '@/components/ui/data-table-header';
+import type { DataTableGroupLabels } from '@/components/ui/data-table-group-row';
+import { DataTableHeaderRows } from '@/components/ui/data-table-header';
 import { DataTableMobile } from '@/components/ui/data-table-mobile';
 import { createSelectColumn, getSelectLabel } from '@/components/ui/data-table-selection';
 import {
@@ -21,12 +22,15 @@ import {
 import {
   DataTableBulkBar,
   DataTableColumnMenu,
+  DataTableExportButton,
   type DataTableToolbarLabels,
 } from '@/components/ui/data-table-toolbar';
 import { Pagination, type PaginationLabels } from '@/components/ui/pagination';
-import { Table, TableCaption, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableCaption } from '@/components/ui/table';
+import { useDataTableDisplay } from '@/hooks/use-data-table-display';
+import type { DataTableVirtualize } from '@/hooks/use-data-table-grid';
 import { useDataTableState } from '@/hooks/use-data-table-state';
-import { readColumnMeta, type DataTableColumnMeta } from '@/lib/data-table-meta';
+import type { DataTableColumnMeta } from '@/lib/data-table-meta';
 import { resolveSticky, SELECT_COLUMN_ID } from '@/lib/data-table-sticky';
 import { fillTemplate, formatCount } from '@/lib/format-message';
 import { useLabels, type Messages } from '@/lib/locale';
@@ -56,6 +60,7 @@ const messages: Messages<
 
 type DataTableLabels = Partial<Record<keyof (typeof messages)['en'], string>> &
   DataTableStateLabels &
+  DataTableGroupLabels &
   DataTableToolbarLabels & { pagination?: PaginationLabels };
 
 /** What the table is showing. `empty` is derived: a successful response with no rows. */
@@ -128,6 +133,30 @@ interface DataTableProps<TData> {
   className?: string;
   /** Classes for the scroll container, for example `max-h-96` with `stickyHeader`. */
   containerClassName?: string;
+  /**
+   * Renders only the rows in view (fixed row height), for thousands of rows on one page.
+   * `true` uses 48px rows in a scroll area of up to 480px; pass options to change that.
+   * The header stays sticky and `aria-rowcount`/`aria-rowindex` describe the full list.
+   */
+  virtualize?: DataTableVirtualize;
+  /**
+   * Grid keyboard model (WAI-ARIA grid): one tab stop, arrow keys move between cells following
+   * the reading direction, Home/End, Ctrl+Home/End, PageUp/PageDown, Enter or F2 to enter a
+   * cell's controls and Escape to leave them. The table gets `role="grid"`.
+   */
+  keyboardNavigation?: boolean;
+  /** Id of a column to group the rows of the current page by, under collapsible header rows. */
+  groupBy?: string;
+  /** Text for a group's name; defaults to the value as a string. */
+  renderGroupLabel?: (value: unknown, rows: TData[]) => ReactNode;
+  /** Totals shown at the end of each group header. */
+  groupAggregates?: (group: { key: string; value: unknown; rows: TData[] }) => ReactNode;
+  /** Adds an "Export" button that downloads the shown rows as an Excel-safe CSV. */
+  exportable?: boolean;
+  /** CSV file name without the extension. Defaults to the caption. */
+  exportFilename?: string;
+  /** Replaces the CSV download with your own export, for example one that asks the server for every row. */
+  onExport?: (rows: TData[]) => void;
 }
 
 const NO_ROWS: never[] = [];
@@ -167,6 +196,14 @@ function DataTable<TData>({
   labels: labelOverrides,
   className,
   containerClassName,
+  virtualize,
+  keyboardNavigation = false,
+  groupBy,
+  renderGroupLabel,
+  groupAggregates,
+  exportable = false,
+  exportFilename,
+  onExport,
 }: DataTableProps<TData>) {
   const labels = useLabels(messages, labelOverrides);
   const {
@@ -228,6 +265,18 @@ function DataTable<TData>({
   const dataColumns = leafColumns.filter((column) => column.id !== SELECT_COLUMN_ID);
   const columnCount = leafColumns.length;
   const skeletonRows = Math.min(pagination?.pageSize ?? 5, 10);
+  const { grid, display } = useDataTableDisplay({
+    rows,
+    columnCount,
+    headerRowCount: table.getHeaderGroups().length,
+    groupBy,
+    virtualize,
+    keyboardNavigation,
+    onRowClick,
+    renderGroupLabel,
+    groupAggregates,
+    groupLabels: labelOverrides,
+  });
   const lastPage = pagination?.total ? getPageCount(pagination.total, pagination.pageSize) : null;
 
   // Deleting the last row of the last page leaves an empty page: go back one.
@@ -279,10 +328,22 @@ function DataTable<TData>({
 
   return (
     <div data-slot="data-table" className={cn('flex flex-col gap-inline', className)}>
-      {toolbar || columnMenu ? (
+      {toolbar || columnMenu || exportable ? (
         <div className="gap-field flex flex-wrap items-center justify-between">
           <div className="gap-field flex min-w-0 flex-1 flex-wrap items-center">{toolbar}</div>
-          {columnMenu ? <DataTableColumnMenu table={table} labels={labelOverrides} /> : null}
+          <div className="gap-field flex items-center">
+            {exportable ? (
+              <DataTableExportButton
+                table={table}
+                rows={rows}
+                filename={exportFilename ?? caption ?? 'export'}
+                onExport={onExport}
+                disabled={isLoading}
+                labels={labelOverrides}
+              />
+            ) : null}
+            {columnMenu ? <DataTableColumnMenu table={table} labels={labelOverrides} /> : null}
+          </div>
         </div>
       ) : null}
 
@@ -303,31 +364,20 @@ function DataTable<TData>({
       </div>
 
       <Table
-        stickyHeader={stickyHeader}
+        {...grid.tableProps}
+        stickyHeader={stickyHeader || grid.virtual !== null}
         aria-busy={isLoading || isRefetching || undefined}
+        containerRef={grid.scrollRef}
+        containerStyle={grid.containerStyle}
+        containerFocusable={!keyboardNavigation}
         containerClassName={cn(cardsMode && 'max-sm:hidden', containerClassName)}
       >
         {caption ? <TableCaption className="sr-only">{caption}</TableCaption> : null}
-        <TableHeader>
-          {table.getHeaderGroups().map((group) => (
-            <TableRow key={group.id} className="hover:bg-transparent">
-              {group.headers.map((header) => {
-                const sticky = stickyOf(
-                  header.column.id,
-                  readColumnMeta(header.column.columnDef.meta),
-                );
-                return (
-                  <DataTableHeaderCell
-                    key={header.id}
-                    header={header}
-                    sticky={sticky.side}
-                    className={sticky.className}
-                  />
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
+        <DataTableHeaderRows
+          table={table}
+          stickyOf={stickyOf}
+          rowIndexProps={(index) => grid.rowIndexProps(index, true)}
+        />
         <DataTableBody
           rows={rows}
           columnCount={columnCount}
@@ -338,6 +388,7 @@ function DataTable<TData>({
           showEmpty={state.status === 'success' && rows.length === 0}
           onRowClick={onRowClick}
           stickyOf={stickyOf}
+          display={display}
         />
       </Table>
 

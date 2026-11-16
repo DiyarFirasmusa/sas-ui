@@ -1,0 +1,8 @@
+{
+  "name": "saved-views",
+  "type": "ui",
+  "category": "data",
+  "title": "Saved views",
+  "description": "Menu of saved list views: apply, save the current state, rename, delete and set a default. Controlled, or self-contained with a storage key.",
+  "files": ["ui/saved-views.tsx", "ui/saved-views-name-dialog.tsx", "hooks/use-saved-views.ts"]
+}

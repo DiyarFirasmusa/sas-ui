@@ -1,0 +1,8 @@
+{
+  "name": "calendar-systems",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Calendar systems",
+  "description": "Pure Intl-based Gregorian and Hijri (Umm al-Qura, civil) helpers: conversion, month bounds, month arithmetic, month grids, names and year lists. Values stay Gregorian ISO strings.",
+  "files": ["lib/calendar-systems.ts"]
+}

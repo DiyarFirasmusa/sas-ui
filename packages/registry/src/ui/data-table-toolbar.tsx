@@ -1,4 +1,4 @@
-import type { Table } from '@tanstack/react-table';
+import type { Row, Table } from '@tanstack/react-table';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -7,24 +7,29 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDownIcon, SettingsIcon } from '@/components/ui/icons';
+import { ChevronDownIcon, DownloadIcon, SettingsIcon } from '@/components/ui/icons';
 import { readColumnMeta } from '@/lib/data-table-meta';
 import { fillTemplate, formatCount } from '@/lib/format-message';
 import { useLabels, type Messages } from '@/lib/locale';
+import { downloadCsv, toCsv, type CsvColumn } from '@/lib/table-export';
 import { cn } from '@/lib/utils';
 
-const messages: Messages<'columns' | 'selectedCount' | 'clearSelection' | 'bulkActions'> = {
+const messages: Messages<
+  'columns' | 'selectedCount' | 'clearSelection' | 'bulkActions' | 'export'
+> = {
   en: {
     columns: 'Columns',
     selectedCount: '{count} selected on this page',
     clearSelection: 'Clear selection',
     bulkActions: 'Bulk actions',
+    export: 'Export',
   },
   ar: {
     columns: 'الأعمدة',
     selectedCount: 'تم تحديد {count} في هذه الصفحة',
     clearSelection: 'إلغاء التحديد',
     bulkActions: 'إجراءات جماعية',
+    export: 'تصدير',
   },
 };
 
@@ -70,6 +75,63 @@ function DataTableColumnMenu<TData>({ table, labels: overrides }: DataTableColum
   );
 }
 
+interface DataTableExportButtonProps<TData> {
+  table: Table<TData>;
+  /** The rows being shown; these are what gets exported. */
+  rows: Row<TData>[];
+  /** File name without the extension. */
+  filename: string;
+  /** Takes over the export, for example to ask the server for every row. Without it a CSV of `rows` is downloaded. */
+  onExport?: (rows: TData[]) => void;
+  disabled?: boolean;
+  labels?: DataTableToolbarLabels;
+}
+
+/**
+ * "Export" button. Exports the visible columns that have data (not the
+ * checkbox or actions columns) as raw values in an Excel-safe CSV.
+ */
+function DataTableExportButton<TData>({
+  table,
+  rows,
+  filename,
+  onExport,
+  disabled = false,
+  labels: overrides,
+}: DataTableExportButtonProps<TData>) {
+  const labels = useLabels(messages, overrides);
+  function exportRows() {
+    if (onExport) {
+      onExport(rows.map((row) => row.original));
+      return;
+    }
+    const columns: CsvColumn<Row<TData>>[] = table
+      .getVisibleLeafColumns()
+      .filter((column) => column.accessorFn !== undefined)
+      .map((column) => {
+        const header = column.columnDef.header;
+        return {
+          header:
+            readColumnMeta(column.columnDef.meta).label ??
+            (typeof header === 'string' ? header : column.id),
+          value: (row) => row.getValue(column.id),
+        };
+      });
+    downloadCsv(filename, toCsv(columns, rows));
+  }
+  return (
+    <Button
+      variant="outline"
+      data-slot="data-table-export"
+      disabled={disabled || rows.length === 0}
+      onClick={exportRows}
+    >
+      <DownloadIcon />
+      {labels.export}
+    </Button>
+  );
+}
+
 interface DataTableBulkBarProps {
   count: number;
   onClear: () => void;
@@ -112,5 +174,10 @@ function DataTableBulkBar({
   );
 }
 
-export { DataTableBulkBar, DataTableColumnMenu };
-export type { DataTableBulkBarProps, DataTableColumnMenuProps, DataTableToolbarLabels };
+export { DataTableBulkBar, DataTableColumnMenu, DataTableExportButton };
+export type {
+  DataTableBulkBarProps,
+  DataTableColumnMenuProps,
+  DataTableExportButtonProps,
+  DataTableToolbarLabels,
+};

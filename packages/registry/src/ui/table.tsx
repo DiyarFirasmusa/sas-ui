@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import type { ComponentProps, CSSProperties, Ref } from 'react';
 import { cn } from '@/lib/utils';
 import { variants, type VariantProps } from '@/lib/variants';
 
@@ -33,6 +33,12 @@ interface TableProps extends ComponentProps<'table'> {
   stickyHeader?: boolean;
   /** Classes for the horizontal scroll container around the `<table>`. */
   containerClassName?: string;
+  /** Inline style for the scroll container, for a height that is only known at run time. */
+  containerStyle?: CSSProperties;
+  /** Ref to the scroll container, for scroll-driven features such as virtualisation. */
+  containerRef?: Ref<HTMLDivElement>;
+  /** Make the scroll container a tab stop so the keyboard can scroll it. Turn off when the cells are focusable themselves. Default true. */
+  containerFocusable?: boolean;
 }
 
 /**
@@ -40,11 +46,21 @@ interface TableProps extends ComponentProps<'table'> {
  * sideways without the page doing so. The container is focusable so keyboard
  * users can scroll it.
  */
-function Table({ className, containerClassName, stickyHeader = false, ...props }: TableProps) {
+function Table({
+  className,
+  containerClassName,
+  containerStyle,
+  containerRef,
+  containerFocusable = true,
+  stickyHeader = false,
+  ...props
+}: TableProps) {
   return (
     <div
+      ref={containerRef}
+      style={containerStyle}
       data-slot="table-container"
-      tabIndex={0}
+      tabIndex={containerFocusable ? 0 : undefined}
       className={cn(
         'relative w-full overflow-auto rounded-lg border border-stroke bg-surface',
         'outline-none focus-visible:ring-2 focus-visible:ring-ring',

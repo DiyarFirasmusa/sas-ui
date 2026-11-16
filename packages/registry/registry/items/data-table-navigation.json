@@ -1,0 +1,8 @@
+{
+  "name": "data-table-navigation",
+  "type": "lib",
+  "category": "data",
+  "title": "Data table grid navigation",
+  "description": "Pure keyboard model for a grid: next cell for arrows (mapped to the reading direction), Home/End, Ctrl+Home/End and PageUp/PageDown.",
+  "files": ["lib/data-table-navigation.ts"]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "filter-builder",
+  "type": "ui",
+  "category": "data",
+  "title": "Filter builder",
+  "description": "Advanced filter editor: nested and/or groups of rules whose operators and value editors follow the field type, with validation, apply and reset.",
+  "files": [
+    "ui/filter-builder.tsx",
+    "ui/filter-builder-rule.tsx",
+    "ui/filter-builder-value.tsx",
+    "lib/filter-builder-messages.ts"
+  ]
+}

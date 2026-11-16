@@ -1,8 +1,9 @@
 import { flexRender, type Header, type Row, type Table } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from '@/components/ui/icons';
-import { TableHead, type StickySide } from '@/components/ui/table';
-import { readColumnMeta } from '@/lib/data-table-meta';
+import { TableHead, TableHeader, TableRow, type StickySide } from '@/components/ui/table';
+import { readColumnMeta, type DataTableColumnMeta } from '@/lib/data-table-meta';
+import type { StickyResult } from '@/lib/data-table-sticky';
 import { cn } from '@/lib/utils';
 
 interface DataTableHeaderCellProps<TData> {
@@ -64,6 +65,40 @@ function DataTableHeaderCell<TData>({
   );
 }
 
+interface DataTableHeaderRowsProps<TData> {
+  table: Table<TData>;
+  stickyOf: (columnId: string, meta: DataTableColumnMeta) => StickyResult;
+  /** `aria-rowindex` of a header row (0-based), set once the body rows are windowed. */
+  rowIndexProps?: (index: number) => { 'aria-rowindex'?: number };
+}
+
+/** The `<thead>`: one row per header group, each cell sticky as the table's sticky options ask. */
+function DataTableHeaderRows<TData>({
+  table,
+  stickyOf,
+  rowIndexProps,
+}: DataTableHeaderRowsProps<TData>) {
+  return (
+    <TableHeader>
+      {table.getHeaderGroups().map((group, index) => (
+        <TableRow key={group.id} className="hover:bg-transparent" {...rowIndexProps?.(index)}>
+          {group.headers.map((header) => {
+            const sticky = stickyOf(header.column.id, readColumnMeta(header.column.columnDef.meta));
+            return (
+              <DataTableHeaderCell
+                key={header.id}
+                header={header}
+                sticky={sticky.side}
+                className={sticky.className}
+              />
+            );
+          })}
+        </TableRow>
+      ))}
+    </TableHeader>
+  );
+}
+
 /** The checkbox that selects one row; `label` names the row for screen readers. */
 function DataTableRowCheckbox<TData>({ row, label }: { row: Row<TData>; label: string }) {
   return (
@@ -90,5 +125,5 @@ function DataTableSelectAll<TData>({ table, label }: { table: Table<TData>; labe
   );
 }
 
-export { DataTableHeaderCell, DataTableRowCheckbox, DataTableSelectAll };
-export type { DataTableHeaderCellProps };
+export { DataTableHeaderCell, DataTableHeaderRows, DataTableRowCheckbox, DataTableSelectAll };
+export type { DataTableHeaderCellProps, DataTableHeaderRowsProps };

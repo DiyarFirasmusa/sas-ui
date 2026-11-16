@@ -1,0 +1,8 @@
+{
+  "name": "saved-views-model",
+  "type": "lib",
+  "category": "data",
+  "title": "Saved views model",
+  "description": "Pure model for saved list views (filters, sorting, column visibility, page size): names, add, rename, delete, default, parsing, and a guarded localStorage adapter.",
+  "files": ["lib/saved-views.ts"]
+}

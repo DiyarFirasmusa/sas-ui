@@ -24,23 +24,31 @@ Chart, RichTextEditor, PdfViewer, AppShell (Sidebar, Topbar), ThemeProvider, The
 ## Verified
 
 - `pnpm typecheck`, `pnpm lint`, `pnpm fmt:check`: clean.
-- 1,963 unit/component tests: tokens 21, CLI 19, registry 1,815 (Testing Library + user-event + axe,
-  Arabic/RTL cases), docs 108 (every example and block renders in English and Arabic).
+- 2,501 unit/component tests: tokens 21, CLI 19, registry 2,343 (Testing Library + user-event + axe,
+  Arabic/RTL cases), docs 118 (every example and block renders in English and Arabic).
 - `pnpm build` (tokens, registry JSON, CLI, docs) and `pnpm e2e:cli`: init → add (incl. data-table, forms,
   shell, command palette, tests) → blocks (dashboard, list, detail, shell, wizard, login, errors) → diff → theme set → typecheck →
   production build in a fresh Vite app.
 - Docs app opened in the browser in light/dark, RTL/LTR, several presets: button, data table,
-  calendar, app shell, tokens page, dashboard-01 and list-page-01 blocks (Arabic RTL) and shell-01 at
+  calendar (Hijri), status bar, 10,000-row virtualised table, app shell, tokens page, dashboard-01 and list-page-01 blocks (Arabic RTL) and shell-01 at
   mobile width. The other blocks were checked in jsdom only.
 
-## Next (from the deep-research report, ranked)
+## Added after the research report
 
-1. Calendar: Hijri (Umm al-Qura) + calendar-system prop + month/year dropdowns.
-2. DataTable v2: virtualisation, RTL arrow-key mapping, grouping, export, saved views.
-3. StatusBar / stage pipeline component and an advanced filter builder.
-4. Input family: PhoneInput (+964), CurrencyInput (IQD), mask, tags, OTP.
-5. Blocks: import wizard, printable RTL documents, kanban, scheduler.
-6. Publish the CLI and host a registry URL.
+- **Hijri calendar:** `Calendar`, `DatePicker`, `DateRangePicker` take `calendarSystem` (`gregory`, `islamic-umalqura`,
+  `islamic-civil`), `secondaryCalendar` (Gregorian small under Hijri) and `captionLayout="dropdowns"` (month/year
+  selects). Values stay Gregorian ISO; only the display changes. No new dependency (Intl).
+- **DataTable v2 (opt-in):** virtualised body (10,000 rows, `aria-rowcount`), APG grid keyboard navigation with
+  RTL-mapped arrows, row grouping, Arabic-Excel-safe CSV export, saved views.
+- **`status-bar`** (Odoo-style stage pipeline, RTL arrows), **`filter-builder`** (nested AND/OR rules, URL round trip),
+  **`arabic-normalize`** (diacritics, alef/ya forms, Arabic-Indic digits, Persian letters).
+
+## Next
+
+1. Adopt `arabic-normalize` in Combobox, DataTable and FilterBar search (command-filter and tree-utils still use their own).
+2. Input family: PhoneInput (+964), CurrencyInput (IQD), mask, tags.
+3. Blocks: import wizard, printable RTL documents, kanban, scheduler.
+4. Publish the CLI and host a registry URL.
 
 ## Not verified / known gaps
 
@@ -50,7 +58,7 @@ Chart, RichTextEditor, PdfViewer, AppShell (Sidebar, Topbar), ThemeProvider, The
   A Playwright + axe pass over the docs app is the next step.
 - **Keyboard navigation inside Base UI popups** (select, menus) is covered only for open/close/Escape in jsdom.
 - **Icons:** a small in-house SVG set; apps keeping hugeicons pass their own icons as children.
-- Calendar: no month/year dropdowns, outside-month days are empty cells. Time picker: label click does not
+- Calendar: outside-month days are empty cells; Umm al-Qura is table-based and can differ from moon sighting. Time picker: label click does not
   focus it. Rich text: heading tool toggles H2 only; links use an inline bar. PDF viewer: load errors surface
   only through a timeout or the `error` prop (iframes do not report them).
 - `DropdownMenuSub` has no content part yet.

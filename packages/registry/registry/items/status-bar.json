@@ -1,0 +1,8 @@
+{
+  "name": "status-bar",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Status bar",
+  "description": "Odoo-style stage pipeline for record workflow: arrow segments that mirror in RTL, optional terminal stages, clickable stages with async confirmation, collapsing to a select on small screens.",
+  "files": ["ui/status-bar.tsx", "lib/status-bar.ts"]
+}

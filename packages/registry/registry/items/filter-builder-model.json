@@ -1,0 +1,13 @@
+{
+  "name": "filter-builder-model",
+  "type": "lib",
+  "category": "data",
+  "title": "Filter builder model",
+  "description": "Pure model of an advanced filter (nested and/or groups of field-operator-value rules): create, edit, validate, evaluate client-side with Arabic-aware text matching, and a compact versioned URL round trip.",
+  "files": [
+    "lib/filter-builder.ts",
+    "lib/filter-builder-validate.ts",
+    "lib/filter-builder-evaluate.ts",
+    "lib/filter-builder-url.ts"
+  ]
+}

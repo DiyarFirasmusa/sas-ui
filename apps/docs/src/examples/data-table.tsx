@@ -6,6 +6,7 @@ import { DataTable, type DataTableState } from '@/components/ui/data-table';
 import { actionsColumn } from '@/components/ui/data-table-row-actions';
 import { PencilIcon, TrashIcon } from '@/components/ui/icons';
 import type { Example } from '../example-types';
+import { SavedViewsDemo } from './saved-views';
 
 interface Booking {
   id: string;
@@ -33,12 +34,28 @@ const allBookings: Booking[] = Array.from({ length: 47 }, (_, index) => ({
   total: 320 + ((index * 137) % 2400),
 }));
 
+/** Ten thousand rows: only the ones in view are in the page. */
+const manyBookings: Booking[] = Array.from({ length: 10_000 }, (_, index) => ({
+  id: `m${index + 1}`,
+  reference: `BK-${String(10_000 + index)}`,
+  customer: customers[index % customers.length] ?? '',
+  status: statuses[index % statuses.length] ?? 'pending',
+  nights: (index % 6) + 1,
+  total: 320 + ((index * 137) % 2400),
+}));
+
 const tone = {
   confirmed: 'green',
   pending: 'yellow',
   cancelled: 'red',
 } as const;
 const money = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2 });
+
+function toneOf(value: unknown) {
+  return value === 'confirmed' || value === 'pending' || value === 'cancelled'
+    ? tone[value]
+    : 'neutral';
+}
 
 /** Stands in for the server: sorts, slices and answers after a short delay. */
 function fetchBookings(
@@ -263,5 +280,105 @@ export const examples: Example[] = [
         }}
       />
     ),
+  },
+  {
+    title: '10,000 rows, virtualised',
+    description:
+      'Only the rows in view are rendered (fixed 48px rows), the header stays put and the scroll bar covers all 10,000. aria-rowcount and aria-rowindex describe the full list to screen readers. Selection and sticky columns still work.',
+    wide: true,
+    render: () => (
+      <DataTable
+        caption="10,000 bookings"
+        columns={columns.slice(0, 5)}
+        data={manyBookings}
+        getRowId={(booking) => booking.id}
+        state={{ status: 'success' }}
+        selectable
+        getRowLabel={(booking) => booking.reference}
+        stickyFirstColumn
+        virtualize={{ rowHeight: 48, height: 420 }}
+      />
+    ),
+  },
+  {
+    title: 'Keyboard navigation',
+    description:
+      'Click a cell or Tab into the grid, then use the arrow keys, Home/End, Ctrl+Home/End and PageUp/PageDown. Switch the docs to Arabic: ArrowLeft then moves to the next cell and ArrowRight to the previous one. Enter or F2 enters a cell that holds a control (the actions menu), Escape returns to the cell.',
+    wide: true,
+    render: () => (
+      <DataTable
+        caption="Bookings grid"
+        columns={columns}
+        data={allBookings.slice(0, 12)}
+        getRowId={(booking) => booking.id}
+        state={{ status: 'success' }}
+        keyboardNavigation
+        onRowClick={() => {}}
+      />
+    ),
+  },
+  {
+    title: 'Keyboard navigation with 10,000 rows',
+    description:
+      'Ctrl+End jumps to the last row: the virtualiser scrolls it into view and focus follows.',
+    wide: true,
+    render: () => (
+      <DataTable
+        caption="10,000 bookings grid"
+        columns={columns.slice(0, 5)}
+        data={manyBookings}
+        getRowId={(booking) => booking.id}
+        state={{ status: 'success' }}
+        keyboardNavigation
+        virtualize={{ rowHeight: 48, height: 320 }}
+      />
+    ),
+  },
+  {
+    title: 'Grouped rows',
+    description:
+      'groupBy turns each value of a column into a collapsible header row with its count (Latin digits) and optional aggregates. Enter or Space on a header toggles it. Grouping applies to the rows of the current page.',
+    wide: true,
+    render: () => (
+      <DataTable
+        caption="Bookings by status"
+        columns={columns}
+        data={allBookings.slice(0, 18)}
+        getRowId={(booking) => booking.id}
+        state={{ status: 'success' }}
+        groupBy="status"
+        renderGroupLabel={(value) => <Badge tone={toneOf(value)}>{String(value)}</Badge>}
+        groupAggregates={({ rows }) =>
+          `Total ${money.format(rows.reduce((sum, booking) => sum + booking.total, 0))}`
+        }
+        stickyHeader
+        containerClassName="max-h-96"
+      />
+    ),
+  },
+  {
+    title: 'Export to CSV',
+    description:
+      'exportable adds an Export button. It downloads the shown rows as a CSV that opens correctly in Excel, Arabic included (UTF-8 BOM, CRLF, formula-injection guard, Latin digits, ISO dates). Pass onExport to ask the server for every row instead.',
+    wide: true,
+    render: () => (
+      <DataTable
+        caption="Bookings"
+        columns={columns}
+        data={allBookings.slice(0, 8)}
+        getRowId={(booking) => booking.id}
+        state={{ status: 'success' }}
+        exportable
+        exportFilename="bookings"
+        columnMenu
+      />
+    ),
+  },
+  {
+    title: 'Saved views',
+    description:
+      'SavedViews stores a snapshot of the filter bar, sorting, column visibility and page size. Save one, change the filters, then apply it again. Views persist in localStorage; set one as the default to apply it on load.',
+    wide: true,
+    render: () => <SavedViewsDemo storageKey="sas-ui-docs:data-table:views" />,
   },
 ];

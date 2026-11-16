@@ -6,6 +6,11 @@ All notable changes are recorded here. The format follows
 
 ## [Unreleased]
 
+### Added (continued)
+
+- Hijri calendar and month/year dropdowns; DataTable virtualisation, grid keyboard navigation, grouping, CSV export and
+  saved views; `status-bar`, `filter-builder`, `arabic-normalize`.
+
 ### Fixed
 
 - `Button loading` no longer lets a submit button submit its form a second time.

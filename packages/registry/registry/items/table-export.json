@@ -1,0 +1,8 @@
+{
+  "name": "table-export",
+  "type": "lib",
+  "category": "data",
+  "title": "Table export",
+  "description": "Excel-safe CSV for Arabic and English: UTF-8 BOM, CRLF, quote escaping, formula-injection guard, Latin digits, ISO dates, and a browser download helper.",
+  "files": ["lib/table-export.ts"]
+}

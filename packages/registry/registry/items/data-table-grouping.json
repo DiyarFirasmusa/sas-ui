@@ -1,0 +1,8 @@
+{
+  "name": "data-table-grouping",
+  "type": "lib",
+  "category": "data",
+  "title": "Data table grouping",
+  "description": "Pure helpers that group rows by a value and flatten them with collapsible group header rows.",
+  "files": ["lib/data-table-grouping.ts"]
+}

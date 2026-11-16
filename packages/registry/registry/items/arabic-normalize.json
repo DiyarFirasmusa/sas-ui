@@ -1,0 +1,8 @@
+{
+  "name": "arabic-normalize",
+  "type": "lib",
+  "category": "foundation",
+  "title": "Arabic normalise",
+  "description": "Arabic-aware text normaliser for search: strips tashkeel and tatweel, folds alef and ya variants and Arabic-Indic digits, with opt-in taa marbuta and hamza folding.",
+  "files": ["lib/arabic-normalize.ts"]
+}

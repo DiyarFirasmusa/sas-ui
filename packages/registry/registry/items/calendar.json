@@ -3,6 +3,6 @@
   "type": "ui",
   "category": "form",
   "title": "Calendar",
-  "description": "Accessible month calendar (ARIA grid) with single, multiple and range selection, min/max, RTL-aware keyboard navigation.",
-  "files": ["ui/calendar.tsx"]
+  "description": "Accessible month calendar (ARIA grid) with single, multiple and range selection, min/max, RTL-aware keyboard navigation, Hijri (Umm al-Qura / civil) display, secondary calendar and month/year dropdowns.",
+  "files": ["ui/calendar.tsx", "ui/calendar-header.tsx", "ui/calendar-grid.tsx"]
 }

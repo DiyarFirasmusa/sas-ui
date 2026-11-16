@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { DateRangeValue } from '@/components/ui/calendar';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Field } from '@/components/ui/field';
+import { LocaleProvider } from '@/lib/locale';
 import type { Example } from '../example-types';
 
 function Controlled() {
@@ -81,6 +82,58 @@ export const examples: Example[] = [
       <Field label="Period" className="w-80">
         <DateRangePicker disabled defaultValue={{ from: '2026-11-10', to: '2026-11-14' }} />
       </Field>
+    ),
+  },
+  {
+    title: 'Hijri',
+    description: 'Two Hijri months on wide screens; the committed range stays Gregorian ISO.',
+    render: () => (
+      <Field label="Period" className="w-96">
+        <DateRangePicker
+          calendarSystem="islamic-umalqura"
+          defaultMonth="2026-11-16"
+          defaultValue={{ from: '2026-11-16', to: '2026-11-25' }}
+        />
+      </Field>
+    ),
+  },
+  {
+    title: 'Hijri with Gregorian underneath',
+    render: () => (
+      <Field label="Period" className="w-96">
+        <DateRangePicker
+          calendarSystem="islamic-umalqura"
+          secondaryCalendar="gregory"
+          defaultMonth="2026-11-16"
+        />
+      </Field>
+    ),
+  },
+  {
+    title: 'Month and year dropdowns',
+    render: () => (
+      <Field label="Period" className="w-96">
+        <DateRangePicker captionLayout="dropdowns" defaultMonth="2026-11-01" />
+      </Field>
+    ),
+  },
+  {
+    title: 'Hijri in Arabic (RTL)',
+    render: () => (
+      <LocaleProvider locale="ar">
+        <div dir="rtl" className="w-96">
+          <Field label="الفترة">
+            <DateRangePicker
+              calendarSystem="islamic-umalqura"
+              secondaryCalendar="gregory"
+              captionLayout="dropdowns"
+              defaultMonth="2026-11-16"
+              defaultValue={{ from: '2026-11-16', to: '2026-11-25' }}
+              clearable
+            />
+          </Field>
+        </div>
+      </LocaleProvider>
     ),
   },
 ];

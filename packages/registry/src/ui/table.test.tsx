@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
 import {
   Table,
@@ -93,6 +94,32 @@ describe('Table', () => {
   it('does not flag the sticky header by default', () => {
     render(<Example />);
     expect(screen.getByRole('table')).not.toHaveAttribute('data-sticky-header');
+  });
+
+  it('exposes the scroll container: ref, inline style and an optional tab stop', () => {
+    const ref = createRef<HTMLDivElement>();
+    const { rerender } = render(
+      <Table containerRef={ref} containerStyle={{ height: 240 }}>
+        <TableBody>
+          <TableRow>
+            <TableCell>One</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(ref.current).toBe(document.querySelector('[data-slot="table-container"]'));
+    expect(ref.current).toHaveStyle({ height: '240px' });
+    expect(ref.current).toHaveAttribute('tabindex', '0');
+    rerender(
+      <Table containerRef={ref} containerFocusable={false}>
+        <TableBody>
+          <TableRow>
+            <TableCell>One</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(ref.current).not.toHaveAttribute('tabindex');
   });
 
   it('renders in Arabic without changes to the structure', () => {

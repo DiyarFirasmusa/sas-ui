@@ -16,7 +16,8 @@ import {
 import { CalendarIcon, CloseIcon } from '@/components/ui/icons';
 import { controlClasses } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { formatDate, parseISODate, type DateStyle } from '@/lib/date-utils';
+import { formatCalendarDate } from '@/lib/calendar-systems';
+import { parseISODate, type DateStyle } from '@/lib/date-utils';
 import { useLabels, useLocale, type Messages } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 
@@ -221,7 +222,16 @@ function DatePickerTrigger({
 
 type DatePickerCalendarProps = Pick<
   CalendarCommonProps,
-  'min' | 'max' | 'isDateDisabled' | 'weekStartsOn' | 'numerals' | 'fixedWeeks' | 'defaultMonth'
+  | 'min'
+  | 'max'
+  | 'isDateDisabled'
+  | 'weekStartsOn'
+  | 'numerals'
+  | 'fixedWeeks'
+  | 'defaultMonth'
+  | 'calendarSystem'
+  | 'secondaryCalendar'
+  | 'captionLayout'
 >;
 
 interface DatePickerProps extends DateFieldProps, DatePickerCalendarProps {
@@ -263,6 +273,9 @@ function DatePicker({
   isDateDisabled,
   weekStartsOn,
   numerals = 'latn',
+  calendarSystem = 'gregory',
+  secondaryCalendar,
+  captionLayout,
   fixedWeeks,
   defaultMonth,
   ...fieldProps
@@ -294,7 +307,11 @@ function DatePicker({
     <Popover open={isOpen && !disabled} onOpenChange={changeOpen}>
       <DatePickerTrigger
         {...fieldProps}
-        display={selected ? formatDate(selected, { locale, numerals, dateStyle }) : null}
+        display={
+          current && selected
+            ? formatCalendarDate(current, calendarSystem, { locale, numerals, dateStyle })
+            : null
+        }
         placeholder={placeholder ?? labels.placeholder}
         clearable={clearable}
         clearLabel={labels.clear}
@@ -319,6 +336,9 @@ function DatePicker({
           isDateDisabled={isDateDisabled}
           weekStartsOn={weekStartsOn}
           numerals={numerals}
+          calendarSystem={calendarSystem}
+          secondaryCalendar={secondaryCalendar}
+          captionLayout={captionLayout}
           fixedWeeks={fixedWeeks}
           labels={labelOverrides}
           onValueChange={(next) => {
