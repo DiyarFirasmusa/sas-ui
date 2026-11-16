@@ -24,8 +24,9 @@ export default defineConfig({
     'unicorn/no-array-sort': 'off',
   },
   overrides: [
+    // Tests and pure translation tables are long by nature, not by complexity.
     {
-      files: ['**/*.test.ts', '**/*.test.tsx'],
+      files: ['**/*.test.ts', '**/*.test.tsx', 'apps/docs/src/i18n/items-ar.ts'],
       rules: { 'eslint/max-lines': 'off' },
     },
   ],
