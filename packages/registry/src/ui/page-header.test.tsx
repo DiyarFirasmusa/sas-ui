@@ -77,3 +77,16 @@ describe('PageHeader', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('PageHeader look', () => {
+  it('uses the H1 ramp style and centres the title block against the actions', () => {
+    const { container } = render(
+      <PageHeader title="Invoices" actions={<button type="button">New</button>} />,
+    );
+    expect(screen.getByRole('heading', { level: 1 })).toHaveClass('text-h1');
+    expect(container.querySelector('[data-slot="page-header"]')).toHaveClass(
+      'items-center',
+      'gap-card',
+    );
+  });
+});

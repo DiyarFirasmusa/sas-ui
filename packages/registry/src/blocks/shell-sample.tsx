@@ -26,6 +26,10 @@ interface ShellCopy {
   general: string;
   team: string;
   billing: string;
+  workspaceLabel: string;
+  workspaceName: string;
+  status: string;
+  userRole: string;
   userName: string;
   commands: string;
   newInvoice: string;
@@ -46,6 +50,10 @@ const COPY: Record<Locale, ShellCopy> = {
     general: 'General',
     team: 'Team',
     billing: 'Billing',
+    workspaceLabel: 'Workspace',
+    workspaceName: 'Northwind Trading',
+    status: 'All systems operational',
+    userRole: 'Operations manager',
     userName: 'Layla Hassan',
     commands: 'Actions',
     newInvoice: 'Create invoice',
@@ -83,6 +91,10 @@ const COPY: Record<Locale, ShellCopy> = {
     general: 'عام',
     team: 'الفريق',
     billing: 'الفوترة',
+    workspaceLabel: 'مساحة العمل',
+    workspaceName: 'شركة الشمال للتجارة',
+    status: 'كل الأنظمة تعمل بشكل طبيعي',
+    userRole: 'مديرة العمليات',
     userName: 'ليلى حسن',
     commands: 'إجراءات',
     newInvoice: 'إنشاء فاتورة',
@@ -125,6 +137,7 @@ function sampleNav(locale: Locale): NavItem[] {
       id: 'settings',
       label: copy.settings,
       icon: <SettingsIcon />,
+      pinned: true,
       children: [
         { id: 'settings-general', label: copy.general, href: '/settings' },
         { id: 'settings-team', label: copy.team, href: '/settings/team' },
@@ -135,7 +148,17 @@ function sampleNav(locale: Locale): NavItem[] {
 }
 
 function sampleUser(locale: Locale): ShellUser {
-  return { name: COPY[locale].userName, email: 'layla@example.com' };
+  return {
+    name: COPY[locale].userName,
+    email: 'layla@example.com',
+    role: COPY[locale].userRole,
+  };
+}
+
+/** The workspace block under the brand, and the status line of the footer. */
+function sampleWorkspace(locale: Locale): { label: string; name: string; status: string } {
+  const copy = COPY[locale];
+  return { label: copy.workspaceLabel, name: copy.workspaceName, status: copy.status };
 }
 
 function sampleNotifications(locale: Locale): ShellNotification[] {
@@ -151,4 +174,4 @@ function sampleCommands(locale: Locale): SearchItem[] {
   ];
 }
 
-export { sampleCommands, sampleNav, sampleNotifications, sampleUser };
+export { sampleCommands, sampleNav, sampleNotifications, sampleUser, sampleWorkspace };

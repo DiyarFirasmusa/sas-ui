@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BuildingIcon, HomeIcon, InboxIcon, SettingsIcon, UserIcon } from '@/components/ui/icons';
 import { Sidebar, SidebarBrand, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
 import { SidebarNav } from '@/components/ui/sidebar-nav';
+import { SidebarTenant } from '@/components/ui/sidebar-tenant';
 import { filterNavItems, type NavItem } from '@/lib/nav-utils';
 import type { Example } from '../example-types';
 
@@ -48,10 +49,19 @@ const items: NavItem[] = [
     label: 'Settings',
     href: '/settings',
     icon: <SettingsIcon className={icon} />,
+    pinned: true,
   },
 ];
 
-function Demo({ rail = false, arabic = false }: { rail?: boolean; arabic?: boolean }) {
+function Demo({
+  rail = false,
+  arabic = false,
+  hr = false,
+}: {
+  rail?: boolean;
+  arabic?: boolean;
+  hr?: boolean;
+}) {
   const [path, setPath] = useState('/sales/orders');
   const data = arabic
     ? items.map((item) => ({
@@ -67,12 +77,19 @@ function Demo({ rail = false, arabic = false }: { rail?: boolean; arabic?: boole
       }))
     : items;
   return (
-    <div className="border-stroke flex h-96 overflow-hidden rounded-lg border">
-      <Sidebar collapsed={rail} className="h-full">
+    <div
+      data-preset-scope={hr ? 'hr' : undefined}
+      className="border-stroke flex h-[28rem] overflow-hidden rounded-lg border"
+    >
+      <Sidebar collapsed={rail} variant={hr ? 'hr' : undefined} className="h-full">
         <SidebarBrand
           title="SAS Suite"
-          subtitle="Admin"
+          subtitle={hr ? undefined : 'Admin'}
           logo={<BuildingIcon className="size-6" />}
+        />
+        <SidebarTenant
+          label={arabic ? 'مساحة العمل' : 'Workspace'}
+          name={arabic ? 'المستودع الرئيسي' : 'Main depot'}
         />
         <SidebarContent>
           <SidebarNav
@@ -92,9 +109,12 @@ function Demo({ rail = false, arabic = false }: { rail?: boolean; arabic?: boole
             )}
           />
         </SidebarContent>
-        <SidebarFooter>
-          <p className="text-b3 truncate">v1.0</p>
-        </SidebarFooter>
+        {hr ? null : (
+          <SidebarFooter
+            status={arabic ? 'كل الأنظمة تعمل' : 'All systems operational'}
+            version="v1.0.0"
+          />
+        )}
       </Sidebar>
       <div className="p-row text-b2 text-text-muted flex-1">Current path: {path}</div>
     </div>
@@ -111,8 +131,17 @@ export const examples: Example[] = [
   },
   {
     title: 'Icon rail',
+    description:
+      'The 64px rail: every icon has a name tooltip on the inline-end side; a group icon expands the sidebar. Hover or tab to an icon.',
     wide: true,
     render: () => <Demo rail />,
+  },
+  {
+    title: 'HR layout',
+    description:
+      '`variant="hr"` inside `data-preset-scope="hr"`: a fixed deep plum column, the tenant as an info card, groups as flat sections with the gold current page.',
+    wide: true,
+    render: () => <Demo hr />,
   },
   {
     title: 'Arabic labels',

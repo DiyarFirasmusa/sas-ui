@@ -20,7 +20,7 @@ describe('ShellNotifications', () => {
   it('hides the badge when everything is read and caps large counts', () => {
     const { rerender } = renderWithLocale(<ShellNotifications notifications={[]} />);
     expect(screen.getByRole('button', { name: 'Notifications' })).toBeInTheDocument();
-    expect(document.querySelector('[data-slot="shell-notifications-badge"]')).toBeNull();
+    expect(document.querySelector('[data-slot="notifications-count"]')).toBeNull();
     rerender(<ShellNotifications count={120} />);
     expect(screen.getByText('99+')).toBeInTheDocument();
   });

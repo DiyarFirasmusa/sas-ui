@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
-import { AlertTriangleIcon, InboxIcon } from '@/components/ui/icons';
+import { iconTileVariants } from '@/components/ui/empty-state';
+import { AlertTriangleIcon, SearchIcon } from '@/components/ui/icons';
+import { Skeleton } from '@/components/ui/skeleton';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { useLabels, type Messages } from '@/lib/locale';
 import { cn } from '@/lib/utils';
@@ -40,13 +42,20 @@ function DataTableErrorPanel({
     <div
       role="alert"
       data-slot="data-table-error"
-      className={cn('flex flex-col items-center gap-field px-row py-page text-center', className)}
+      className={cn(
+        'flex min-h-56 flex-col items-center justify-center gap-row px-row py-page text-center',
+        className,
+      )}
     >
-      <AlertTriangleIcon className="text-danger size-6" />
-      <p className="text-h5 text-text-primary">{labels.errorTitle}</p>
-      {message ? <p className="text-b2 text-text-muted">{message}</p> : null}
+      <span aria-hidden="true" className={iconTileVariants({ tone: 'danger' })}>
+        <AlertTriangleIcon />
+      </span>
+      <div className="flex flex-col gap-1">
+        <p className="text-h4 text-text-primary">{labels.errorTitle}</p>
+        {message ? <p className="text-b2 text-text-secondary">{message}</p> : null}
+      </div>
       {onRetry ? (
-        <Button variant="outline" size="sm" onClick={onRetry}>
+        <Button variant="outline" onClick={onRetry}>
           {labels.retry}
         </Button>
       ) : null}
@@ -75,11 +84,18 @@ function DataTableEmptyPanel({
   return (
     <div
       data-slot="data-table-empty"
-      className={cn('flex flex-col items-center gap-field px-row py-page text-center', className)}
+      className={cn(
+        'flex min-h-56 flex-col items-center justify-center gap-row px-row py-page text-center',
+        className,
+      )}
     >
-      <InboxIcon className="text-text-muted size-6" />
-      <p className="text-h5 text-text-primary">{title ?? labels.emptyTitle}</p>
-      {description ? <p className="text-b2 text-text-muted">{description}</p> : null}
+      <span aria-hidden="true" className={iconTileVariants({ tone: 'neutral' })}>
+        <SearchIcon />
+      </span>
+      <div className="flex flex-col gap-1">
+        <p className="text-h4 text-text-secondary">{title ?? labels.emptyTitle}</p>
+        {description ? <p className="text-b2 text-text-muted">{description}</p> : null}
+      </div>
       {action}
     </div>
   );
@@ -100,7 +116,7 @@ function DataTableStateRow({
   );
 }
 
-const SKELETON_WIDTHS = ['w-3/4', 'w-1/2', 'w-2/3', 'w-5/6', 'w-1/3'] as const;
+const SKELETON_WIDTHS = ['w-32', 'w-44', 'w-24', 'w-36', 'w-28', 'w-40'] as const;
 
 /** Placeholder rows with the real column count, so the layout does not shift when data arrives. */
 function DataTableSkeletonRows({
@@ -117,13 +133,13 @@ function DataTableSkeletonRows({
           key={row}
           aria-hidden="true"
           data-slot="data-table-skeleton-row"
-          className="hover:bg-transparent"
+          className="h-[62px] hover:bg-transparent"
         >
           {Array.from({ length: Math.max(columnCount, 1) }, (_cell, column) => (
             <TableCell key={column}>
-              <div
+              <Skeleton
                 className={cn(
-                  'h-4 animate-pulse rounded-md bg-surface-dim motion-reduce:animate-none',
+                  'h-3.5 max-w-full',
                   SKELETON_WIDTHS[(row + column) % SKELETON_WIDTHS.length],
                 )}
               />
@@ -144,11 +160,11 @@ function DataTableSkeletonCards({ rowCount }: { rowCount: number }) {
           key={row}
           aria-hidden="true"
           data-slot="data-table-skeleton-card"
-          className="gap-field border-stroke bg-surface p-row flex flex-col rounded-lg border"
+          className="gap-field border-stroke bg-surface p-row flex flex-col rounded-xl border"
         >
-          <div className="bg-surface-dim h-5 w-1/2 animate-pulse rounded-md motion-reduce:animate-none" />
-          <div className="bg-surface-dim h-4 w-3/4 animate-pulse rounded-md motion-reduce:animate-none" />
-          <div className="bg-surface-dim h-4 w-2/3 animate-pulse rounded-md motion-reduce:animate-none" />
+          <Skeleton className="h-5 w-1/2" />
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-2/3" />
         </li>
       ))}
     </>

@@ -13,14 +13,25 @@ const team = [
 export const examples: Example[] = [
   {
     title: 'Initials fallback',
-    description:
-      'First letters of the first two words; the colour comes from the name, so it is stable.',
+    description: 'First letters of the first two words on the brand fill.',
     render: () => (
       <div className="gap-inline flex items-center">
         <Avatar name="Layla Hassan" />
         <Avatar name="محمد علي" />
         <Avatar name="Grace" />
         <Avatar />
+      </div>
+    ),
+  },
+  {
+    title: 'Colour from the name',
+    description:
+      'The initials sit on the brand fill by default; `tone="auto"` picks a tag hue per name.',
+    render: () => (
+      <div className="gap-inline flex items-center">
+        <Avatar name="Layla Hassan" tone="auto" />
+        <Avatar name="Grace Hopper" tone="auto" />
+        <Avatar name="محمد علي" tone="auto" />
       </div>
     ),
   },

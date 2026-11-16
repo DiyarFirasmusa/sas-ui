@@ -4,6 +4,7 @@ import {
   sampleNav,
   sampleNotifications,
   sampleUser,
+  sampleWorkspace,
 } from '@/components/blocks/shell-sample';
 import { flattenNavItems } from '@/lib/nav-utils';
 
@@ -19,6 +20,22 @@ describe('shell sample data', () => {
     );
     expect(sampleCommands(locale).length).toBeGreaterThan(0);
   });
+
+  it.each(['en', 'ar'] as const)(
+    'describes a workspace and a pinned settings group in %s',
+    (locale) => {
+      const workspace = sampleWorkspace(locale);
+      expect(workspace.label.length).toBeGreaterThan(0);
+      expect(workspace.name.length).toBeGreaterThan(0);
+      expect(workspace.status.length).toBeGreaterThan(0);
+      expect(sampleUser(locale).role?.length).toBeGreaterThan(0);
+      expect(
+        sampleNav(locale)
+          .filter((item) => item.pinned)
+          .map((item) => item.id),
+      ).toEqual(['settings']);
+    },
+  );
 
   it('uses Arabic text for the Arabic sample', () => {
     expect(sampleNav('ar')[0]?.label).toMatch(/[؀-ۿ]/);

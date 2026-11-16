@@ -11,7 +11,7 @@ const messages: Messages<'close'> = {
 
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
 
-/** Max widths (420 / 640 / 900 / 1100 px); all still shrink to the viewport on phones. */
+/** Max widths (420 / 640 / 900 / 1100 px, the dashboards' sizes); all still shrink to the viewport on phones. */
 const dialogSizes: Record<DialogSize, string> = {
   sm: 'max-w-[26.25rem]',
   md: 'max-w-[40rem]',
@@ -36,7 +36,7 @@ interface DialogContentProps extends DialogPrimitive.Popup.Props {
   showCloseButton?: boolean;
   /** Accessible name of the close button; defaults to the localised "Close". */
   closeLabel?: string;
-  /** Width step. Omit for the default 32rem panel. */
+  /** Width step. Default `md` (640px), the dashboards' standard dialog. */
   size?: DialogSize;
 }
 
@@ -45,7 +45,7 @@ function DialogContent({
   children,
   showCloseButton = true,
   closeLabel,
-  size,
+  size = 'md',
   ...props
 }: DialogContentProps) {
   const labels = useLabels(messages, closeLabel ? { close: closeLabel } : undefined);
@@ -54,7 +54,7 @@ function DialogContent({
       <DialogPrimitive.Backdrop
         data-slot="dialog-backdrop"
         className={cn(
-          'fixed inset-0 z-50 bg-scrim',
+          'fixed inset-0 z-50 bg-scrim backdrop-blur-[12px]',
           'transition-opacity duration-200 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0',
           'motion-reduce:transition-none',
         )}
@@ -63,12 +63,12 @@ function DialogContent({
         data-slot="dialog-content"
         data-size={size}
         className={cn(
-          'fixed start-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg -translate-y-1/2 flex-col',
+          'fixed start-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] -translate-y-1/2 flex-col overflow-hidden',
           'ltr:-translate-x-1/2 rtl:translate-x-1/2',
-          'rounded-modal border border-stroke bg-popover text-popover-foreground shadow-xlarge outline-none',
+          'rounded-modal border border-stroke-strong bg-surface-elevated text-text-primary shadow-xlarge outline-none',
           'transition-[opacity,scale] duration-200 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
           'motion-reduce:transition-none',
-          size && dialogSizes[size],
+          dialogSizes[size],
           className,
         )}
         {...props}
@@ -80,7 +80,7 @@ function DialogContent({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="end-inline top-inline absolute"
+                className="end-row top-row absolute z-10"
                 aria-label={labels.close}
               />
             }
@@ -110,7 +110,7 @@ function DialogHeader({
     <div
       data-slot="dialog-header"
       className={cn(
-        'flex flex-col gap-1',
+        'flex shrink-0 flex-col gap-1.5',
         padded && 'p-card pb-row',
         reserveClose ? 'pe-14' : padded && 'pe-card',
         className,
@@ -131,7 +131,7 @@ function DialogBody({
   return (
     <div
       data-slot="dialog-body"
-      className={cn('min-h-0 flex-1 overflow-y-auto', padded && 'px-card py-2', className)}
+      className={cn('min-h-0 flex-1 overflow-y-auto', padded && 'px-card pb-card', className)}
       {...props}
     />
   );
@@ -149,8 +149,9 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        'flex flex-col-reverse gap-field sm:flex-row sm:justify-end',
-        padded && 'p-card pt-row',
+        // The dashboards put the primary action first, at the start edge.
+        'flex shrink-0 flex-col gap-field bg-surface-elevated sm:flex-row sm:flex-wrap sm:justify-start',
+        padded && 'px-card pt-field pb-card',
         className,
       )}
       {...props}

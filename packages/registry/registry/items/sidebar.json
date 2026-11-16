@@ -3,6 +3,17 @@
   "type": "ui",
   "category": "navigation",
   "title": "Sidebar",
-  "description": "Token-coloured sidebar with brand, footer and a data-driven nav: links, expandable groups, badges, active state and a renderLink prop for any router.",
-  "files": ["ui/sidebar.tsx", "ui/sidebar-nav.tsx", "lib/nav-utils.ts"]
+  "description": "The dashboards' sidebar: brand row with the rail toggle, workspace card, grouped accordion navigation with icons, badges and pinned entries, a 64px rail with inline-end tooltips, status footer and user block; the `hr` layout swaps in a fixed column, tenant info card and flat sections. Token-coloured, router-agnostic.",
+  "files": [
+    "ui/sidebar.tsx",
+    "ui/sidebar-nav.tsx",
+    "ui/sidebar-nav-items.tsx",
+    "ui/sidebar-nav-rail.tsx",
+    "ui/sidebar-rail-tooltip.tsx",
+    "ui/sidebar-tenant.tsx",
+    "ui/sidebar-info-card.tsx",
+    "ui/sidebar-user.tsx",
+    "ui/sidebar-mobile-header.tsx",
+    "lib/nav-utils.ts"
+  ]
 }

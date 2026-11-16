@@ -103,6 +103,19 @@ describe('RadioGroup', () => {
     expect(screen.getByRole('radio', { name: 'احترافي' })).toBeChecked();
   });
 
+  it('draws the 16px round box and turns the picked label primary', () => {
+    render(
+      <RadioGroup defaultValue="b" aria-label="Plan">
+        <RadioGroupItem value="a" label="A" />
+        <RadioGroupItem value="b" label="B" />
+      </RadioGroup>,
+    );
+    expect(screen.getByRole('radio', { name: 'A' })).toHaveClass('size-4', 'rounded-full');
+    expect(screen.getByText('B').closest('label')).toHaveClass(
+      'has-[[data-checked]]:text-primary-text',
+    );
+  });
+
   it('has no axe violations', async () => {
     const { container } = render(
       <Field label="Plan" description="Pick one" error="Required">

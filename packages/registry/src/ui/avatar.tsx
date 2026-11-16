@@ -69,11 +69,19 @@ interface AvatarProps
   src?: string;
   /** Shown instead of the initials/user glyph when there is no `name`. */
   fallback?: ReactNode;
+  /**
+   * Fill behind the initials: `brand` (default, the dashboards' user avatar)
+   * or `auto`, a tag hue picked from the name so people tell apart in a list.
+   */
+  tone?: 'brand' | 'auto';
 }
 
-function Avatar({ className, size, name, src, fallback, ...props }: AvatarProps) {
+function Avatar({ className, size, name, src, fallback, tone = 'brand', ...props }: AvatarProps) {
   const initials = name ? getInitials(name) : '';
-  const hue = HUE_CLASSES[name ? hueIndexForName(name) : 0];
+  const hue =
+    tone === 'auto'
+      ? HUE_CLASSES[name ? hueIndexForName(name) : 0]
+      : 'bg-primary text-primary-foreground';
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
@@ -105,10 +113,20 @@ interface AvatarGroupProps
   max?: number;
   /** Accessible name for the whole group, e.g. "Assignees". */
   label?: string;
+  /** Fill behind the initials; see `Avatar`. */
+  tone?: AvatarProps['tone'];
 }
 
 /** Overlapping avatars with a "+N" tile for the overflow. Overlap flips with the direction. */
-function AvatarGroup({ people, max = 4, size, label, className, ...props }: AvatarGroupProps) {
+function AvatarGroup({
+  people,
+  max = 4,
+  size,
+  label,
+  tone,
+  className,
+  ...props
+}: AvatarGroupProps) {
   const labels = useLabels(messages);
   const limit = Math.max(1, max);
   const shown = people.length > limit ? people.slice(0, limit) : people;
@@ -127,6 +145,7 @@ function AvatarGroup({ people, max = 4, size, label, className, ...props }: Avat
           name={person.name}
           src={person.src}
           size={size}
+          tone={tone}
           className={cn('ring-2 ring-background', index > 0 && '-ms-2')}
         />
       ))}

@@ -143,8 +143,8 @@ function DetailPage01({
   }
 
   return (
-    <div className={cn('bg-background p-row sm:p-page min-h-svh', className)} {...props}>
-      <div className="gap-row mx-auto flex w-full max-w-6xl flex-col">
+    <div className={cn('bg-background p-4 md:p-page min-h-svh', className)} {...props}>
+      <div className="gap-card flex w-full flex-col">
         <StateWrapper
           state={state}
           loading={<DetailSkeleton label={labels.loading} />}

@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
+  menuSurfaceClasses,
 } from '@/components/ui/dropdown-menu';
 import { useLocale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
@@ -45,13 +46,7 @@ function ContextMenuContent({ className, ...props }: ContextMenuPrimitive.Popup.
         <ContextMenuPrimitive.Positioner className="z-50 outline-none">
           <ContextMenuPrimitive.Popup
             data-slot="context-menu-content"
-            className={cn(
-              'min-w-44 origin-(--transform-origin) overflow-y-auto rounded-lg border border-stroke bg-popover p-1 text-popover-foreground shadow-large outline-none',
-              'max-h-(--available-height)',
-              'transition-[opacity,scale] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
-              'motion-reduce:transition-none',
-              className,
-            )}
+            className={cn(menuSurfaceClasses, className)}
             {...props}
           />
         </ContextMenuPrimitive.Positioner>
@@ -87,13 +82,7 @@ function ContextMenuSubContent({ className, ...props }: MenuPrimitive.Popup.Prop
       >
         <MenuPrimitive.Popup
           data-slot="context-menu-sub-content"
-          className={cn(
-            'min-w-44 origin-(--transform-origin) overflow-y-auto rounded-lg border border-stroke bg-popover p-1 text-popover-foreground shadow-large outline-none',
-            'max-h-(--available-height)',
-            'transition-[opacity,scale] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
-            'motion-reduce:transition-none',
-            className,
-          )}
+          className={cn(menuSurfaceClasses, className)}
           {...props}
         />
       </MenuPrimitive.Positioner>

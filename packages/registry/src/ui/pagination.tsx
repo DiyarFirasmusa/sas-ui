@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -73,6 +72,27 @@ interface PaginationProps {
 
 const DEFAULT_PAGE_SIZES = [10, 20, 50, 100] as const;
 
+// The dashboards' page box: 29px square, 7px radius, a faint fill and a stroke;
+// the current page takes the primary fill. Phones get a 44px target.
+const pageBoxClasses = [
+  'inline-flex h-[29px] min-w-[29px] shrink-0 cursor-pointer items-center justify-center rounded-[var(--radius-pagination,7px)] border border-stroke bg-text-primary/5 px-1.5 text-[13px]/none font-semibold text-text-primary tabular-nums',
+  'transition-colors outline-none hover:bg-hover-row motion-reduce:transition-none max-sm:size-11',
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-highlight',
+  'disabled:cursor-not-allowed disabled:bg-transparent disabled:text-text-inactive disabled:hover:bg-transparent',
+  'aria-[current=page]:border-primary aria-[current=page]:bg-primary aria-[current=page]:text-primary-foreground aria-[current=page]:hover:bg-primary-hover',
+].join(' ');
+
+function PageBox({ className, ...props }: React.ComponentProps<'button'>) {
+  return (
+    <button
+      type="button"
+      data-slot="pagination-box"
+      className={cn(pageBoxClasses, className)}
+      {...props}
+    />
+  );
+}
+
 /**
  * Server-driven pagination: it never slices data, it only reports the page the
  * user asked for. Counts use Latin digits in both languages, and the chevrons
@@ -115,8 +135,6 @@ function Pagination({
       onPageChange(target);
     }
   }
-
-  const stepButton = 'max-sm:size-11';
 
   return (
     <nav
@@ -161,45 +179,32 @@ function Pagination({
         ) : null}
       </div>
 
-      <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className={stepButton}
-          aria-label={labels.first}
-          disabled={disabled || isFirst}
-          onClick={() => go(1)}
-        >
+      <div className="gap-field flex items-center">
+        <PageBox aria-label={labels.first} disabled={disabled || isFirst} onClick={() => go(1)}>
           <ChevronsLeftIcon />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className={stepButton}
+        </PageBox>
+        <PageBox
           aria-label={labels.previous}
           disabled={disabled || isFirst}
           onClick={() => go(current - 1)}
         >
           <ChevronLeftIcon />
-        </Button>
+        </PageBox>
 
-        <ol className="hidden items-center gap-1 sm:flex">
+        <ol className="gap-field hidden items-center sm:flex">
           {getPageWindow(current, resolvedCount, siblings).map((item) =>
             typeof item === 'number' ? (
               <li key={item}>
-                <Button
-                  variant={item === current ? 'default' : 'ghost'}
-                  size="icon-sm"
+                <PageBox
                   aria-label={fillTemplate(labels.page, {
                     page: formatCount(item),
                   })}
                   aria-current={item === current ? 'page' : undefined}
                   disabled={disabled}
-                  className="tabular-nums"
                   onClick={() => go(item)}
                 >
                   {formatCount(item)}
-                </Button>
+                </PageBox>
               </li>
             ) : (
               <li key={item} aria-hidden="true" className="text-text-muted px-1">
@@ -212,26 +217,20 @@ function Pagination({
           {pageStatus}
         </span>
 
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className={stepButton}
+        <PageBox
           aria-label={labels.next}
           disabled={disabled || isLast}
           onClick={() => go(current + 1)}
         >
           <ChevronRightIcon />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className={stepButton}
+        </PageBox>
+        <PageBox
           aria-label={labels.last}
           disabled={disabled || isLast}
           onClick={() => go(resolvedCount)}
         >
           <ChevronsRightIcon />
-        </Button>
+        </PageBox>
       </div>
       <span role="status" className="sr-only">
         {pageStatus}

@@ -58,12 +58,12 @@ describe('Dialog', () => {
     expect(await screen.findByRole('button', { name: 'إغلاق' })).toBeInTheDocument();
   });
 
-  it('keeps the default width and adds an opt-in size scale', async () => {
+  it('defaults to the 640px dialog and offers a size scale', async () => {
     const { unmount } = render(<Example />);
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     const plain = await screen.findByRole('dialog');
-    expect(plain).toHaveClass('max-w-lg');
-    expect(plain).not.toHaveAttribute('data-size');
+    expect(plain).toHaveClass('max-w-[40rem]');
+    expect(plain).toHaveAttribute('data-size', 'md');
     unmount();
 
     const widths = {
@@ -84,7 +84,6 @@ describe('Dialog', () => {
       await userEvent.click(screen.getByRole('button', { name: 'Open' }));
       const dialog = await screen.findByRole('dialog');
       expect(dialog).toHaveClass(widths[size]);
-      expect(dialog).not.toHaveClass('max-w-lg');
       expect(dialog).toHaveAttribute('data-size', size);
       close();
     }

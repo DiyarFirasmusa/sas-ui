@@ -4,6 +4,7 @@ import { useRef, useState, type FocusEventHandler, type Ref } from 'react';
 import {
   ComboboxContent,
   comboboxGroupClasses,
+  comboboxIconButton,
   type ComboboxAsyncProps,
 } from '@/components/ui/combobox';
 import { ChevronDownIcon, CloseIcon } from '@/components/ui/icons';
@@ -58,12 +59,6 @@ const messages: Messages<MultiSelectLabelKey> = {
     selectedCount: '{count} محدد',
   },
 };
-
-const iconButton = cn(
-  'inline-flex size-7 shrink-0 items-center justify-center rounded-md text-text-muted outline-none',
-  'transition-colors hover:bg-hover-row hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ring',
-  '[&_svg]:size-4 data-[disabled]:pointer-events-none',
-);
 
 interface MultiSelectProps
   extends
@@ -204,7 +199,7 @@ function MultiSelect({
           onBlur={handleBlur}
           className={cn(
             comboboxGroupClasses,
-            'h-auto min-h-9.5 items-start py-1 ps-1.5',
+            'h-auto min-h-control-input items-start py-1.5 ps-1.5',
             className,
           )}
         >
@@ -267,7 +262,7 @@ function MultiSelect({
                         : undefined
                     }
                     data-slot="multi-select-input"
-                    className="text-b1 text-text-primary placeholder:text-text-muted h-7 min-w-16 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
+                    className="text-control-input text-text-primary placeholder:text-text-muted h-7 min-w-16 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
                   />
                 </ComboboxPrimitive.Chips>
               );
@@ -277,7 +272,7 @@ function MultiSelect({
             <ComboboxPrimitive.Clear
               data-slot="multi-select-clear"
               aria-label={labels.clear}
-              className={iconButton}
+              className={comboboxIconButton}
             >
               <CloseIcon />
             </ComboboxPrimitive.Clear>
@@ -286,7 +281,7 @@ function MultiSelect({
             data-slot="multi-select-trigger"
             aria-label={labels.open}
             tabIndex={-1}
-            className={iconButton}
+            className={comboboxIconButton}
           >
             <ChevronDownIcon />
           </ComboboxPrimitive.Trigger>

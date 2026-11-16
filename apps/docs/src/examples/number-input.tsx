@@ -13,7 +13,12 @@ function Controlled() {
 }
 
 export const examples: Example[] = [
-  { title: 'Min, max and step', render: () => <Controlled /> },
+  {
+    title: 'Min, max and step',
+    description:
+      'The 28px stepper buttons sit together at the end edge of the field, decrease first; the value stays at the start edge.',
+    render: () => <Controlled />,
+  },
   {
     title: 'Decimals and a larger step',
     render: () => (

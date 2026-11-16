@@ -49,19 +49,21 @@ function RadioGroupItem({ className, label, description, ...props }: RadioGroupI
       // Inside a Field every radio would otherwise be named by the field label.
       {...(label === undefined ? {} : { 'aria-labelledby': labelId })}
       className={cn(
-        'inline-flex size-5 shrink-0 items-center justify-center rounded-full border border-stroke-strong bg-surface outline-none',
-        'transition-colors',
-        'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        // The checkbox's 16px box and 50% ink border, drawn round.
+        'peer relative inline-flex size-4 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_oklab,var(--text-primary)_50%,transparent)] bg-surface shadow-small outline-none',
+        'transition-[border-color,box-shadow,background-color] duration-150 motion-reduce:transition-none',
+        'after:absolute after:-inset-x-3 after:-inset-y-2',
+        'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50',
         'data-[checked]:border-primary data-[checked]:bg-primary',
         'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
-        'data-[invalid]:border-danger group-aria-invalid/radio-group:border-danger',
+        'data-[invalid]:border-danger data-[invalid]:ring-3 data-[invalid]:ring-danger/20 group-aria-invalid/radio-group:border-danger data-[invalid]:data-[checked]:border-primary',
         className,
       )}
       {...props}
     >
       <RadioPrimitive.Indicator
         data-slot="radio-group-indicator"
-        className="bg-primary-foreground size-2 rounded-full"
+        className="bg-primary-foreground size-1.5 rounded-full"
       />
     </RadioPrimitive.Root>
   );
@@ -74,12 +76,14 @@ function RadioGroupItem({ className, label, description, ...props }: RadioGroupI
     <label
       data-slot="radio-group-label"
       className={cn(
-        'flex min-h-11 cursor-pointer items-start gap-field text-b1 text-text-primary select-none sm:min-h-9',
+        // The dashboards' `.choice`: field text, turning primary once picked.
+        'flex min-h-11 cursor-pointer items-start gap-field text-control-input text-text-primary select-none sm:min-h-0',
+        'has-[[data-checked]]:text-primary-text',
         props.disabled && 'cursor-not-allowed opacity-70',
       )}
     >
-      <span className="flex h-6 items-center">{radio}</span>
-      <span className="flex flex-col pt-0.5">
+      <span className="flex h-lh items-center">{radio}</span>
+      <span className="flex flex-col">
         <span id={labelId}>{label}</span>
         {description ? <span className="text-b3 text-text-muted">{description}</span> : null}
       </span>

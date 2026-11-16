@@ -49,7 +49,10 @@ function DataTableColumnMenu<TData>({ table, labels: overrides }: DataTableColum
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline" />} data-slot="data-table-columns">
+      <DropdownMenuTrigger
+        render={<Button variant="outline" size="sm" />}
+        data-slot="data-table-columns"
+      >
         <SettingsIcon />
         {labels.columns}
         <ChevronDownIcon />
@@ -122,6 +125,7 @@ function DataTableExportButton<TData>({
   return (
     <Button
       variant="outline"
+      size="sm"
       data-slot="data-table-export"
       disabled={disabled || rows.length === 0}
       onClick={exportRows}
@@ -159,7 +163,7 @@ function DataTableBulkBar({
       aria-label={labels.bulkActions}
       data-slot="data-table-bulk-bar"
       className={cn(
-        'flex flex-wrap items-center gap-inline rounded-lg border border-primary-highlight bg-primary-tint px-row py-field',
+        'flex flex-wrap items-center gap-inline rounded-control border border-primary-highlight bg-primary-tint px-row py-field',
         className,
       )}
     >
@@ -174,7 +178,53 @@ function DataTableBulkBar({
   );
 }
 
-export { DataTableBulkBar, DataTableColumnMenu, DataTableExportButton };
+interface DataTableTopBarProps<TData> extends Omit<DataTableExportButtonProps<TData>, 'labels'> {
+  /** Filters, search and other controls on the start side. */
+  children?: ReactNode;
+  exportable: boolean;
+  columnMenu: boolean;
+  labels?: DataTableToolbarLabels;
+}
+
+/** The row above the table: the caller's controls, then export and the column menu. */
+function DataTableTopBar<TData>({
+  children,
+  exportable,
+  columnMenu,
+  labels,
+  ...exportProps
+}: DataTableTopBarProps<TData>) {
+  if (!children && !columnMenu && !exportable) {
+    return null;
+  }
+  return (
+    <div className="gap-field flex flex-wrap items-center justify-between">
+      <div className="gap-field flex min-w-0 flex-1 flex-wrap items-center">{children}</div>
+      <div className="gap-field flex items-center">
+        {exportable ? <DataTableExportButton {...exportProps} labels={labels} /> : null}
+        {columnMenu ? <DataTableColumnMenu table={exportProps.table} labels={labels} /> : null}
+      </div>
+    </div>
+  );
+}
+
+/** Panel heading: the title and the row count beside it. */
+function DataTableTitle({ title, count }: { title: ReactNode; count: number }) {
+  return (
+    <div data-slot="data-table-title" className="gap-field flex items-center justify-between">
+      <h2 className="text-h4 text-text-primary">{title}</h2>
+      <span className="text-b3 text-text-muted tabular-nums">{formatCount(count)}</span>
+    </div>
+  );
+}
+
+export {
+  DataTableBulkBar,
+  DataTableColumnMenu,
+  DataTableExportButton,
+  DataTableTitle,
+  DataTableTopBar,
+};
 export type {
   DataTableBulkBarProps,
   DataTableColumnMenuProps,

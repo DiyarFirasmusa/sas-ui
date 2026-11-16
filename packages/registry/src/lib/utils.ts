@@ -25,8 +25,23 @@ const TYPE_RAMP = [
   'kpi',
   'metric',
   'display',
+  'control',
+  'control-input',
 ];
-const SPACING_ROLES = ['field', 'inline', 'row', 'panel', 'card', 'page'];
+const SPACING_ROLES = [
+  'field',
+  'inline',
+  'row',
+  'panel',
+  'card',
+  'page',
+  'control',
+  'control-lg',
+  'control-sm',
+  'control-xs',
+  'control-input',
+  'control-x',
+];
 
 const twMerge = extendTailwindMerge({
   extend: {

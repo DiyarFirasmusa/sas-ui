@@ -39,3 +39,15 @@ describe('generate-css', () => {
     expect(block).toContain('--color-border: var(--border);');
   });
 });
+
+describe('geometry', () => {
+  it('emits compact control geometry by default and comfortable for hr', () => {
+    const css = presetsToSwitchableCss(PRESETS);
+    const compact = PRESETS.find((entry) => entry.name === 'inventory');
+    const comfortable = PRESETS.find((entry) => entry.name === 'hr');
+    expect(compact && presetToCss(compact, 'root')).toContain('--control-h: 38px;');
+    expect(comfortable && presetToCss(comfortable, 'root')).toContain('--control-h: 44px;');
+    expect(css).toContain('--control-h-input: 44px;');
+    expect(css).toContain('--control-radius: 12px;');
+  });
+});

@@ -103,15 +103,13 @@ describe('Breadcrumb', () => {
     await userEvent.keyboard('{Escape}');
   });
 
-  it('labels the landmark and ellipsis in Arabic and mirrors the separator', () => {
+  it('labels the landmark and ellipsis in Arabic and draws a plain slash separator', () => {
     const { container } = renderWithLocale(
       <BreadcrumbTrail items={[{ label: 'الرئيسية', href: '/' }, { label: 'التقارير' }]} />,
       { locale: 'ar' },
     );
     expect(screen.getByRole('navigation', { name: 'مسار التنقل' })).toBeInTheDocument();
-    expect(container.querySelector('[data-slot="breadcrumb-separator"] svg')).toHaveClass(
-      'rtl:-scale-x-100',
-    );
+    expect(container.querySelector('[data-slot="breadcrumb-separator"]')).toHaveTextContent('/');
   });
 
   it('names the ellipsis button in Arabic', () => {

@@ -33,16 +33,17 @@ const trackVariants = variants(
 const tabVariants = variants(
   [
     'group/tab relative inline-flex cursor-pointer items-center justify-center gap-field whitespace-nowrap text-button-2 text-text-secondary',
-    'outline-none transition-colors duration-150 motion-reduce:transition-none',
+    'transition-colors duration-150 motion-reduce:transition-none',
     'enabled:hover:text-text-primary disabled:cursor-not-allowed disabled:text-text-inactive',
-    'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-highlight',
     '[&>svg]:size-4 [&>svg]:shrink-0',
   ],
   {
     variants: {
       variant: {
-        pill: 'h-11 flex-[1_0_auto] rounded-pill px-5 aria-selected:bg-primary-light aria-selected:text-primary-text sm:h-10',
-        plain: 'h-11 flex-none rounded-control px-field aria-selected:text-text-primary sm:h-9',
+        pill: 'h-11 flex-[1_0_auto] rounded-pill px-[18px] aria-selected:bg-primary-light aria-selected:text-primary-text sm:h-10',
+        plain:
+          'h-11 flex-none rounded-control px-field aria-selected:text-text-primary sm:h-[34px]',
         // The indicator is the tab's own bottom border, so it follows the tab
         // in both directions and while the track scrolls.
         underline:
@@ -217,7 +218,7 @@ function TabBar<TId extends string = string>({
             {item.count === undefined ? null : (
               <span
                 data-slot="tab-bar-count"
-                className="rounded-pill bg-surface-dim text-label text-text-secondary group-aria-selected/tab:bg-primary group-aria-selected/tab:text-primary-foreground inline-flex h-5.5 min-w-5.5 items-center justify-center px-1.5 tabular-nums"
+                className="rounded-pill bg-text-primary/7 text-text-secondary group-aria-selected/tab:bg-primary group-aria-selected/tab:text-primary-foreground inline-flex h-[22px] min-w-[22px] items-center justify-center px-1.5 text-[11px]/none font-semibold tabular-nums"
               >
                 {item.count}
               </span>

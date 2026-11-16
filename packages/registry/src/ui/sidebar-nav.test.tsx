@@ -206,15 +206,227 @@ describe('SidebarNav', () => {
     it('shows icon-only entries that keep their names', () => {
       rail();
       const home = screen.getByRole('link', { name: 'Home' });
-      expect(home).toHaveAttribute('title', 'Home');
+      expect(home).toHaveClass('size-11', 'rounded-xl', 'bg-sidebar-selected');
       expect(screen.getByRole('button', { name: 'Sales' })).toBeInTheDocument();
       expect(screen.queryByText('Home')).not.toBeInTheDocument();
+    });
+
+    it('names each icon in a tooltip on hover and on keyboard focus', async () => {
+      rail();
+      await userEvent.hover(screen.getByRole('link', { name: 'Home' }));
+      expect(await screen.findByText('Home')).toHaveAttribute('data-slot', 'tooltip-content');
+      await userEvent.unhover(screen.getByRole('link', { name: 'Home' }));
+      await userEvent.tab();
+      await userEvent.tab();
+      expect(screen.getByRole('button', { name: 'Sales' })).toHaveFocus();
+      expect(
+        await screen.findByText('Sales', { selector: '[data-slot="tooltip-content"]' }),
+      ).toBeInTheDocument();
+    });
+
+    it('marks a group icon as selected when the active page is inside it', () => {
+      const value: SidebarContextValue = {
+        inShell: true,
+        collapsed: true,
+        setCollapsed: vi.fn(),
+        variant: 'desktop',
+        mobileOpen: false,
+        openMobile: vi.fn(),
+        closeMobile: vi.fn(),
+      };
+      render(
+        <SidebarContext value={value}>
+          <Nav currentPath="/sales/orders" />
+        </SidebarContext>,
+      );
+      expect(screen.getByRole('button', { name: 'Sales' })).toHaveClass('bg-sidebar-selected');
+      expect(
+        screen
+          .getByRole('button', { name: 'Sales' })
+          .querySelector('[data-slot="sidebar-badge-dot"]'),
+      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'People' })).not.toHaveClass('bg-sidebar-selected');
+    });
+
+    it('lists pinned entries last under a divider', () => {
+      const pinned: NavItem[] = [
+        ...items.slice(0, 2),
+        {
+          id: 'help',
+          label: 'Help',
+          href: '/help',
+          icon: <svg aria-hidden="true" />,
+          pinned: true,
+        },
+      ];
+      render(
+        <SidebarContext
+          value={{
+            inShell: true,
+            collapsed: true,
+            setCollapsed: vi.fn(),
+            variant: 'desktop',
+            mobileOpen: false,
+            openMobile: vi.fn(),
+            closeMobile: vi.fn(),
+          }}
+        >
+          <SidebarNav items={pinned} currentPath="/" />
+        </SidebarContext>,
+      );
+      const help = screen.getByRole('link', { name: 'Help' });
+      expect(help.closest('ul')).toHaveClass('mt-auto', 'border-t');
     });
 
     it('expands the sidebar when a group icon is pressed', async () => {
       const setCollapsed = rail();
       await userEvent.click(screen.getByRole('button', { name: 'People' }));
       expect(setCollapsed).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('styling', () => {
+    it('draws top-level rows as 44px icon rows and the active one from the selected tokens', () => {
+      render(<Nav currentPath="/" />);
+      const home = screen.getByRole('link', { name: 'Home' });
+      expect(home).toHaveClass(
+        'h-11',
+        'rounded-xl',
+        'bg-sidebar-selected',
+        'text-sidebar-selected-foreground',
+      );
+      expect(screen.getByRole('button', { name: /People/ })).toHaveClass(
+        'h-11',
+        'text-sidebar-foreground',
+      );
+    });
+
+    it('draws nested links as 36px rows with a bar on the current page', () => {
+      render(<Nav currentPath="/sales/orders" />);
+      const orders = screen.getByRole('link', { name: /Orders/ });
+      expect(orders).toHaveClass('h-9', 'rounded-lg', 'text-sidebar-foreground');
+      expect(orders.querySelector('span[aria-hidden="true"]')).toHaveClass('bg-sidebar-foreground');
+      expect(screen.getByRole('link', { name: /Invoices/ })).toHaveClass(
+        'text-sidebar-foreground/70',
+      );
+      expect(orders.closest('ul')).toHaveClass('border-s', 'border-sidebar-border');
+    });
+
+    it('tints an open group and shows the badge total of a closed one', async () => {
+      render(<Nav currentPath="/" />);
+      const sales = screen.getByRole('button', { name: /Sales/ });
+      expect(sales).toHaveTextContent('99+');
+      await userEvent.click(sales);
+      expect(sales).toHaveClass('bg-sidebar-accent');
+    });
+  });
+
+  describe('pinned entries', () => {
+    const withPinned: NavItem[] = [
+      ...items.slice(0, 2),
+      { id: 'settings', label: 'Settings', href: '/settings', pinned: true },
+    ];
+
+    it('sit in their own list at the bottom under a divider', () => {
+      render(<SidebarNav items={withPinned} currentPath="/" />);
+      const settings = screen.getByRole('link', { name: 'Settings' });
+      const list = settings.closest('ul');
+      expect(list).toHaveClass('mt-auto', 'border-t', 'border-sidebar-border');
+      expect(screen.getByRole('link', { name: 'Home' }).closest('ul')).not.toBe(list);
+    });
+  });
+
+  describe('hr layout', () => {
+    function flat(path = '/') {
+      return (
+        <SidebarContext
+          value={{
+            inShell: true,
+            collapsed: false,
+            setCollapsed: vi.fn(),
+            variant: 'desktop',
+            mobileOpen: false,
+            openMobile: vi.fn(),
+            closeMobile: vi.fn(),
+            layout: 'hr',
+          }}
+        >
+          <SidebarNav items={items} currentPath={path} />
+        </SidebarContext>
+      );
+    }
+
+    it('shows groups as flat sections under small headings, with no accordion', () => {
+      render(flat());
+      expect(screen.getByText('Sales')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /Sales/ })).not.toBeInTheDocument();
+      const orders = screen.getByRole('link', { name: /Orders/ });
+      expect(orders.closest('ul')).toHaveAccessibleName('Sales');
+      expect(screen.getByRole('link', { name: 'Staff' })).toBeInTheDocument();
+    });
+
+    it('marks the current page with the accent tokens on a 40px row', () => {
+      render(flat('/sales/orders'));
+      expect(screen.getByRole('link', { name: /Orders/ })).toHaveClass(
+        'h-10',
+        'rounded-md',
+        'bg-sidebar-accent',
+        'text-sidebar-accent-foreground',
+      );
+      expect(screen.getByRole('link', { name: /Invoices/ })).not.toHaveClass('bg-sidebar-accent');
+    });
+
+    it('lists pinned groups last as their own labelled section under a divider', () => {
+      render(
+        <SidebarContext
+          value={{
+            inShell: true,
+            collapsed: false,
+            setCollapsed: vi.fn(),
+            variant: 'desktop',
+            mobileOpen: false,
+            openMobile: vi.fn(),
+            closeMobile: vi.fn(),
+            layout: 'hr',
+          }}
+        >
+          <SidebarNav
+            items={[
+              ...items,
+              {
+                id: 'entity',
+                label: 'Entity settings',
+                pinned: true,
+                children: [{ id: 'units', label: 'Units', href: '/units' }],
+              },
+            ]}
+            currentPath="/"
+          />
+        </SidebarContext>,
+      );
+      const units = screen.getByRole('link', { name: 'Units' });
+      expect(units.closest('ul')).toHaveAccessibleName('Entity settings');
+      expect(units.closest('ul')?.parentElement?.parentElement).toHaveClass('mt-auto', 'border-t');
+    });
+
+    it('does not collapse to a rail', () => {
+      render(
+        <SidebarContext
+          value={{
+            inShell: true,
+            collapsed: true,
+            setCollapsed: vi.fn(),
+            variant: 'desktop',
+            mobileOpen: false,
+            openMobile: vi.fn(),
+            closeMobile: vi.fn(),
+            layout: 'hr',
+          }}
+        >
+          <SidebarNav items={items} currentPath="/" />
+        </SidebarContext>,
+      );
+      expect(screen.getByText('People')).toBeInTheDocument();
     });
   });
 

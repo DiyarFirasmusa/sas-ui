@@ -42,7 +42,7 @@ function DetailField({
         className={cn(
           'min-w-0 text-b1 break-words text-text-primary',
           tone === 'boxed' &&
-            'flex min-h-11 items-center rounded-xl border border-stroke bg-surface-dim px-row py-2',
+            'flex min-h-11 items-center rounded-control border border-stroke bg-surface-dim px-row py-2',
           valueClassName,
         )}
       >

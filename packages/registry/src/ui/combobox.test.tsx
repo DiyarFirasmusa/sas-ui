@@ -156,6 +156,15 @@ describe('Combobox (static options)', () => {
     expect(await screen.findByText('لا توجد نتائج')).toBeInTheDocument();
   });
 
+  it('is a field-height control whose rows use the dashboards option style', async () => {
+    render(<Combobox aria-label="Country" options={countries} />);
+    const group = document.querySelector('[data-slot="combobox"]');
+    expect(group).toHaveClass('h-control-input', 'rounded-control', 'focus-within:ring-3');
+    await userEvent.click(screen.getByRole('button', { name: 'Open options' }));
+    const row = await screen.findByRole('option', { name: 'Egypt' });
+    expect(row).toHaveClass('min-h-10', 'data-[selected]:bg-primary-light');
+  });
+
   it('has no axe violations', async () => {
     const { container } = render(
       <Field label="Country" description="Where you live">

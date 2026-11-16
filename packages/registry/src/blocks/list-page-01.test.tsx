@@ -27,6 +27,46 @@ describe('ListPage01', () => {
     expect(screen.getByText('Showing 1–10 of 26')).toBeInTheDocument();
   });
 
+  describe('KPI tiles', () => {
+    it('count the sample set by status in a labelled summary above the table', () => {
+      renderWithLocale(<ListPage01 />);
+      const summary = screen.getByRole('region', { name: 'Summary' });
+      const tiles = summary.querySelectorAll('[data-slot="stat-card"]');
+      expect(tiles).toHaveLength(4);
+      expect(within(summary).getByText('All licences')).toBeInTheDocument();
+      expect(within(summary).getByText('26')).toBeInTheDocument();
+    });
+
+    it('are left out for server rows unless passed, and can be hidden', () => {
+      const { unmount } = renderWithLocale(<ListPage01 rows={[]} total={0} />);
+      expect(screen.queryByRole('region', { name: 'Summary' })).not.toBeInTheDocument();
+      unmount();
+      const custom = renderWithLocale(
+        <ListPage01
+          rows={[]}
+          total={0}
+          stats={[{ id: 'open', label: 'Open cases', value: '7', tone: 'info' }]}
+        />,
+      );
+      expect(screen.getByText('Open cases')).toBeInTheDocument();
+      custom.unmount();
+      renderWithLocale(<ListPage01 stats={[]} />);
+      expect(screen.queryByRole('region', { name: 'Summary' })).not.toBeInTheDocument();
+    });
+
+    it('are translated in Arabic', () => {
+      renderWithLocale(<ListPage01 />, { locale: 'ar' });
+      expect(screen.getByRole('region', { name: 'الملخص' })).toBeInTheDocument();
+      expect(screen.getByText('كل التراخيص')).toBeInTheDocument();
+    });
+  });
+
+  it('keeps search and filters inside the table panel', () => {
+    renderWithLocale(<ListPage01 />);
+    const panel = screen.getByRole('table').closest('[data-slot="data-table"]');
+    expect(panel).toContainElement(screen.getByRole('searchbox'));
+  });
+
   it('pages and sorts the browsable sample', async () => {
     renderWithLocale(<ListPage01 />);
     await userEvent.click(screen.getByRole('button', { name: 'Next page' }));

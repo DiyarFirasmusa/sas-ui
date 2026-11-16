@@ -171,3 +171,13 @@ describe('Pagination', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('Pagination look', () => {
+  it('draws 29px page boxes with the current page filled', () => {
+    render(<Pagination page={2} pageCount={5} onPageChange={() => {}} />);
+    const current = screen.getByRole('button', { name: 'Page 2' });
+    expect(current).toHaveClass('h-[29px]', 'min-w-[29px]', 'font-semibold');
+    expect(current.className).toContain('aria-[current=page]:bg-primary');
+    expect(screen.getByRole('button', { name: 'Next page' })).toHaveClass('border-stroke');
+  });
+});

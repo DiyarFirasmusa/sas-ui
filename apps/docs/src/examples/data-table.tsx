@@ -133,9 +133,11 @@ const columns: ColumnDef<Booking>[] = [
 function ServerTable({
   mobile = 'scroll',
   sticky = false,
+  title,
 }: {
   mobile?: 'scroll' | 'cards';
   sticky?: boolean;
+  title?: string;
 }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -170,6 +172,7 @@ function ServerTable({
   return (
     <DataTable
       caption="Bookings"
+      title={title}
       columns={columns}
       data={rows}
       getRowId={(booking) => booking.id}
@@ -216,6 +219,13 @@ export const examples: Example[] = [
       'Sorting, paging and size come from the server (simulated here). Selection is per page and clears when the page or sort changes.',
     wide: true,
     render: () => <ServerTable />,
+  },
+  {
+    title: 'Panel title',
+    description:
+      'The table sits in the dashboards’ panel by default (20px radius and padding); `title` adds a heading with the row count and `embedded` drops the panel when it is already inside a card.',
+    wide: true,
+    render: () => <ServerTable title="Bookings" />,
   },
   {
     title: 'Sticky first and last columns',

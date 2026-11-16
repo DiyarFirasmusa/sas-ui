@@ -14,15 +14,16 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
+  type DialogSize,
 } from '@/components/ui/dialog';
+import {
+  DialogHeading,
+  type DialogIconLayout,
+  type DialogIconTone,
+} from '@/components/ui/dialog-heading';
 import { useLabels, type Messages } from '@/lib/locale';
-import { cn } from '@/lib/utils';
-import { variants, type VariantProps } from '@/lib/variants';
 
 const messages: Messages<
   'submit' | 'cancel' | 'discardTitle' | 'discardDescription' | 'discard' | 'keepEditing'
@@ -45,12 +46,9 @@ const messages: Messages<
   },
 };
 
-const contentVariants = variants('', {
-  variants: { size: { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl' } },
-  defaultVariants: { size: 'md' },
-});
-
-interface FormDialogProps extends VariantProps<typeof contentVariants> {
+interface FormDialogProps {
+  /** Width step: 420 / 640 / 900 / 1100px. Default `md`. */
+  size?: DialogSize;
   open?: DialogPrimitive.Root.Props['open'];
   defaultOpen?: DialogPrimitive.Root.Props['defaultOpen'];
   onOpenChange?: DialogPrimitive.Root.Props['onOpenChange'];
@@ -58,6 +56,10 @@ interface FormDialogProps extends VariantProps<typeof contentVariants> {
   trigger?: ReactElement;
   title: ReactNode;
   description?: ReactNode;
+  /** Optional glyph beside or above the title, tinted by `iconTone`. */
+  icon?: ReactNode;
+  iconTone?: DialogIconTone;
+  iconLayout?: DialogIconLayout;
   /** The form fields. */
   children: ReactNode;
   /**
@@ -90,6 +92,9 @@ function FormDialog({
   trigger,
   title,
   description,
+  icon,
+  iconTone,
+  iconLayout,
   children,
   onSubmit,
   isSubmitting = false,
@@ -156,10 +161,7 @@ function FormDialog({
         actionsRef={actions}
       >
         {trigger ? <DialogTrigger render={trigger} /> : null}
-        <DialogContent
-          showCloseButton={!isSubmitting}
-          className={cn(contentVariants({ size }), className)}
-        >
+        <DialogContent showCloseButton={false} size={size} className={className}>
           <form
             data-slot="form-dialog-form"
             aria-busy={isSubmitting || undefined}
@@ -172,15 +174,21 @@ function FormDialog({
             }}
             className="flex min-h-0 flex-1 flex-col"
           >
-            <DialogHeader>
-              <DialogTitle>{title}</DialogTitle>
-              {description ? <DialogDescription>{description}</DialogDescription> : null}
-            </DialogHeader>
+            <DialogHeading
+              title={title}
+              description={description}
+              icon={icon}
+              iconTone={iconTone}
+              iconLayout={iconLayout}
+            />
             <DialogBody className="gap-row flex flex-col">
               {error ? <Alert variant="danger" description={error} /> : null}
               {children}
             </DialogBody>
             <DialogFooter>
+              <Button type="submit" loading={isSubmitting}>
+                {labels.submit}
+              </Button>
               <Button
                 type="button"
                 variant="outline"
@@ -195,9 +203,6 @@ function FormDialog({
                 }}
               >
                 {labels.cancel}
-              </Button>
-              <Button type="submit" loading={isSubmitting}>
-                {labels.submit}
               </Button>
             </DialogFooter>
           </form>

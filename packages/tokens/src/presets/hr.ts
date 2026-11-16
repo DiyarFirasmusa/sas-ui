@@ -3,13 +3,14 @@
 // Adjusted from upstream so the preset passes the AA contrast gate:
 //   light text-muted #7a7080 → #6d6374 (was 4.27:1 on the canvas)
 //   light tag-yellow #7c7200 → #746a00 (was 4.46:1 on the canvas)
-import type { Preset } from '../token-names.ts';
+import { COMFORTABLE_GEOMETRY, type Preset } from '../token-names.ts';
 
 export const hr: Preset = {
   name: 'hr',
   label: { en: 'HR', ar: 'الموارد البشرية' },
   description: 'Plum with a gold accent and a deep plum sidebar — the erp-hr-frontend palette.',
   radius: '0.75rem',
+  geometry: COMFORTABLE_GEOMETRY,
   light: {
     // surfaces
     background: '#f7f3ee',

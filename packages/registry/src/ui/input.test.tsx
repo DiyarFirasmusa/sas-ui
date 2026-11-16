@@ -39,20 +39,42 @@ describe('Input', () => {
     expect(screen.getByLabelText('Name')).toBeDisabled();
   });
 
-  it('keeps the 38px default and offers an opt-in 42px lg size', () => {
+  it('takes the preset input height, with opt-in sm and lg sizes', () => {
     render(
       <>
         <Input aria-label="Plain" />
+        <Input aria-label="Small" size="sm" />
         <Input aria-label="Large" size="lg" />
       </>,
     );
-    expect(screen.getByLabelText('Plain')).toHaveClass('h-9.5');
+    expect(screen.getByLabelText('Plain')).toHaveClass('h-control-input');
     expect(screen.getByLabelText('Plain')).toHaveAttribute('data-size', 'default');
+    expect(screen.getByLabelText('Small')).toHaveClass('h-[calc(var(--control-h-input,42px)-2px)]');
     const large = screen.getByLabelText('Large');
-    expect(large).toHaveClass('h-10.5');
-    expect(large).not.toHaveClass('h-9.5');
-    expect(controlClasses).toContain('h-9.5');
-    expect(controlSizeClasses.lg).toBe('h-10.5');
+    expect(large).toHaveClass('h-control-lg');
+    expect(large).not.toHaveClass('h-control-input');
+    expect(controlClasses).toContain('h-control-input');
+    expect(controlSizeClasses.lg).toBe('h-control-lg');
+  });
+
+  it('draws the dashboards field: geometry tokens, 1px stroke, 3px glow, danger and disabled states', () => {
+    render(<Input aria-label="Name" />);
+    const input = screen.getByLabelText('Name');
+    expect(input).toHaveClass(
+      'rounded-control',
+      'border',
+      'border-stroke',
+      'px-row',
+      'text-control-input',
+      'placeholder:text-text-muted',
+      'focus-within:border-primary-highlight',
+      'focus-within:ring-3',
+      'aria-invalid:border-danger',
+      'disabled:bg-disabled-container',
+      'disabled:text-text-inactive',
+    );
+    // Colours and sizes come from tokens, never from hardcoded pixels.
+    expect(controlClasses).not.toMatch(/\bh-\d|\brounded-(?:\[|lg|md)|\btext-b\d/);
   });
 
   it('autoDirection={false} keeps the UI direction for typed and controlled text', async () => {

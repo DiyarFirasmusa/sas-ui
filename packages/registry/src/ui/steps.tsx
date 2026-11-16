@@ -45,7 +45,7 @@ const numberVariants = variants(
     variants: {
       current: {
         true: 'bg-primary text-primary-foreground',
-        false: 'bg-surface-dim text-text-secondary',
+        false: 'bg-neutral-100 text-text-secondary',
       },
     },
   },
@@ -160,7 +160,7 @@ function Steps<TId extends string = string>({
               <ChevronRightIcon
                 aria-hidden
                 data-slot="steps-separator"
-                className="text-text-inactive"
+                className="text-text-inactive size-4 shrink-0"
               />
             ) : null}
             {chip}

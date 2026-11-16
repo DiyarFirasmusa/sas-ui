@@ -30,3 +30,19 @@ describe('SectionTitle', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('SectionTitle accent', () => {
+  it('draws the primary accent bar before the title, or the gold one', () => {
+    const { container, rerender } = render(<SectionTitle title="Details" />);
+    const bar = () => container.querySelector('[data-slot="section-title-accent"]');
+    expect(bar()).toHaveClass('bg-primary', 'w-1');
+    expect(bar()).toHaveAttribute('aria-hidden', 'true');
+    rerender(<SectionTitle title="Details" accent="gold" />);
+    expect(bar()).toHaveClass('bg-primary-highlight');
+  });
+
+  it('swaps the bar for the icon tile when an icon is given', () => {
+    const { container } = render(<SectionTitle title="Details" icon={<svg />} />);
+    expect(container.querySelector('[data-slot="section-title-accent"]')).not.toBeInTheDocument();
+  });
+});

@@ -143,7 +143,7 @@ describe('SelectParts', () => {
     );
     const small = screen.getByRole('combobox', { name: 'Small' });
     expect(small).toHaveAttribute('data-size', 'sm');
-    expect(small).toHaveClass('h-9');
+    expect(small).toHaveClass('h-[calc(var(--control-h-input,42px)-2px)]');
   });
 
   it('shows the empty row, localised', async () => {

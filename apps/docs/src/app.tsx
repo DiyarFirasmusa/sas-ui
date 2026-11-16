@@ -34,7 +34,13 @@ export function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   if (route.page === 'preview') {
-    return <PreviewPage key={route.name} name={route.name} />;
+    return (
+      <PreviewPage
+        key={`${route.name}/${route.example ?? 1}`}
+        name={route.name}
+        example={route.example}
+      />
+    );
   }
   const docsLayout = usesDocsLayout(route);
   return (

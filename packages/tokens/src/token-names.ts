@@ -172,6 +172,52 @@ export const ALIAS_TOKENS: Record<string, CoreTokenName> = {
   'sidebar-active': 'sidebar-accent',
 };
 
+/**
+ * Component geometry: how tall, round and large-typed controls are. Two house
+ * systems exist — the compact one of the inventory/tourism dashboards and the
+ * comfortable one of the HR dashboard. Components read these through the
+ * `h-control*`, `rounded-control` and `text-control*` utilities.
+ */
+export interface Geometry {
+  /** Default button height. */
+  controlHeight: string;
+  controlHeightLg: string;
+  controlHeightSm: string;
+  controlHeightXs: string;
+  /** Text input, select trigger and other field-like controls. */
+  inputHeight: string;
+  controlRadius: string;
+  buttonPaddingX: string;
+  /** `font` shorthand for button labels. */
+  buttonFont: string;
+  /** `font` shorthand for text typed into fields. */
+  inputFont: string;
+}
+
+export const COMPACT_GEOMETRY: Geometry = {
+  controlHeight: '38px',
+  controlHeightLg: '44px',
+  controlHeightSm: '32px',
+  controlHeightXs: '28px',
+  inputHeight: '42px',
+  controlRadius: '10px',
+  buttonPaddingX: '16px',
+  buttonFont: '600 13px / 19.5px var(--font-sans)',
+  inputFont: '400 13px / 19.5px var(--font-sans)',
+};
+
+export const COMFORTABLE_GEOMETRY: Geometry = {
+  controlHeight: '44px',
+  controlHeightLg: '52px',
+  controlHeightSm: '40px',
+  controlHeightXs: '32px',
+  inputHeight: '44px',
+  controlRadius: '12px',
+  buttonPaddingX: '20px',
+  buttonFont: '500 16px / 1.2 var(--font-sans)',
+  inputFont: '400 14px / 1.5 var(--font-sans)',
+};
+
 export interface Preset {
   /** Stable id: used in `data-preset`, the CLI and file names. */
   name: string;
@@ -179,6 +225,8 @@ export interface Preset {
   description: string;
   /** Base corner radius (--radius). */
   radius: string;
+  /** Control sizes; the compact system when omitted. */
+  geometry?: Geometry;
   light: ThemeTokens;
   dark: ThemeTokens;
 }

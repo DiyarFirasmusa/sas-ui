@@ -1,5 +1,6 @@
 import { Field as FieldPrimitive } from '@base-ui/react/field';
 import type { ReactNode } from 'react';
+import { RequiredMark } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
 interface FieldProps extends Omit<FieldPrimitive.Root.Props, 'children'> {
@@ -35,18 +36,14 @@ function Field({
       {...props}
     >
       {label ? (
-        <FieldPrimitive.Label className="text-label text-text-secondary flex items-center gap-1">
+        <FieldPrimitive.Label className="text-label text-text-primary flex items-center gap-1">
           {label}
-          {required ? (
-            <span aria-hidden="true" className="text-danger">
-              *
-            </span>
-          ) : null}
+          {required ? <RequiredMark /> : null}
         </FieldPrimitive.Label>
       ) : null}
       {children}
       {description ? (
-        <FieldPrimitive.Description className="text-b3 text-text-muted">
+        <FieldPrimitive.Description className="text-b3 text-text-secondary">
           {description}
         </FieldPrimitive.Description>
       ) : null}

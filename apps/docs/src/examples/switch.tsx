@@ -42,9 +42,15 @@ export const examples: Example[] = [
     ),
   },
   {
-    title: 'Pinned left-to-right (mirror={false})',
-    description: 'Keeps "on" at the physical right in Arabic, for designs that never mirror it.',
-    render: () => <Switch mirror={false} label="مفعّل" defaultChecked />,
+    title: 'Mirrored in Arabic (mirror)',
+    description:
+      'By default the track stays left-to-right, as the dashboards draw it: "on" is at the physical right in Arabic too. Pass mirror to slide "on" toward the end edge instead.',
+    render: () => (
+      <>
+        <Switch label="مفعّل" defaultChecked />
+        <Switch mirror label="مرآة" defaultChecked />
+      </>
+    ),
   },
   {
     title: 'In a field, invalid',
@@ -60,7 +66,7 @@ export const examples: Example[] = [
     ),
   },
   {
-    title: 'Arabic (thumb slides toward the end)',
+    title: 'Arabic',
     render: () => (
       <>
         <Switch label="الإشعارات" description="تنبيهات البريد الإلكتروني" />

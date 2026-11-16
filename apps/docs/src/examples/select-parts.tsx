@@ -51,7 +51,8 @@ export const examples: Example[] = [
   },
   {
     title: 'Custom value and small trigger',
-    description: 'The trigger shows the code, the list shows the full names.',
+    description:
+      'The trigger shows the code, the list shows the full names. size="sm" is 2px shorter than the input height (40px compact). The popup lines the selected row up with the trigger by default; pass alignItemWithTrigger={false} to open it below instead.',
     render: () => (
       <SelectRoot defaultValue="usd">
         <SelectTrigger aria-label="Currency code" size="sm" className="w-32">

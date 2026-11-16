@@ -8,6 +8,7 @@ import {
   XCircleIcon,
 } from '@/components/ui/icons';
 import { useLabels, useLocale, type Messages } from '@/lib/locale';
+import { cn } from '@/lib/utils';
 
 const messages: Messages<'notifications' | 'close'> = {
   en: { notifications: 'Notifications', close: 'Close notification' },
@@ -66,7 +67,16 @@ const toasterStyle: ToasterStyle = {
   '--error-bg': 'var(--surface-elevated)',
   '--error-text': 'var(--text-primary)',
   '--error-border': 'var(--stroke)',
-  '--border-radius': 'var(--radius-xl)',
+  '--border-radius': 'var(--radius)',
+};
+
+/** The dashboards' toast: surface, 1px stroke, the app radius, the large shadow. */
+const toastClassNames = {
+  toast:
+    'gap-inline rounded-lg border border-stroke bg-surface px-row py-inline text-b1 text-text-primary shadow-large',
+  title: 'text-button-1',
+  description: 'text-b3 text-text-secondary',
+  icon: 'inline-flex shrink-0 items-center justify-center',
 };
 
 interface ToasterComponentProps extends Omit<
@@ -107,14 +117,22 @@ function Toaster({
       dir={direction}
       position={resolvePosition(position, direction)}
       containerAriaLabel={labels.notifications}
-      toastOptions={{ closeButtonAriaLabel: labels.close, ...toastOptions }}
+      toastOptions={{
+        closeButtonAriaLabel: labels.close,
+        ...toastOptions,
+        classNames: {
+          ...toastClassNames,
+          ...toastOptions?.classNames,
+          toast: cn(toastClassNames.toast, toastOptions?.classNames?.toast),
+        },
+      }}
       icons={{
-        success: <CheckCircleIcon className="text-success size-5" />,
-        info: <InfoIcon className="text-info size-5" />,
-        warning: <AlertTriangleIcon className="text-warning size-5" />,
-        error: <XCircleIcon className="text-danger size-5" />,
+        success: <CheckCircleIcon className="text-success size-4" />,
+        info: <InfoIcon className="text-info size-4" />,
+        warning: <AlertTriangleIcon className="text-warning size-4" />,
+        error: <XCircleIcon className="text-danger size-4" />,
         loading: (
-          <LoaderIcon className="text-text-muted size-5 animate-spin motion-reduce:animate-none" />
+          <LoaderIcon className="text-text-muted size-4 animate-spin motion-reduce:animate-none" />
         ),
       }}
       style={{ ...toasterStyle, ...style }}

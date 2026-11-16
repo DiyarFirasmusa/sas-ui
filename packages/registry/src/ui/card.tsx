@@ -5,7 +5,8 @@ function Card({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card"
       className={cn(
-        'flex flex-col gap-row rounded-xl border border-stroke bg-surface py-card text-text-primary shadow-small',
+        // The dashboards' `surface-card`: 20px radius and padding, a stroke, no shadow.
+        'flex flex-col gap-row rounded-modal border border-stroke bg-surface py-panel text-text-primary',
         className,
       )}
       {...props}
@@ -19,7 +20,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-header"
       className={cn(
-        'grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-row gap-y-1 px-card',
+        'grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-row gap-y-1 px-panel',
         className,
       )}
       {...props}
@@ -65,14 +66,14 @@ function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div data-slot="card-content" className={cn('px-card', className)} {...props} />;
+  return <div data-slot="card-content" className={cn('px-panel', className)} {...props} />;
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-footer"
-      className={cn('flex items-center gap-field px-card', className)}
+      className={cn('flex items-center gap-field px-panel', className)}
       {...props}
     />
   );

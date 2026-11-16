@@ -8,25 +8,26 @@ const messages: Messages<'loading'> = {
 
 interface SkeletonProps extends React.ComponentProps<'div'> {
   /**
-   * Sweep a highlight across the block instead of pulsing it. Needs the
-   * `animate-skeleton-shimmer` utility from the theme (`@sas-ui/tokens`
-   * foundation); reduced motion stops it. Default false (pulse).
+   * Sweep a highlight across the block (the dashboards' loading look; needs
+   * the `animate-skeleton-shimmer` utility from the `@sas-ui/tokens`
+   * foundation) or, with `false`, pulse it. Reduced motion stops both.
+   * Default true.
    */
   shimmer?: boolean;
 }
 
 /** Placeholder block. Decorative: group it in a labelled region when it stands for content. */
-function Skeleton({ className, shimmer = false, ...props }: SkeletonProps) {
+function Skeleton({ className, shimmer = true, ...props }: SkeletonProps) {
   return (
     <div
       data-slot="skeleton"
       data-shimmer={shimmer ? '' : undefined}
       aria-hidden="true"
       className={cn(
-        'rounded-control bg-surface-dim',
+        'rounded-md',
         shimmer
-          ? 'animate-skeleton-shimmer bg-linear-to-r from-surface-dim via-surface to-surface-dim bg-size-[200%_100%] motion-reduce:animate-none rtl:[animation-direction:reverse]'
-          : 'animate-pulse motion-reduce:animate-none',
+          ? 'animate-skeleton-shimmer bg-[linear-gradient(90deg,var(--hover-row)_0%,var(--stroke-subtle)_50%,var(--hover-row)_100%)] bg-size-[200%_100%] motion-reduce:animate-none rtl:[animation-direction:reverse]'
+          : 'animate-pulse bg-hover-row motion-reduce:animate-none',
         className,
       )}
       {...props}
@@ -57,7 +58,7 @@ function SkeletonGroup({ className, label, children, ...props }: SkeletonGroupPr
 interface SkeletonTextProps extends SkeletonGroupProps {
   /** Number of lines. Default 3. */
   lines?: number;
-  /** Shimmer the lines instead of pulsing them. */
+  /** Shimmer the lines (default) or, with `false`, pulse them. */
   shimmer?: boolean;
 }
 
@@ -83,7 +84,7 @@ function SkeletonText({ lines = 3, shimmer, className, ...props }: SkeletonTextP
 interface SkeletonTableProps extends SkeletonGroupProps {
   rows?: number;
   columns?: number;
-  /** Shimmer the cells instead of pulsing them. */
+  /** Shimmer the cells (default) or, with `false`, pulse them. */
   shimmer?: boolean;
 }
 

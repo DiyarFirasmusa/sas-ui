@@ -93,3 +93,13 @@ describe('Card', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('Card look', () => {
+  it("is the dashboards' surface card: 20px radius, 20px padding, no shadow", () => {
+    const { container } = render(<Example />);
+    const card = container.querySelector('[data-slot="card"]');
+    expect(card).toHaveClass('rounded-modal', 'border-stroke', 'bg-surface', 'py-panel');
+    expect(card).not.toHaveClass('shadow-small');
+    expect(container.querySelector('[data-slot="card-header"]')).toHaveClass('px-panel');
+  });
+});

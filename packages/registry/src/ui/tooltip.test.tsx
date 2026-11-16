@@ -47,12 +47,12 @@ describe('Tooltip', () => {
     expect(document.querySelector('[data-slot="tooltip-arrow"]')).toBeInTheDocument();
   });
 
-  it('has no arrow by default', async () => {
+  it('draws the arrow by default and drops it with showArrow={false}', async () => {
     render(
       <TooltipProvider delay={0}>
         <Tooltip>
           <TooltipTrigger aria-label="Plain">P</TooltipTrigger>
-          <TooltipContent>Plain tip</TooltipContent>
+          <TooltipContent showArrow={false}>Plain tip</TooltipContent>
         </Tooltip>
       </TooltipProvider>,
     );

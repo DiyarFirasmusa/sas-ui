@@ -33,6 +33,12 @@ describe('cn', () => {
     expect(cn('rounded-nav rounded-kpi')).toBe('rounded-kpi');
   });
 
+  it('knows the control geometry tokens', () => {
+    expect(cn('h-control h-control-lg')).toBe('h-control-lg');
+    expect(cn('text-control text-text-muted')).toBe('text-control text-text-muted');
+    expect(cn('px-control-x px-row')).toBe('px-row');
+  });
+
   it('keeps logical utilities apart from each other', () => {
     expect(cn('ps-2 pe-4')).toBe('ps-2 pe-4');
     expect(cn('ps-2 ps-4')).toBe('ps-4');

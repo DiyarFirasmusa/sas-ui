@@ -4,5 +4,5 @@
   "category": "overlay",
   "title": "Dialog",
   "description": "Modal dialog with header, body and footer slots and a localised close button.",
-  "files": ["ui/dialog.tsx"]
+  "files": ["ui/dialog.tsx", "ui/dialog-heading.tsx"]
 }

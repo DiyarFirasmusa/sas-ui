@@ -3,14 +3,16 @@ import { variants, type VariantProps } from '@/lib/variants';
 
 /**
  * `tone` picks one of the preset's tag hues: text and container come from the
- * same pair, which the contrast tests keep at WCAG AA in every preset.
+ * same pair, which the contrast tests keep at WCAG AA in every preset. The
+ * shape is the dashboards' badge: a 26px pill (22px for `size="sm"`), 12px
+ * semibold text, a tinted container.
  */
 const badgeVariants = variants(
-  'inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-pill px-inline py-0.5 text-label whitespace-nowrap [&>svg]:size-3.5',
+  'inline-flex w-fit shrink-0 items-center justify-center whitespace-nowrap rounded-pill',
   {
     variants: {
       tone: {
-        neutral: 'bg-tag-neutral-container text-tag-neutral',
+        neutral: 'bg-tag-neutral-container text-text-secondary',
         green: 'bg-tag-green-container text-tag-green',
         red: 'bg-tag-red-container text-tag-red',
         yellow: 'bg-tag-yellow-container text-tag-yellow',
@@ -21,24 +23,50 @@ const badgeVariants = variants(
         primary: 'bg-primary-light text-primary-text',
         solid: 'bg-primary text-primary-foreground',
       },
+      size: {
+        default: 'h-[26px] gap-field px-inline text-[12px]/none font-semibold [&>svg]:size-3.5',
+        sm: 'h-[22px] gap-1 px-field text-[11px]/none font-semibold [&>svg]:size-3',
+      },
       outline: {
         true: 'border border-current bg-transparent',
         false: '',
       },
     },
-    defaultVariants: { tone: 'neutral', outline: false },
+    defaultVariants: { tone: 'neutral', size: 'default', outline: false },
   },
 );
 
-type BadgeProps = React.ComponentProps<'span'> & VariantProps<typeof badgeVariants>;
+interface BadgeOwnProps {
+  /**
+   * Status style: a 5px dot and the tone's text with no container, as table
+   * status cells draw it. Without it the badge is a tinted chip.
+   */
+  dot?: boolean;
+}
 
-function Badge({ className, tone, outline, ...props }: BadgeProps) {
+type BadgeProps = React.ComponentProps<'span'> & VariantProps<typeof badgeVariants> & BadgeOwnProps;
+
+function Badge({ className, tone, size, outline, dot = false, children, ...props }: BadgeProps) {
   return (
     <span
       data-slot="badge"
-      className={cn(badgeVariants({ tone, outline }), className)}
+      data-dot={dot ? '' : undefined}
+      className={cn(
+        badgeVariants({ tone, size, outline }),
+        dot && 'bg-transparent px-0',
+        className,
+      )}
       {...props}
-    />
+    >
+      {dot ? (
+        <span
+          aria-hidden="true"
+          data-slot="badge-dot"
+          className="rounded-pill size-[5px] shrink-0 bg-current"
+        />
+      ) : null}
+      {children}
+    </span>
   );
 }
 

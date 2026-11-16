@@ -2,28 +2,56 @@ import { Input as InputPrimitive } from '@base-ui/react/input';
 import { useState, type ChangeEvent } from 'react';
 import { cn } from '@/lib/utils';
 
-/** Shared look of every single-line control (input, select trigger, date…). */
+/**
+ * Shared look of every single-line control (input, select trigger, date…),
+ * translated from the dashboards' `.control` sheet: `h-control-input` (42px in
+ * the compact system, 44px in the comfortable one), `rounded-control`, a 1px
+ * `stroke` border, 16px inline padding, `text-control-input` (400 13/19.5), a
+ * 4% ink wash over the surface and a muted placeholder. Hover darkens the
+ * stroke, focus (also `focus-within`, for wrappers) draws the highlight border
+ * plus a 3px 20% glow, invalid swaps both to danger, disabled greys the fill.
+ */
 export const controlClasses = [
-  'flex h-9.5 w-full min-w-0 items-center gap-field rounded-control border border-stroke-strong bg-surface px-inline',
-  'text-b1 text-text-primary placeholder:text-text-muted',
-  'transition-colors outline-none',
-  'hover:border-neutral-500',
-  'focus-visible:border-primary-highlight focus-visible:ring-2 focus-visible:ring-ring/40',
+  'flex h-control-input w-full min-w-0 items-center gap-field rounded-control border border-stroke px-row',
+  'bg-[color-mix(in_oklab,var(--text-primary)_4%,var(--surface))] text-control-input text-text-primary',
+  'transition-[border-color,box-shadow] duration-150 ease-[ease] motion-reduce:transition-none',
+  'placeholder:text-text-muted',
+  'not-disabled:not-aria-invalid:not-data-invalid:hover:border-stroke-strong',
+  'outline-none focus-within:border-primary-highlight focus-within:ring-3 focus-within:ring-primary-highlight/20',
+  'aria-invalid:border-danger aria-invalid:focus-within:border-danger aria-invalid:focus-within:ring-danger/20',
+  'data-[invalid]:border-danger data-[invalid]:focus-within:border-danger data-[invalid]:focus-within:ring-danger/20',
   'disabled:cursor-not-allowed disabled:bg-disabled-container disabled:text-text-inactive',
-  'aria-invalid:border-danger aria-invalid:ring-danger/30',
-  'data-[invalid]:border-danger',
+  'data-[disabled]:cursor-not-allowed data-[disabled]:bg-disabled-container data-[disabled]:text-text-inactive',
 ].join(' ');
 
-/** Opt-in control heights. `lg` is 42px; `default` keeps the 38px of `controlClasses`. */
+/**
+ * Opt-in control heights. `default` is the input height of the active preset;
+ * `sm` sits 2px under it (the dashboards' 40px compact trigger for toolbars and
+ * table cells); `lg` is the large button height (44px compact, 52px comfortable).
+ */
 export const controlSizeClasses = {
   default: '',
-  lg: 'h-10.5',
+  sm: 'h-[calc(var(--control-h-input,42px)-2px)]',
+  lg: 'h-control-lg',
 } as const;
+
+/**
+ * One row of a dropdown list (select, combobox, multi-select), from the
+ * dashboards' `.select-item`: 40px minimum, 13px text, 8px radius, hover and
+ * keyboard highlight on `hover-row`, the selected row on `primary-light`, and
+ * room at the end edge for the check mark (position it with `end-2`).
+ */
+export const optionClasses = [
+  'relative flex min-h-10 w-full cursor-default items-center gap-field rounded-md py-2 ps-2 pe-8 text-start text-b2 text-text-primary outline-none select-none',
+  'hover:bg-hover-row focus-visible:bg-hover-row data-[highlighted]:bg-hover-row',
+  'data-[selected]:bg-primary-light data-[selected]:hover:bg-primary-light data-[selected]:data-[highlighted]:bg-primary-light',
+  'data-[disabled]:pointer-events-none data-[disabled]:text-text-muted data-[disabled]:opacity-60',
+].join(' ');
 
 type ControlSize = keyof typeof controlSizeClasses;
 
 type InputProps = Omit<React.ComponentProps<'input'>, 'dir' | 'size'> & {
-  /** `lg` makes the control 42px tall; the default is unchanged. */
+  /** `sm` is 2px shorter than the preset's input height, `lg` is as tall as a large button. */
   size?: ControlSize;
   /**
    * Switch to `dir="auto"` once the field has a value so the typed language

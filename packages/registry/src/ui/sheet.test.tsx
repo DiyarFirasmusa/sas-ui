@@ -138,3 +138,27 @@ describe('Sheet', () => {
     await expectNoA11yViolations();
   });
 });
+
+describe('Sheet look', () => {
+  it('uses the elevated dialog surface with a strong stroke and a blurred scrim', async () => {
+    render(
+      <Sheet>
+        <SheetTrigger>Open</SheetTrigger>
+        <SheetContent>
+          <SheetTitle>Filters</SheetTitle>
+          <SheetFooter>
+            <button type="button">Apply</button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    const sheet = await screen.findByRole('dialog');
+    expect(sheet).toHaveClass('bg-surface-elevated', 'border-stroke-strong');
+    expect(document.querySelector('[data-slot="sheet-backdrop"]')).toHaveClass(
+      'backdrop-blur-[12px]',
+    );
+    // The primary action sits first, at the start edge.
+    expect(document.querySelector('[data-slot="sheet-footer"]')).toHaveClass('sm:justify-start');
+  });
+});

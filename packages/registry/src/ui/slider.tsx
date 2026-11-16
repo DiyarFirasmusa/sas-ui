@@ -86,7 +86,7 @@ function Slider({
                 className={cn(
                   'size-5 rounded-full border-2 border-primary bg-surface shadow-small outline-none select-none',
                   'transition-shadow motion-reduce:transition-none',
-                  'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background',
+                  'has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50',
                   'data-[invalid]:border-danger group-aria-invalid/slider:border-danger',
                   'data-[disabled]:border-text-inactive data-[disabled]:cursor-not-allowed',
                 )}

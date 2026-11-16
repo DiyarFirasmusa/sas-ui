@@ -10,6 +10,7 @@ import {
 import { useEffect, useMemo, type ReactNode } from 'react';
 import { DataTableBody } from '@/components/ui/data-table-body';
 import type { MobileCardContext } from '@/components/ui/data-table-cards';
+import { DataTableFooter, type DataTablePagination } from '@/components/ui/data-table-footer';
 import type { DataTableGroupLabels } from '@/components/ui/data-table-group-row';
 import { DataTableHeaderRows } from '@/components/ui/data-table-header';
 import { DataTableMobile } from '@/components/ui/data-table-mobile';
@@ -21,11 +22,11 @@ import {
 } from '@/components/ui/data-table-states';
 import {
   DataTableBulkBar,
-  DataTableColumnMenu,
-  DataTableExportButton,
+  DataTableTitle,
+  DataTableTopBar,
   type DataTableToolbarLabels,
 } from '@/components/ui/data-table-toolbar';
-import { Pagination, type PaginationLabels } from '@/components/ui/pagination';
+import type { PaginationLabels } from '@/components/ui/pagination';
 import { Table, TableCaption } from '@/components/ui/table';
 import { useDataTableDisplay } from '@/hooks/use-data-table-display';
 import type { DataTableVirtualize } from '@/hooks/use-data-table-grid';
@@ -73,18 +74,6 @@ type DataTableState =
       refetching?: boolean;
     };
 
-interface DataTablePagination {
-  /** Current page, 1-based. */
-  page: number;
-  pageSize: number;
-  /** Total rows on the server; the page count is derived from it. */
-  total?: number;
-  pageCount?: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
-  pageSizeOptions?: readonly number[];
-}
-
 interface DataTableEmpty {
   title?: ReactNode;
   description?: ReactNode;
@@ -131,6 +120,13 @@ interface DataTableProps<TData> {
   renderMobileCard?: (row: TData, context: MobileCardContext<TData>) => ReactNode;
   labels?: DataTableLabels;
   className?: string;
+  /** Heading of the table's panel, with the total row count beside it. */
+  title?: ReactNode;
+  /**
+   * The table sits in the dashboards' panel (20px radius, a stroke, 20px
+   * padding) by default. Pass `embedded` when it is already inside a card.
+   */
+  embedded?: boolean;
   /** Classes for the scroll container, for example `max-h-96` with `stickyHeader`. */
   containerClassName?: string;
   /**
@@ -194,6 +190,8 @@ function DataTable<TData>({
   mobile = 'scroll',
   renderMobileCard,
   labels: labelOverrides,
+  title,
+  embedded = false,
   className,
   containerClassName,
   virtualize,
@@ -327,25 +325,28 @@ function DataTable<TData>({
   const cardsMode = mobile === 'cards';
 
   return (
-    <div data-slot="data-table" className={cn('flex flex-col gap-inline', className)}>
-      {toolbar || columnMenu || exportable ? (
-        <div className="gap-field flex flex-wrap items-center justify-between">
-          <div className="gap-field flex min-w-0 flex-1 flex-wrap items-center">{toolbar}</div>
-          <div className="gap-field flex items-center">
-            {exportable ? (
-              <DataTableExportButton
-                table={table}
-                rows={rows}
-                filename={exportFilename ?? caption ?? 'export'}
-                onExport={onExport}
-                disabled={isLoading}
-                labels={labelOverrides}
-              />
-            ) : null}
-            {columnMenu ? <DataTableColumnMenu table={table} labels={labelOverrides} /> : null}
-          </div>
-        </div>
-      ) : null}
+    <div
+      data-slot="data-table"
+      data-embedded={embedded ? '' : undefined}
+      className={cn(
+        'flex min-w-0 flex-col gap-row',
+        !embedded && 'rounded-modal border border-stroke bg-surface p-panel',
+        className,
+      )}
+    >
+      {title ? <DataTableTitle title={title} count={pagination?.total ?? rows.length} /> : null}
+      <DataTableTopBar
+        table={table}
+        rows={rows}
+        filename={exportFilename ?? caption ?? 'export'}
+        onExport={onExport}
+        disabled={isLoading}
+        exportable={exportable}
+        columnMenu={columnMenu}
+        labels={labelOverrides}
+      >
+        {toolbar}
+      </DataTableTopBar>
 
       {showBulkBar ? (
         <DataTableBulkBar
@@ -370,7 +371,11 @@ function DataTable<TData>({
         containerRef={grid.scrollRef}
         containerStyle={grid.containerStyle}
         containerFocusable={!keyboardNavigation}
-        containerClassName={cn(cardsMode && 'max-sm:hidden', containerClassName)}
+        containerClassName={cn(
+          cardsMode && 'max-sm:hidden',
+          !embedded && 'border-transparent',
+          containerClassName,
+        )}
       >
         {caption ? <TableCaption className="sr-only">{caption}</TableCaption> : null}
         <DataTableHeaderRows
@@ -413,25 +418,10 @@ function DataTable<TData>({
       </span>
 
       {pagination && state.status !== 'error' && pagination.total !== 0 ? (
-        <Pagination
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          total={pagination.total}
-          pageCount={pagination.pageCount}
+        <DataTableFooter
+          pagination={pagination}
           disabled={isLoading}
-          pageSizeOptions={pagination.pageSizeOptions}
-          onPageSizeChange={
-            pagination.onPageSizeChange
-              ? (size) => {
-                  clearSelectionIfAny();
-                  pagination.onPageSizeChange?.(size);
-                }
-              : undefined
-          }
-          onPageChange={(page) => {
-            clearSelectionIfAny();
-            pagination.onPageChange(page);
-          }}
+          onBeforeChange={clearSelectionIfAny}
           labels={labelOverrides?.pagination}
         />
       ) : null}

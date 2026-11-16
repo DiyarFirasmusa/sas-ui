@@ -72,18 +72,18 @@ describe('Switch', () => {
   });
 
   it('positions the thumb with logical offsets so it mirrors in Arabic', async () => {
-    renderWithLocale(<Switch label="الإشعارات" />, { locale: 'ar' });
+    renderWithLocale(<Switch label="الإشعارات" mirror />, { locale: 'ar' });
     const toggle = screen.getByRole('switch', { name: 'الإشعارات' });
     const thumb = toggle.querySelector('[data-slot="switch-thumb"]');
     expect(thumb).not.toBeNull();
-    expect(thumb?.className).toContain('start-0.5');
-    expect(thumb?.className).toContain('data-[checked]:start-[calc(100%-1.375rem)]');
+    expect(thumb?.className).toContain('start-0');
+    expect(thumb?.className).toContain('data-[checked]:start-[calc(100%-1rem)]');
     expect(thumb?.className).not.toMatch(/(?:^|\s)(?:left|right|translate-x)/);
     await userEvent.click(toggle);
     expect(toggle).toBeChecked();
   });
 
-  it('keeps the 44x24 default and offers an opt-in sm size', () => {
+  it('is the dashboards 32x18.4 switch with a 16px thumb, and offers an opt-in sm size', () => {
     render(
       <>
         <Switch aria-label="Regular" />
@@ -93,19 +93,19 @@ describe('Switch', () => {
     const regular = screen.getByRole('switch', { name: 'Regular' });
     const small = screen.getByRole('switch', { name: 'Small' });
     expect(regular).toHaveAttribute('data-size', 'default');
-    expect(regular).toHaveClass('h-6', 'w-11');
+    expect(regular).toHaveClass('h-[18.4px]', 'w-8');
     expect(small).toHaveAttribute('data-size', 'sm');
-    expect(small.className).toContain('data-[size=sm]:h-5');
+    expect(small.className).toContain('data-[size=sm]:h-3.5');
     expect(small.querySelector('[data-slot="switch-thumb"]')?.className).toContain(
-      'group-data-[size=sm]/switch:size-4',
+      'group-data-[size=sm]/switch:size-3',
     );
   });
 
-  it('mirror={false} pins the track to left-to-right in Arabic', async () => {
+  it('pins the track left-to-right by default, as the dashboards draw it; mirror opts back in', async () => {
     renderWithLocale(
       <>
-        <Switch aria-label="مرآة" />
-        <Switch aria-label="ثابت" mirror={false} />
+        <Switch aria-label="ثابت" />
+        <Switch aria-label="مرآة" mirror />
       </>,
       { locale: 'ar' },
     );

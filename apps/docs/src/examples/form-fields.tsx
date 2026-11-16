@@ -68,6 +68,8 @@ function Demo() {
 export const examples: Example[] = [
   {
     title: 'Bound fields (react-hook-form + zod)',
+    description:
+      'The switch field is a settings row: label and description at the start, the switch at the end. Labels use the 12px 600 field style; descriptions are secondary text.',
     wide: true,
     render: () => <Demo />,
   },

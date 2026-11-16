@@ -143,13 +143,12 @@ function TriggerButton({
       }}
       className={cn(
         controlClasses,
-        'cursor-pointer justify-start data-[popup-open]:border-primary-highlight',
+        'cursor-pointer justify-between data-[popup-open]:border-primary-highlight',
         'data-[readonly]:cursor-default',
         reserveClear && 'pe-10',
         className,
       )}
     >
-      <CalendarIcon className="text-text-muted" />
       <span
         id={valueId}
         data-placeholder={hasValue ? undefined : ''}
@@ -157,6 +156,7 @@ function TriggerButton({
       >
         {display ?? placeholder}
       </span>
+      <CalendarIcon className="text-text-secondary size-4 shrink-0" />
     </PopoverTrigger>
   );
 }
@@ -209,7 +209,7 @@ function DatePickerTrigger({
             nodeRef.current?.focus();
           }}
           className={cn(
-            'absolute end-1.5 top-1/2 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-text-muted outline-none',
+            'absolute end-1.5 top-1/2 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-control text-text-secondary outline-none',
             'hover:bg-hover-row hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ring',
           )}
         >

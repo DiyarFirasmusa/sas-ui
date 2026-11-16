@@ -59,8 +59,14 @@ describe('Avatar', () => {
     expect(avatar).toHaveTextContent('LH');
   });
 
-  it('colours the fallback from the name', () => {
+  it('fills the initials with the brand colour by default', () => {
     const { container } = render(<Avatar name="Layla Hassan" />);
+    expect(container.querySelector('.bg-primary.text-primary-foreground')).toBeInTheDocument();
+    expect(container.querySelector('[class*="bg-tag-"]')).not.toBeInTheDocument();
+  });
+
+  it('colours the fallback from the name with tone="auto"', () => {
+    const { container } = render(<Avatar name="Layla Hassan" tone="auto" />);
     expect(container.querySelector('[class*="bg-tag-"]')).toBeInTheDocument();
   });
 

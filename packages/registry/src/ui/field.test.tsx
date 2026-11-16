@@ -6,6 +6,17 @@ import { Input } from '@/components/ui/input';
 import { expectNoA11yViolations } from '@/test/a11y';
 
 describe('Field + Input', () => {
+  it('styles the label, description and error with the dashboards text tokens', () => {
+    render(
+      <Field label="Email" description="We never share it" error="Required">
+        <Input name="email" />
+      </Field>,
+    );
+    expect(screen.getByText('Email')).toHaveClass('text-label', 'text-text-primary');
+    expect(screen.getByText('We never share it')).toHaveClass('text-b3', 'text-text-secondary');
+    expect(screen.getByText('Required')).toHaveClass('text-b3', 'text-danger');
+  });
+
   it('links label, description and control', async () => {
     render(
       <Field label="Email" description="We never share it" required>

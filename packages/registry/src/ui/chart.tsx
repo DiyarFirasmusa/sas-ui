@@ -254,7 +254,7 @@ function ChartTooltipContent({
     <div
       data-slot="chart-tooltip"
       className={cn(
-        'grid min-w-32 items-start gap-field rounded-lg border border-stroke bg-popover px-inline py-field text-b3 text-popover-foreground shadow-large',
+        'grid min-w-32 items-start gap-field rounded-[var(--radius-nav,12px)] border border-stroke bg-popover px-inline py-field text-b3 text-text-primary shadow-mid',
         className,
       )}
     >

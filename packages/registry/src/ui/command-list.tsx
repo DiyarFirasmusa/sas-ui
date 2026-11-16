@@ -87,7 +87,7 @@ function CommandGroup({ heading, className, children, ...props }: CommandGroupPr
         {...props}
       >
         {heading ? (
-          <div id={headingId} className="px-inline text-label text-text-muted py-1.5">
+          <div id={headingId} className="px-field text-table-header text-text-muted py-1.5">
             {heading}
           </div>
         ) : null}
@@ -102,7 +102,7 @@ function CommandSeparator({ className, ...props }: React.ComponentProps<'div'>) 
     <div
       data-slot="command-separator"
       aria-hidden="true"
-      className={cn('-mx-1 my-1 h-px bg-stroke', className)}
+      className={cn('-mx-1 my-1 h-px bg-stroke-subtle', className)}
       {...props}
     />
   );

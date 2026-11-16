@@ -129,7 +129,7 @@ function FormPage01({
 
   return (
     <div className={cn('min-h-svh bg-background', className)} {...props}>
-      <div className="gap-card p-row sm:p-page mx-auto flex w-full max-w-4xl flex-col">
+      <div className="gap-card md:p-page mx-auto flex w-full max-w-4xl flex-col p-4">
         <PageHeader title={labels.title} subtitle={labels.subtitle} onBack={leave} />
         {status ? (
           <Alert

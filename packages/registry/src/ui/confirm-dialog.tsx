@@ -6,12 +6,14 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  DialogHeading,
+  type DialogIconLayout,
+  type DialogIconTone,
+} from '@/components/ui/dialog-heading';
 import { useLabels, type Messages } from '@/lib/locale';
 
 const messages: Messages<'confirm' | 'cancel' | 'failed'> = {
@@ -35,6 +37,11 @@ interface ConfirmDialogProps {
   trigger?: ReactElement;
   title: ReactNode;
   description?: ReactNode;
+  /** Optional glyph beside or above the title, tinted by `iconTone`. */
+  icon?: ReactNode;
+  /** Default `danger` for a destructive confirmation, `success` otherwise. */
+  iconTone?: DialogIconTone;
+  iconLayout?: DialogIconLayout;
   /** Extra content between the description and the buttons. */
   children?: ReactNode;
   confirmLabel?: string;
@@ -67,6 +74,9 @@ function ConfirmDialog({
   trigger,
   title,
   description,
+  icon,
+  iconTone,
+  iconLayout,
   children,
   confirmLabel,
   cancelLabel,
@@ -131,13 +141,16 @@ function ConfirmDialog({
       <DialogContent
         data-destructive={destructive ? '' : undefined}
         showCloseButton={false}
-        className="max-w-md"
+        size="sm"
         initialFocus={destructive ? cancelButton : undefined}
       >
-        <DialogHeader className="pe-card">
-          <DialogTitle>{title}</DialogTitle>
-          {description ? <DialogDescription>{description}</DialogDescription> : null}
-        </DialogHeader>
+        <DialogHeading
+          title={title}
+          description={description}
+          icon={icon}
+          iconTone={iconTone ?? (destructive ? 'danger' : 'success')}
+          iconLayout={iconLayout}
+        />
         {shownError || children ? (
           <DialogBody className="gap-row flex flex-col">
             {children}
@@ -145,6 +158,16 @@ function ConfirmDialog({
           </DialogBody>
         ) : null}
         <DialogFooter>
+          <Button
+            type="button"
+            variant={destructive ? 'destructive' : 'default'}
+            loading={pending}
+            onClick={() => {
+              void confirm();
+            }}
+          >
+            {labels.confirm}
+          </Button>
           <Button
             ref={cancelButton}
             type="button"
@@ -155,16 +178,6 @@ function ConfirmDialog({
             }}
           >
             {labels.cancel}
-          </Button>
-          <Button
-            type="button"
-            variant={destructive ? 'destructive' : 'default'}
-            loading={pending}
-            onClick={() => {
-              void confirm();
-            }}
-          >
-            {labels.confirm}
           </Button>
         </DialogFooter>
       </DialogContent>

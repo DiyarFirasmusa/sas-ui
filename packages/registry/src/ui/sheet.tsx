@@ -12,7 +12,7 @@ const messages: Messages<'close'> = {
 
 const sheetVariants = variants(
   [
-    'fixed z-50 flex flex-col bg-popover text-popover-foreground shadow-xlarge outline-none',
+    'fixed z-50 flex flex-col bg-surface-elevated text-text-primary shadow-xlarge outline-none',
     'transition-[translate] duration-300 ease-out motion-reduce:transition-none',
   ],
   {
@@ -21,11 +21,11 @@ const sheetVariants = variants(
       // panel and its slide direction flip with the page.
       side: {
         start:
-          'inset-y-0 start-0 h-full w-3/4 max-w-sm border-e border-stroke data-[ending-style]:ltr:-translate-x-full data-[ending-style]:rtl:translate-x-full data-[starting-style]:ltr:-translate-x-full data-[starting-style]:rtl:translate-x-full',
-        end: 'inset-y-0 end-0 h-full w-3/4 max-w-sm border-s border-stroke data-[ending-style]:ltr:translate-x-full data-[ending-style]:rtl:-translate-x-full data-[starting-style]:ltr:translate-x-full data-[starting-style]:rtl:-translate-x-full',
-        top: 'inset-x-0 top-0 max-h-[85dvh] border-b border-stroke data-[ending-style]:-translate-y-full data-[starting-style]:-translate-y-full',
+          'inset-y-0 start-0 h-full w-3/4 max-w-sm border-e border-stroke-strong data-[ending-style]:ltr:-translate-x-full data-[ending-style]:rtl:translate-x-full data-[starting-style]:ltr:-translate-x-full data-[starting-style]:rtl:translate-x-full',
+        end: 'inset-y-0 end-0 h-full w-3/4 max-w-sm border-s border-stroke-strong data-[ending-style]:ltr:translate-x-full data-[ending-style]:rtl:-translate-x-full data-[starting-style]:ltr:translate-x-full data-[starting-style]:rtl:-translate-x-full',
+        top: 'inset-x-0 top-0 max-h-[85dvh] border-b border-stroke-strong data-[ending-style]:-translate-y-full data-[starting-style]:-translate-y-full',
         bottom:
-          'inset-x-0 bottom-0 max-h-[85dvh] rounded-t-modal border-t border-stroke data-[ending-style]:translate-y-full data-[starting-style]:translate-y-full',
+          'inset-x-0 bottom-0 max-h-[85dvh] rounded-t-modal border-t border-stroke-strong data-[ending-style]:translate-y-full data-[starting-style]:translate-y-full',
       },
     },
     defaultVariants: { side: 'end' },
@@ -100,7 +100,7 @@ function SheetContent({
       <SheetPrimitive.Backdrop
         data-slot="sheet-backdrop"
         className={cn(
-          'fixed inset-0 z-50 bg-scrim',
+          'fixed inset-0 z-50 bg-scrim backdrop-blur-[12px]',
           'transition-opacity duration-300 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0',
           'motion-reduce:transition-none',
         )}
@@ -118,7 +118,7 @@ function SheetContent({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="end-inline top-inline absolute"
+                className="end-row top-row absolute z-10"
                 aria-label={labels.close}
               />
             }
@@ -156,7 +156,7 @@ function SheetFooter({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="sheet-footer"
       className={cn(
-        'mt-auto flex flex-col-reverse gap-field p-card pt-row sm:flex-row sm:justify-end',
+        'mt-auto flex flex-col gap-field p-card pt-row sm:flex-row sm:flex-wrap sm:justify-start',
         className,
       )}
       {...props}

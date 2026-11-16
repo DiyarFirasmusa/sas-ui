@@ -19,6 +19,11 @@ describe('Label', () => {
     expect(screen.getByText('*')).toHaveAttribute('aria-hidden', 'true');
   });
 
+  it('uses the field label style: text-label in the primary text colour', () => {
+    render(<Label>Name</Label>);
+    expect(screen.getByText('Name')).toHaveClass('text-label', 'text-text-primary');
+  });
+
   it('has no axe violations', async () => {
     const { container } = render(
       <>

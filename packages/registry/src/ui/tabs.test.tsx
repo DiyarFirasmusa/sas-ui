@@ -93,7 +93,7 @@ describe('Tabs', () => {
     expect(list).toHaveClass('overflow-x-auto');
     expect(screen.getByRole('tab', { name: 'Account' })).toHaveClass('border-b-2');
     rerender(<Example variant="pill" />);
-    expect(screen.getByRole('tablist')).toHaveClass('bg-hover-row');
+    expect(screen.getByRole('tablist')).toHaveClass('rounded-pill', 'border', 'bg-surface');
     expect(screen.getByRole('tab', { name: 'Account' })).toHaveAttribute('data-active');
   });
 

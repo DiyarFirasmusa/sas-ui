@@ -110,8 +110,9 @@ function DeltaBadge({ delta }: { delta: StatDelta }) {
   );
 }
 
+// The dashboards' KPI tile: 16px radius, a stroke, 20px padding, no shadow.
 const cardClass =
-  'block w-full rounded-xl border border-stroke bg-surface p-panel text-start shadow-small';
+  'block w-full rounded-[var(--radius-kpi,16px)] border border-stroke bg-surface p-panel text-start';
 const interactiveClass =
   'cursor-pointer outline-none transition-colors hover:bg-hover-row focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
@@ -147,16 +148,17 @@ function StatCard({
   const body = (
     <span className="gap-inline flex items-start justify-between">
       <span className="gap-field flex min-w-0 flex-1 flex-col">
-        <span className="text-b2 text-text-secondary block">{label}</span>
         {loading ? (
           <>
             <Skeleton className="h-8 w-28" />
+            <span className="text-b2 text-text-secondary block">{label}</span>
             {delta ? <Skeleton className="h-4 w-20" /> : null}
             <span role="status" aria-label={labels.loading} className="sr-only" />
           </>
         ) : (
           <>
             <span className="text-kpi text-text-primary block truncate tabular-nums">{figure}</span>
+            <span className="text-b2 text-text-secondary block">{label}</span>
             {delta ? <DeltaBadge delta={delta} /> : null}
           </>
         )}

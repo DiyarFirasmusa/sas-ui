@@ -1,7 +1,7 @@
 import { Select as SelectPrimitive } from '@base-ui/react/select';
 import type { ReactNode } from 'react';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@/components/ui/icons';
-import { controlClasses } from '@/components/ui/input';
+import { controlClasses, controlSizeClasses, optionClasses } from '@/components/ui/input';
 import { useLabels, type Messages } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 
@@ -21,14 +21,7 @@ const popupClasses = [
   'isolate flex max-h-[min(18rem,var(--available-height,18rem))] w-(--anchor-width,max-content) min-w-(--anchor-width,8rem)',
   'origin-(--transform-origin) flex-col overflow-hidden rounded-lg border border-stroke bg-popover text-popover-foreground shadow-large outline-none',
   'transition-[opacity,scale] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
-  'motion-reduce:transition-none',
-].join(' ');
-
-const itemClasses = [
-  'relative flex min-h-9 w-full cursor-default items-center gap-field rounded-md py-1.5 ps-inline pe-8 text-start text-b1 text-text-primary outline-none select-none',
-  'data-[highlighted]:bg-hover-row',
-  'data-[selected]:bg-primary-light data-[selected]:data-[highlighted]:bg-primary-light',
-  'data-[disabled]:pointer-events-none data-[disabled]:text-text-muted data-[disabled]:opacity-60',
+  'motion-reduce:transition-none data-[align-trigger=true]:transition-none',
 ].join(' ');
 
 /**
@@ -43,7 +36,7 @@ function SelectRoot<Value = string, Multiple extends boolean | undefined = false
 }
 
 interface SelectTriggerProps extends SelectPrimitive.Trigger.Props {
-  /** `sm` is a 36px trigger for toolbars and table cells; the default matches `Input`. */
+  /** `sm` is a 40px trigger (compact system) for toolbars and table cells; the default matches `Input`. */
   size?: 'default' | 'sm';
 }
 
@@ -56,15 +49,15 @@ function SelectTrigger({ className, size = 'default', children, ...props }: Sele
       className={cn(
         controlClasses,
         'cursor-pointer justify-between whitespace-nowrap data-[popup-open]:border-primary-highlight',
-        size === 'sm' && 'h-9 min-h-9',
+        size === 'sm' && controlSizeClasses.sm,
         '[&_svg]:pointer-events-none [&_svg]:shrink-0',
         className,
       )}
       {...props}
     >
       {children}
-      <SelectPrimitive.Icon className="text-text-muted">
-        <ChevronDownIcon />
+      <SelectPrimitive.Icon className="text-text-secondary">
+        <ChevronDownIcon className="size-5" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -100,7 +93,7 @@ interface SelectContentProps extends SelectPrimitive.Popup.Props {
   sideOffset?: number;
   align?: SelectPrimitive.Positioner.Props['align'];
   alignOffset?: number;
-  /** Overlay the popup on the trigger so the selected item lines up (Base UI default). Off by default. */
+  /** Overlay the popup on the trigger so the selected item lines up (the dashboards' look). On by default. */
   alignItemWithTrigger?: boolean;
 }
 
@@ -112,7 +105,7 @@ function SelectContent({
   sideOffset = 4,
   align = 'start',
   alignOffset = 0,
-  alignItemWithTrigger = false,
+  alignItemWithTrigger = true,
   ...props
 }: SelectContentProps) {
   return (
@@ -127,6 +120,7 @@ function SelectContent({
       >
         <SelectPrimitive.Popup
           data-slot="select-content"
+          data-align-trigger={alignItemWithTrigger}
           className={cn(popupClasses, className)}
           {...props}
         >
@@ -165,7 +159,7 @@ function SelectItem({ className, children, title, ...props }: SelectItemProps) {
     <SelectPrimitive.Item
       data-slot="select-item"
       title={title ?? (typeof children === 'string' ? children : undefined)}
-      className={cn(itemClasses, className)}
+      className={cn(optionClasses, className)}
       {...props}
     >
       <SelectPrimitive.ItemText className="min-w-0 flex-1 truncate">
@@ -225,7 +219,7 @@ function SelectEmpty({ className, children, ...props }: SelectEmptyProps) {
       role="option"
       aria-disabled="true"
       aria-selected="false"
-      className={cn('px-inline py-2 text-center text-b2 text-text-muted', className)}
+      className={cn('px-inline py-6 text-center text-b2 text-text-secondary', className)}
       {...props}
     >
       {children ?? labels.empty}

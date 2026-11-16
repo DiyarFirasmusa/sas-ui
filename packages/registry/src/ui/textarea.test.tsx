@@ -41,7 +41,7 @@ describe('Textarea', () => {
         <Textarea aria-label="Large" size="lg" />
       </>,
     );
-    expect(screen.getByLabelText('Plain')).toHaveClass('min-h-24', 'py-2');
+    expect(screen.getByLabelText('Plain')).toHaveClass('min-h-24', 'py-3', 'h-auto', 'resize-y');
     expect(screen.getByLabelText('Plain')).toHaveAttribute('data-size', 'default');
     expect(screen.getByLabelText('Large')).toHaveClass('min-h-28', 'py-3');
   });

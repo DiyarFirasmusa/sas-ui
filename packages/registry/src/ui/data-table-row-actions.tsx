@@ -1,6 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontalIcon } from '@/components/ui/icons';
 import { useLabels, type Messages } from '@/lib/locale';
+import { cn } from '@/lib/utils';
 
 const messages: Messages<'actions'> = {
   en: { actions: 'Actions' },
@@ -59,10 +59,15 @@ function RowActions({ actions, label, className }: RowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={<Button variant="ghost" size="icon-sm" className="max-sm:size-11" />}
         aria-label={labels.actions}
         data-slot="row-actions"
-        className={className}
+        className={cn(
+          // The dashboards' "⋯" trigger: a borderless square that tints on hover and while open.
+          'inline-flex size-control-sm shrink-0 cursor-pointer items-center justify-center rounded-control border border-transparent text-text-secondary outline-none transition-colors max-sm:size-11 motion-reduce:transition-none [&>svg]:size-4.5',
+          'hover:bg-hover-row hover:text-text-primary data-[popup-open]:bg-hover-row data-[popup-open]:text-text-primary',
+          'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-highlight',
+          className,
+        )}
       >
         <MoreHorizontalIcon />
       </DropdownMenuTrigger>

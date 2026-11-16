@@ -71,7 +71,7 @@ function CommandItem({
         }
       }}
       className={cn(
-        'relative flex min-h-11 cursor-default items-center gap-field rounded-md px-inline text-b1 outline-none select-none sm:min-h-9',
+        'relative flex min-h-11 cursor-default items-center gap-field rounded-sm px-field py-1.5 text-b2 outline-none select-none sm:min-h-8',
         'data-[selected]:bg-hover-row data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         "[&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
         className,

@@ -47,3 +47,10 @@ describe('Kbd', () => {
     await expectNoA11yViolations();
   });
 });
+
+describe('Kbd look', () => {
+  it('uses the 6px key radius', () => {
+    render(<Kbd>K</Kbd>);
+    expect(screen.getByText('K').className).toContain('--radius-kbd');
+  });
+});

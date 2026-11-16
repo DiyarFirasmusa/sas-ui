@@ -145,3 +145,14 @@ describe('StatGrid', () => {
     expect(container.firstElementChild).toHaveClass('xl:grid-cols-4');
   });
 });
+
+describe('StatCard look', () => {
+  it('shows the figure above the label in a 16px-radius, shadowless tile', () => {
+    const { container } = render(<StatCard label="Revenue" value="12,480" icon={<UserIcon />} />);
+    const card = container.querySelector('[data-slot="stat-card"]');
+    expect(card).toHaveClass('border-stroke', 'bg-surface', 'p-panel');
+    expect(card).not.toHaveClass('shadow-small');
+    const text = card?.textContent ?? '';
+    expect(text.indexOf('12,480')).toBeLessThan(text.indexOf('Revenue'));
+  });
+});

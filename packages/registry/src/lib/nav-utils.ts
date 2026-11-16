@@ -20,6 +20,15 @@ export interface NavItem {
   /** Match only the exact path, for a root link such as `/`. */
   exact?: boolean;
   disabled?: boolean;
+  /** Top level only: shown at the bottom of the sidebar, under a divider (settings, help). */
+  pinned?: boolean;
+}
+
+/** A run of top-level links, optionally under a small heading — the HR sidebar's flat layout. */
+export interface NavSection {
+  id: string;
+  label?: string;
+  items: readonly NavItem[];
 }
 
 /** Drops the query string, hash and trailing slash so `/a/?x=1#y` equals `/a`. */
@@ -160,4 +169,39 @@ export function filterNavItems(
     }
     return [{ ...item, children }];
   });
+}
+
+/** Splits the top level into the main list and the entries that sit at the bottom of the sidebar. */
+export function splitPinned(items: readonly NavItem[]): { main: NavItem[]; pinned: NavItem[] } {
+  return {
+    main: items.filter((item) => item.pinned !== true),
+    pinned: items.filter((item) => item.pinned === true),
+  };
+}
+
+/**
+ * Flattens a tree into labelled sections: every top-level group becomes a
+ * heading over its children, and consecutive top-level links share one
+ * unlabelled section. Used where navigation is a flat list under small
+ * headings instead of an accordion.
+ */
+export function toNavSections(items: readonly NavItem[]): NavSection[] {
+  const sections: NavSection[] = [];
+  let run: NavItem[] = [];
+  const flush = () => {
+    if (run.length > 0) {
+      sections.push({ id: `links-${run[0]?.id ?? sections.length}`, items: run });
+      run = [];
+    }
+  };
+  for (const item of items) {
+    if (item.children && item.children.length > 0) {
+      flush();
+      sections.push({ id: item.id, label: item.label, items: item.children });
+    } else {
+      run.push(item);
+    }
+  }
+  flush();
+  return sections;
 }

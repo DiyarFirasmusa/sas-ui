@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronRightIcon, MoreHorizontalIcon } from '@/components/ui/icons';
+import { MoreHorizontalIcon } from '@/components/ui/icons';
 import { useLabels, type Messages } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 
@@ -29,7 +29,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<'ol'>) {
   return (
     <ol
       data-slot="breadcrumb-list"
-      className={cn('flex flex-wrap items-center gap-field text-b1 text-text-secondary', className)}
+      className={cn('flex flex-wrap items-center gap-field text-b3 text-warning', className)}
       {...props}
     />
   );
@@ -53,8 +53,8 @@ function BreadcrumbLink({ className, render, ...props }: useRender.ComponentProp
     props: {
       'data-slot': 'breadcrumb-link',
       className: cn(
-        'rounded-sm text-text-secondary transition-colors outline-none hover:text-text-primary hover:underline',
-        'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        'rounded-sm transition-colors outline-none hover:text-primary-text',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-highlight',
         'motion-reduce:transition-none',
         className,
       ),
@@ -69,23 +69,23 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<'span'>) {
     <span
       data-slot="breadcrumb-page"
       aria-current="page"
-      className={cn('text-h5 text-text-primary', className)}
+      className={cn('font-medium', className)}
       {...props}
     />
   );
 }
 
-/** Chevron between items; it mirrors itself in RTL. Pass children to use another glyph. */
+/** The "/" between items, in the trail's colour. Pass children to use another glyph. */
 function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<'li'>) {
   return (
     <li
       data-slot="breadcrumb-separator"
       role="presentation"
       aria-hidden="true"
-      className={cn('inline-flex items-center text-text-muted', className)}
+      className={cn('inline-flex items-center', className)}
       {...props}
     >
-      {children ?? <ChevronRightIcon />}
+      {children ?? '/'}
     </li>
   );
 }
@@ -106,8 +106,8 @@ function BreadcrumbEllipsis({ items, label }: BreadcrumbEllipsisProps) {
         data-slot="breadcrumb-ellipsis"
         aria-label={labels.more}
         className={cn(
-          'inline-flex size-8 items-center justify-center rounded-md text-text-secondary transition-colors outline-none hover:bg-hover-row hover:text-text-primary',
-          'focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none',
+          'inline-flex size-8 items-center justify-center rounded-md transition-colors outline-none hover:bg-hover-row hover:text-primary-text',
+          'focus-visible:outline-2 focus-visible:outline-primary-highlight motion-reduce:transition-none',
           'data-[popup-open]:bg-hover-row',
         )}
       >

@@ -5,26 +5,29 @@ import { expectNoA11yViolations } from '@/test/a11y';
 import { renderWithLocale } from '@/test/render';
 
 describe('Skeleton', () => {
-  it('is a decorative pulse block that stops pulsing for reduced motion', () => {
+  it('is a decorative shimmer block that stops moving for reduced motion', () => {
     const { container } = render(<Skeleton className="h-4 w-20" />);
     const block = container.querySelector('[data-slot="skeleton"]');
     expect(block).toHaveAttribute('aria-hidden', 'true');
-    expect(block).toHaveClass('animate-pulse', 'motion-reduce:animate-none', 'h-4', 'w-20');
+    expect(block).toHaveClass(
+      'animate-skeleton-shimmer',
+      'motion-reduce:animate-none',
+      'h-4',
+      'w-20',
+    );
   });
 
-  it('shimmer swaps the pulse for the sweeping highlight and still honours reduced motion', () => {
-    const { container } = render(<Skeleton shimmer className="h-4" />);
-    const block = container.querySelector('[data-slot="skeleton"]');
-    expect(block).toHaveAttribute('data-shimmer');
-    expect(block).toHaveClass('animate-skeleton-shimmer', 'motion-reduce:animate-none', 'h-4');
-    expect(block).not.toHaveClass('animate-pulse');
-  });
-
-  it('pulses by default (no shimmer marker)', () => {
-    const { container } = render(<Skeleton />);
+  it('shimmer={false} swaps the sweeping highlight for a pulse and still honours reduced motion', () => {
+    const { container } = render(<Skeleton shimmer={false} className="h-4" />);
     const block = container.querySelector('[data-slot="skeleton"]');
     expect(block).not.toHaveAttribute('data-shimmer');
+    expect(block).toHaveClass('animate-pulse', 'motion-reduce:animate-none', 'h-4');
     expect(block).not.toHaveClass('animate-skeleton-shimmer');
+  });
+
+  it('shimmers by default', () => {
+    const { container } = render(<Skeleton />);
+    expect(container.querySelector('[data-slot="skeleton"]')).toHaveAttribute('data-shimmer');
   });
 
   it('SkeletonText and SkeletonTable pass shimmer to every block', () => {

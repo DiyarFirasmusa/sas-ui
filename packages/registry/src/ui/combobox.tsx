@@ -2,7 +2,7 @@ import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import { DirectionProvider } from '@base-ui/react/direction-provider';
 import { useRef, useState, type FocusEventHandler, type Ref, type UIEvent } from 'react';
 import { CheckIcon, ChevronDownIcon, CloseIcon, LoaderIcon } from '@/components/ui/icons';
-import { controlClasses } from '@/components/ui/input';
+import { controlClasses, optionClasses } from '@/components/ui/input';
 import {
   optionFor,
   rememberOptions,
@@ -108,15 +108,12 @@ function ComboboxContent({
                   value={option}
                   disabled={option.disabled}
                   data-slot="combobox-item"
-                  className={cn(
-                    'relative flex min-h-9 cursor-default items-center gap-field rounded-md ps-8 pe-inline text-b1 outline-none select-none',
-                    'data-[highlighted]:bg-hover-row data-[disabled]:opacity-50',
-                  )}
+                  className={optionClasses}
                 >
-                  <ComboboxPrimitive.ItemIndicator className="absolute start-2 flex items-center">
-                    <CheckIcon className="text-primary-text size-4" />
+                  <span className="min-w-0 flex-1 truncate">{option.label}</span>
+                  <ComboboxPrimitive.ItemIndicator className="text-primary-text pointer-events-none absolute end-2 inline-flex size-4 items-center justify-center">
+                    <CheckIcon className="size-4" />
                   </ComboboxPrimitive.ItemIndicator>
-                  <span className="truncate">{option.label}</span>
                 </ComboboxPrimitive.Item>
               )}
             </ComboboxPrimitive.List>
@@ -132,7 +129,7 @@ function ComboboxContent({
             </ComboboxPrimitive.Status>
             <ComboboxPrimitive.Empty>
               {!loading && !error ? (
-                <div className={cn(rowClasses, 'text-text-muted')}>{labels.empty}</div>
+                <div className="text-text-secondary text-b2 py-6 text-center">{labels.empty}</div>
               ) : null}
             </ComboboxPrimitive.Empty>
             {error && onRetry ? <ListButton onClick={onRetry}>{labels.retry}</ListButton> : null}
@@ -163,19 +160,19 @@ function ListButton({ onClick, children }: { onClick: () => void; children: stri
   );
 }
 
-const iconButton = cn(
-  'inline-flex size-7 shrink-0 items-center justify-center rounded-md text-text-muted outline-none',
-  'transition-colors hover:bg-hover-row hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ring',
-  '[&_svg]:size-4 data-[disabled]:pointer-events-none',
+// The 28px inline buttons of the dashboards' number stepper, reused for clear/open.
+const comboboxIconButton = cn(
+  'inline-flex size-7 shrink-0 items-center justify-center rounded-control text-text-secondary outline-none',
+  'transition-colors duration-150 hover:bg-hover-row hover:text-text-primary focus-visible:ring-2 focus-visible:ring-ring',
+  '[&_svg]:size-5 data-[disabled]:pointer-events-none data-[disabled]:opacity-40',
 );
 
 /** Classes for the field-like group that holds the input and its buttons. */
 const comboboxGroupClasses = cn(
   controlClasses,
-  'gap-1 pe-1',
-  'focus-within:border-primary-highlight focus-within:ring-2 focus-within:ring-ring/40',
-  'has-[input[aria-invalid=true]]:border-danger has-[input[aria-invalid=true]]:ring-danger/30',
-  'data-[disabled]:cursor-not-allowed data-[disabled]:bg-disabled-container data-[disabled]:text-text-inactive',
+  'gap-1 pe-1.5',
+  // The invalid flag sits on the inner input, so the group reads it with :has().
+  'has-[input[aria-invalid=true]]:border-danger has-[input[aria-invalid=true]]:focus-within:border-danger has-[input[aria-invalid=true]]:focus-within:ring-danger/20',
 );
 
 interface ComboboxProps
@@ -313,13 +310,13 @@ function Combobox({
             aria-invalid={ariaInvalid}
             dir={hasText || selected ? 'auto' : undefined}
             data-slot="combobox-input"
-            className="text-b1 text-text-primary placeholder:text-text-muted h-full min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
+            className="text-control-input text-text-primary placeholder:text-text-muted h-full min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
           />
           {clearable ? (
             <ComboboxPrimitive.Clear
               data-slot="combobox-clear"
               aria-label={labels.clear}
-              className={cn(iconButton, 'data-[hidden]:hidden')}
+              className={cn(comboboxIconButton, 'data-[hidden]:hidden')}
             >
               <CloseIcon />
             </ComboboxPrimitive.Clear>
@@ -328,7 +325,7 @@ function Combobox({
             data-slot="combobox-trigger"
             aria-label={labels.open}
             tabIndex={-1}
-            className={iconButton}
+            className={comboboxIconButton}
           >
             <ChevronDownIcon />
           </ComboboxPrimitive.Trigger>
@@ -346,5 +343,5 @@ function Combobox({
   );
 }
 
-export { Combobox, ComboboxContent, comboboxGroupClasses };
+export { Combobox, ComboboxContent, comboboxGroupClasses, comboboxIconButton };
 export type { ComboboxAsyncProps, ComboboxContentProps, ComboboxOption, ComboboxProps };

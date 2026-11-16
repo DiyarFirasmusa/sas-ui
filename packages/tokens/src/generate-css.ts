@@ -1,5 +1,5 @@
 import { ALIAS_TOKENS, CORE_TOKEN_NAMES } from './token-names.ts';
-import type { Preset, ThemeTokens } from './token-names.ts';
+import { COMPACT_GEOMETRY, type Geometry, type Preset, type ThemeTokens } from './token-names.ts';
 
 export type PresetScope =
   /** Unscoped `:root` / `.dark` — the single preset of a project. */
@@ -30,6 +30,20 @@ function selectors(preset: Preset, scope: PresetScope) {
   };
 }
 
+function geometryDeclarations(geometry: Geometry): string {
+  return [
+    `  --control-h: ${geometry.controlHeight};`,
+    `  --control-h-lg: ${geometry.controlHeightLg};`,
+    `  --control-h-sm: ${geometry.controlHeightSm};`,
+    `  --control-h-xs: ${geometry.controlHeightXs};`,
+    `  --control-h-input: ${geometry.inputHeight};`,
+    `  --control-radius: ${geometry.controlRadius};`,
+    `  --control-px: ${geometry.buttonPaddingX};`,
+    `  --type-control: ${geometry.buttonFont};`,
+    `  --type-control-input: ${geometry.inputFont};`,
+  ].join('\n');
+}
+
 /** CSS custom properties for one preset: a light block and a dark block. */
 export function presetToCss(preset: Preset, scope: PresetScope): string {
   const { light, dark } = selectors(preset, scope);
@@ -38,6 +52,7 @@ export function presetToCss(preset: Preset, scope: PresetScope): string {
     `${light} {`,
     '  color-scheme: light;',
     `  --radius: ${preset.radius};`,
+    geometryDeclarations(preset.geometry ?? COMPACT_GEOMETRY),
     declarations(preset.light, '  '),
     '}',
     '',

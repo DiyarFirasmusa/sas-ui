@@ -164,3 +164,28 @@ describe('Table', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('Table look', () => {
+  it('tints the header strip, mutes its text and uses 16px cell padding and subtle rules', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>Hotel</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const head = screen.getByRole('columnheader', { name: 'Name' });
+    expect(head).toHaveClass('h-9', 'px-row', 'text-table-header', 'text-text-muted');
+    expect(head.className).toContain('color-mix');
+    expect(screen.getByRole('cell', { name: 'Hotel' })).toHaveClass('px-row');
+    expect(screen.getAllByRole('row')[1]).toHaveClass('border-stroke-subtle');
+    expect(screen.getByRole('table')).toHaveClass('text-b2');
+  });
+});

@@ -68,6 +68,25 @@ describe('bound form fields', () => {
     expect(screen.getByLabelText(/Name/)).toBeInvalid();
   });
 
+  it('lays the switch field out as a settings row: text at the start, switch at the end', () => {
+    function Row() {
+      const form = useForm({ defaultValues: { active: false } });
+      return (
+        <SwitchField
+          control={form.control}
+          name="active"
+          label="Active"
+          description="Visible to the team"
+        />
+      );
+    }
+    render(<Row />);
+    const toggle = screen.getByRole('switch', { name: 'Active' });
+    expect(toggle).toHaveAccessibleDescription('Visible to the team');
+    expect(toggle.parentElement).toHaveClass('justify-between');
+    expect(toggle.previousElementSibling).toHaveTextContent('ActiveVisible to the team');
+  });
+
   it('submits parsed values once every field is valid', async () => {
     const onSubmit = vi.fn();
     render(<Example onSubmit={onSubmit} />);

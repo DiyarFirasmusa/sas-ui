@@ -4,8 +4,10 @@ import type { Example } from '../example-types';
 export const examples: Example[] = [
   {
     title: 'Underline',
+    description:
+      'The pill is the default (the dashboards’ tab track); `underline` is the quieter alternative.',
     render: () => (
-      <Tabs defaultValue="overview" className="w-full max-w-md">
+      <Tabs defaultValue="overview" variant="underline" className="w-full max-w-md">
         <TabsList aria-label="Project sections">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
@@ -24,9 +26,9 @@ export const examples: Example[] = [
     ),
   },
   {
-    title: 'Pill',
+    title: 'Pill (default)',
     render: () => (
-      <Tabs defaultValue="month" variant="pill">
+      <Tabs defaultValue="month">
         <TabsList aria-label="Range">
           <TabsTrigger value="week">Week</TabsTrigger>
           <TabsTrigger value="month">Month</TabsTrigger>

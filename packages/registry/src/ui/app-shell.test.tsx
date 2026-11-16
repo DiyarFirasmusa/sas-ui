@@ -88,26 +88,82 @@ describe('AppShell', () => {
     const onCollapsedChange = vi.fn();
     render(<Shell onCollapsedChange={onCollapsedChange} />);
     const aside = screen.getByRole('complementary', { name: 'Navigation' });
-    expect(aside).toHaveClass('w-64');
+    expect(aside).toHaveClass('w-61');
     await userEvent.click(screen.getByRole('button', { name: 'Collapse sidebar' }));
     expect(aside).toHaveClass('w-16');
     expect(onCollapsedChange).toHaveBeenLastCalledWith(true);
     expect(within(aside).queryByText('SAS Suite')).not.toBeInTheDocument();
     expect(within(aside).getByRole('link', { name: 'Home' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Expand sidebar' }));
-    expect(aside).toHaveClass('w-64');
+    expect(aside).toHaveClass('w-61');
   });
 
   it('can start collapsed and be controlled', () => {
     const { rerender } = render(<Shell defaultCollapsed />);
     expect(screen.getByRole('complementary')).toHaveClass('w-16');
     rerender(<Shell collapsed={false} />);
-    expect(screen.getByRole('complementary')).toHaveClass('w-64');
+    expect(screen.getByRole('complementary')).toHaveClass('w-61');
   });
 
-  it('can omit the built-in collapse button', () => {
+  it('can omit the rail toggle of the brand row', () => {
     render(<Shell hideCollapseButton />);
     expect(screen.queryByRole('button', { name: 'Collapse sidebar' })).not.toBeInTheDocument();
+  });
+
+  it('offers the rail toggle in the brand row at the top of the sidebar', () => {
+    render(<Shell />);
+    const aside = screen.getByRole('complementary', { name: 'Navigation' });
+    const brand = aside.querySelector('[data-slot="sidebar-brand"]');
+    expect(brand).toContainElement(within(aside).getByRole('button', { name: 'Collapse sidebar' }));
+  });
+
+  it('pads the page like the dashboards: 16px on phones, 32px from md', () => {
+    render(<Shell />);
+    expect(screen.getByRole('main')).toHaveClass('p-4', 'md:p-page');
+  });
+
+  describe('phone header', () => {
+    it('shows a strip in the sidebar colours with the menu button and brand, and takes the button from the topbar', async () => {
+      render(<Shell mobileBrand={<span>SAS Suite mark</span>} />);
+      const strip = document.querySelector('[data-slot="mobile-header"]');
+      expect(strip).toHaveClass('bg-sidebar', 'h-18', 'md:hidden');
+      expect(strip).toHaveTextContent('SAS Suite mark');
+      expect(screen.getAllByRole('button', { name: 'Open navigation menu' })).toHaveLength(1);
+      expect(strip).toContainElement(screen.getByRole('button', { name: 'Open navigation menu' }));
+      expect(screen.getByRole('banner')).toHaveClass('max-md:top-18');
+      await userEvent.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+      expect(await screen.findByRole('dialog', { name: 'Navigation' })).toBeInTheDocument();
+    });
+
+    it('is not a second banner landmark', () => {
+      render(<Shell mobileBrand="Brand" />);
+      expect(screen.getAllByRole('banner')).toHaveLength(1);
+    });
+  });
+
+  describe('hr variant', () => {
+    it('uses the fixed column, no rail toggle and the comfortable page padding', () => {
+      render(<Shell variant="hr" />);
+      const aside = screen.getByRole('complementary', { name: 'Navigation' });
+      expect(aside).toHaveAttribute('data-layout', 'hr');
+      expect(aside).toHaveClass('w-61');
+      expect(screen.queryByRole('button', { name: 'Collapse sidebar' })).not.toBeInTheDocument();
+      expect(screen.getByRole('main')).toHaveClass('md:px-7.5', 'md:py-6.5');
+      expect(screen.getByRole('banner')).toHaveAttribute('data-variant', 'hr');
+    });
+
+    it('ignores a collapsed request and always shows the phone strip', () => {
+      render(<Shell variant="hr" defaultCollapsed />);
+      expect(screen.getByRole('complementary')).not.toHaveAttribute('data-collapsed');
+      expect(document.querySelector('[data-slot="mobile-header"]')).toBeInTheDocument();
+    });
+
+    it('opens a wider drawer from the strip', async () => {
+      render(<Shell variant="hr" />);
+      await userEvent.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+      const drawer = await screen.findByRole('dialog', { name: 'Navigation' });
+      expect(drawer).toHaveClass('w-72', 'bg-sidebar');
+    });
   });
 
   describe('mobile drawer', () => {

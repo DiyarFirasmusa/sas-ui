@@ -19,6 +19,7 @@ export const examples: Example[] = [
     render: () => (
       <div className="gap-row grid w-full max-w-md">
         <Textarea aria-label="Large" size="lg" placeholder="Large (pairs with Input size=lg)" />
+        <Textarea aria-label="Invalid" aria-invalid defaultValue="Invalid value" />
         <Textarea aria-label="Fixed" autoDirection={false} placeholder="autoDirection off" />
       </div>
     ),

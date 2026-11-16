@@ -19,6 +19,7 @@
     "hooks/use-data-table-grid.ts",
     "hooks/use-data-table-groups.ts",
     "hooks/use-data-table-state.ts",
-    "lib/data-table-sticky.ts"
+    "lib/data-table-sticky.ts",
+    "ui/data-table-footer.tsx"
   ]
 }

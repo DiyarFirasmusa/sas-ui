@@ -121,8 +121,9 @@ function DataTableBody<TData>({
         selected={row.getIsSelected()}
         tabIndex={rowTabStop ? 0 : undefined}
         className={cn(
+          'h-[62px]',
           onRowClick &&
-            'cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
+            'cursor-pointer outline-none focus-visible:bg-hover-row focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring/40',
         )}
         onClick={(event) => {
           if (onRowClick && !isFromControl(event)) {

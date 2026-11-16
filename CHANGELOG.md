@@ -23,6 +23,11 @@ All notable changes are recorded here. The format follows
 - CLI: `sas-ui upstream` sends an improved component from a project back to a library checkout.
 - Docs: [Continuous improvement](docs/CONTINUOUS-IMPROVEMENT.md) workflow.
 
+- **Design system alignment:** components now default to the look of the owner's dashboards instead of a generic shadcn
+  look — control geometry as preset data (`h-control*`, `rounded-control`, `text-control*`; compact for inventory/tourism,
+  comfortable for HR), the dashboards' sidebar, topbar and shell (with an `hr` variant), buttons, fields, tabs, tables,
+  dialogs, badges and page blocks. See [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md).
+
 ### Fixed
 
 - `Button loading` no longer lets a submit button submit its form a second time.

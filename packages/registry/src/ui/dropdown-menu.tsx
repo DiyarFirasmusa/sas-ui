@@ -10,6 +10,17 @@ function DropdownMenuTrigger(props: MenuPrimitive.Trigger.Props) {
   return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />;
 }
 
+/**
+ * The menu surface shared by the dropdown and context menus: the dashboards'
+ * 12px nav radius, a stroke border and the mid shadow.
+ */
+const menuSurfaceClasses = [
+  'min-w-44 origin-(--transform-origin) overflow-y-auto rounded-[var(--radius-nav,12px)] border border-stroke bg-popover p-1 text-text-primary shadow-mid outline-none',
+  'max-h-(--available-height)',
+  'transition-[opacity,scale] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
+  'motion-reduce:transition-none',
+].join(' ');
+
 interface DropdownMenuContentProps extends MenuPrimitive.Popup.Props {
   align?: MenuPrimitive.Positioner.Props['align'];
   alignOffset?: number;
@@ -36,13 +47,7 @@ function DropdownMenuContent({
       >
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-content"
-          className={cn(
-            'min-w-44 origin-(--transform-origin) overflow-y-auto rounded-lg border border-stroke bg-popover p-1 text-popover-foreground shadow-large outline-none',
-            'max-h-(--available-height)',
-            'transition-[opacity,scale] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
-            'motion-reduce:transition-none',
-            className,
-          )}
+          className={cn(menuSurfaceClasses, className)}
           {...props}
         />
       </MenuPrimitive.Positioner>
@@ -51,7 +56,7 @@ function DropdownMenuContent({
 }
 
 const itemClasses = [
-  'relative flex min-h-9 cursor-default items-center gap-field rounded-md px-inline text-b1 outline-none select-none',
+  'relative flex min-h-8 cursor-default items-center gap-field rounded-sm px-field py-1.5 text-b2 outline-none select-none',
   'data-[highlighted]:bg-hover-row data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
   "[&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
 ].join(' ');
@@ -146,7 +151,7 @@ function DropdownMenuLabel({
     <MenuPrimitive.GroupLabel
       data-slot="dropdown-menu-label"
       data-inset={inset ? '' : undefined}
-      className={cn('px-inline py-1.5 text-label text-text-muted', insetClasses, className)}
+      className={cn('px-field py-1.5 text-table-header text-text-muted', insetClasses, className)}
       {...props}
     />
   );
@@ -156,7 +161,7 @@ function DropdownMenuSeparator({ className, ...props }: MenuPrimitive.Separator.
   return (
     <MenuPrimitive.Separator
       data-slot="dropdown-menu-separator"
-      className={cn('-mx-1 my-1 h-px bg-stroke', className)}
+      className={cn('-mx-1 my-1 h-px bg-stroke-subtle', className)}
       {...props}
     />
   );
@@ -246,4 +251,5 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 };
+export { menuSurfaceClasses };
 export type { DropdownMenuContentProps, DropdownMenuItemProps };

@@ -4,6 +4,9 @@ import { variants, type VariantProps } from '@/lib/variants';
 
 type StickySide = 'start' | 'end';
 
+/** The header strip's tint (3.5% of the text colour over the surface), shared by every header cell. */
+const TABLE_HEADER_TINT = 'bg-[color-mix(in_oklab,var(--text-primary)_3.5%,var(--surface))]';
+
 const cellVariants = variants('', {
   variants: {
     align: {
@@ -71,7 +74,7 @@ function Table({
       role={containerFocusable && containerLabel ? 'region' : undefined}
       aria-label={containerFocusable ? containerLabel : undefined}
       className={cn(
-        'relative w-full overflow-auto rounded-lg border border-stroke bg-surface',
+        'relative w-full overflow-auto rounded-xl border border-stroke bg-surface',
         'outline-none focus-visible:ring-2 focus-visible:ring-ring',
         containerClassName,
       )}
@@ -80,7 +83,7 @@ function Table({
         data-slot="table"
         data-sticky-header={stickyHeader ? '' : undefined}
         className={cn(
-          'group/table w-full caption-bottom border-collapse text-b1 text-text-primary',
+          'group/table w-full caption-bottom border-collapse text-b2 text-text-primary',
           className,
         )}
         {...props}
@@ -93,7 +96,7 @@ function TableHeader({ className, ...props }: ComponentProps<'thead'>) {
   return (
     <thead
       data-slot="table-header"
-      className={cn('[&_tr]:border-b [&_tr]:border-stroke', className)}
+      className={cn('[&_tr]:border-b [&_tr]:border-stroke-subtle', className)}
       {...props}
     />
   );
@@ -113,7 +116,7 @@ function TableFooter({ className, ...props }: ComponentProps<'tfoot'>) {
   return (
     <tfoot
       data-slot="table-footer"
-      className={cn('border-t border-stroke bg-surface-dim text-h5', className)}
+      className={cn('border-t border-stroke-subtle', TABLE_HEADER_TINT, 'text-h5', className)}
       {...props}
     />
   );
@@ -130,7 +133,7 @@ function TableRow({ className, selected = false, ...props }: TableRowProps) {
       data-slot="table-row"
       data-state={selected ? 'selected' : undefined}
       className={cn(
-        'group/row border-b border-stroke bg-surface transition-colors motion-reduce:transition-none',
+        'group/row border-b border-stroke-subtle bg-surface transition-colors motion-reduce:transition-none',
         'hover:bg-hover-row data-[state=selected]:bg-primary-tint',
         className,
       )}
@@ -158,10 +161,11 @@ function TableHead({
       data-slot="table-head"
       scope={scope}
       className={cn(
-        'h-11 whitespace-nowrap bg-surface-dim px-inline align-middle text-table-header text-text-secondary',
+        'h-9 whitespace-nowrap px-row align-middle text-table-header text-text-muted',
+        TABLE_HEADER_TINT,
         'group-data-[sticky-header]/table:sticky group-data-[sticky-header]/table:top-0 group-data-[sticky-header]/table:z-10',
         cellVariants({ align, numeric, sticky }),
-        sticky && 'z-20 bg-surface-dim group-data-[sticky-header]/table:z-20',
+        sticky && ['z-20 group-data-[sticky-header]/table:z-20', TABLE_HEADER_TINT],
         className,
       )}
       {...props}
@@ -179,7 +183,7 @@ function TableCell({ className, align = 'start', numeric, sticky, ...props }: Ta
     <td
       data-slot="table-cell"
       className={cn(
-        'px-inline py-field align-middle',
+        'px-row py-field align-middle',
         cellVariants({ align, numeric, sticky }),
         className,
       )}
@@ -198,5 +202,15 @@ function TableCaption({ className, ...props }: ComponentProps<'caption'>) {
   );
 }
 
-export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };
+export {
+  TABLE_HEADER_TINT,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+};
 export type { StickySide, TableCellProps, TableHeadProps, TableProps, TableRowProps };

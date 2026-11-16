@@ -17,8 +17,8 @@ export type Route =
   | { page: 'component'; name: string }
   | { page: 'blocks' }
   | { page: 'block'; name: string }
-  /** A block rendered alone, loaded inside the block previews' iframes. */
-  | { page: 'preview'; name: string }
+  /** A block rendered alone, loaded inside the block previews' iframes. `example` is 1-based; default the first. */
+  | { page: 'preview'; name: string; example?: number }
   | { page: 'charts' }
   | { page: 'themes' }
   | { page: 'tokens' };
@@ -53,9 +53,11 @@ export function parseRoute(hash: string): Route {
   if (block?.[1]) {
     return { page: 'block', name: block[1] };
   }
-  const preview = new RegExp(`^preview/${NAME}$`).exec(path);
+  const preview = new RegExp(`^preview/${NAME}(?:/(\\d+))?$`).exec(path);
   if (preview?.[1]) {
-    return { page: 'preview', name: preview[1] };
+    return preview[2]
+      ? { page: 'preview', name: preview[1], example: Number(preview[2]) }
+      : { page: 'preview', name: preview[1] };
   }
   const component = new RegExp(`^components/${NAME}$`).exec(path);
   if (component?.[1]) {

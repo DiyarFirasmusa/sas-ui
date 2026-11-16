@@ -177,3 +177,16 @@ describe('Toaster', () => {
     await expectNoA11yViolations();
   });
 });
+
+describe('Toaster look', () => {
+  it('styles the toast as the dashboards do, with icons at 16px', async () => {
+    renderWithLocale(<Toaster />);
+    act(() => {
+      notify.success('Saved');
+    });
+    const toast = await screen.findByText('Saved');
+    const surface = toast.closest('[data-sonner-toast]');
+    expect(surface).toHaveClass('rounded-lg', 'border-stroke', 'bg-surface', 'shadow-large');
+    expect(surface?.querySelector('[data-icon] svg')).toHaveClass('size-4');
+  });
+});

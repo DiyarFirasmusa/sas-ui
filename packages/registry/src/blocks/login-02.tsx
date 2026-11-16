@@ -87,10 +87,11 @@ function brandInitial(brand: string): string {
 }
 
 /**
- * Two-column sign-in. From `lg` up the brand panel (the preset's
- * `--auth-panel-from/to` gradient and `--brand-tile`) sits at the start edge
- * and mirrors in Arabic; below `lg` only the form shows. Same validation,
- * single-flight submit and server error as `Login01`.
+ * The dashboards' sign-in: one bordered, shadowed card on the page, split in
+ * two from `lg` up. The brand panel (the preset's `--auth-panel-from/to`
+ * gradient and `--brand-tile`) sits at the start edge and mirrors in Arabic;
+ * below `lg` only the form shows. Same validation, single-flight submit and
+ * server error as `Login01`.
  */
 function Login02({
   onSubmit,
@@ -122,86 +123,95 @@ function Login02({
 
   return (
     <div
-      className={cn(
-        'grid min-h-svh bg-background lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]',
-        className,
-      )}
+      className={cn('grid min-h-svh place-items-center bg-background p-4 md:p-6', className)}
       {...props}
     >
-      <aside
-        data-slot="login-brand-panel"
-        className="from-auth-panel-from to-auth-panel-to p-page hidden flex-col justify-between bg-linear-to-br text-white lg:flex"
-      >
-        <div className="gap-inline flex items-center">
-          <span
-            aria-hidden="true"
-            className="bg-brand-tile text-brand-tile-foreground text-h3 grid size-11 place-items-center rounded-xl"
-          >
-            {logo ?? brandInitial(brand)}
-          </span>
-          <span className="text-h3">{brand}</span>
-        </div>
-        <p className="text-h1 max-w-md">{tagline ?? labels.tagline}</p>
-        <p className="text-b2 text-white/70">{labels.footnote}</p>
-      </aside>
-
-      <main className="gap-page p-row sm:p-page flex flex-col">
-        <div className="gap-field flex items-center justify-between">
-          <span className="text-h4 text-text-primary lg:invisible">{brand}</span>
-          {switcher ? <div data-slot="login-switcher">{switcher}</div> : null}
-        </div>
-        <div className="grid flex-1 place-items-center">
-          <div className="gap-card flex w-full max-w-sm flex-col">
-            <div className="gap-field flex flex-col">
-              <h1 className="text-h2 text-text-primary">{labels.title}</h1>
-              <p className="text-b2 text-text-secondary">{labels.description}</p>
-            </div>
-            <Form form={form} error={error} onSubmit={async (values) => onSubmit?.(values)}>
-              <TextField
-                control={form.control}
-                name="email"
-                label={labels.email}
-                type="email"
-                autoComplete="username"
-                required
-              />
-              <TextField
-                control={form.control}
-                name="password"
-                label={labels.password}
-                type="password"
-                kind="latin"
-                autoComplete="current-password"
-                required
-              />
-              <div className="gap-field flex items-center justify-between">
-                <label className="gap-field text-b2 text-text-primary flex items-center">
-                  <Checkbox
-                    checked={form.watch('remember')}
-                    onCheckedChange={(next) => form.setValue('remember', next)}
-                  />
-                  {labels.remember}
-                </label>
-                <a
-                  href={forgotPasswordHref}
-                  className="text-b2 text-primary-text underline-offset-4 hover:underline"
-                >
-                  {labels.forgot}
-                </a>
-              </div>
-              <Button type="submit" loading={isSubmitting} className="w-full">
-                {labels.submit}
-              </Button>
-            </Form>
-            <p className="text-b2 text-text-secondary text-center">
-              {labels.noAccount}{' '}
-              <a href={signUpHref} className="text-primary-text underline-offset-4 hover:underline">
-                {labels.signUp}
-              </a>
+      <div className="rounded-modal border-stroke bg-surface shadow-large grid w-full max-w-[72rem] overflow-hidden border lg:min-h-[40rem] lg:grid-cols-2">
+        <aside
+          data-slot="login-brand-panel"
+          className="from-auth-panel-from to-auth-panel-to relative hidden flex-col justify-center overflow-hidden bg-linear-to-br p-12 text-white lg:flex"
+        >
+          <div className="lg:-translate-y-8">
+            <span
+              aria-hidden="true"
+              className="mb-card bg-brand-tile text-h4 text-brand-tile-foreground grid size-12 place-items-center rounded-xl ring-1 ring-white/20"
+            >
+              {logo ?? brandInitial(brand)}
+            </span>
+            <p className="text-h1">{brand}</p>
+            <p className="mt-row text-h3">{tagline ?? labels.tagline}</p>
+            <p className="mt-card pt-card text-h5 border-t border-white/20 text-white/80">
+              {labels.footnote}
             </p>
           </div>
-        </div>
-      </main>
+        </aside>
+
+        <main className="bg-surface p-card flex flex-col">
+          {switcher ? (
+            <div
+              data-slot="login-switcher"
+              className="mb-card gap-field flex flex-wrap justify-end"
+            >
+              {switcher}
+            </div>
+          ) : null}
+          <p className="mb-card text-h2 text-text-primary lg:hidden">{brand}</p>
+          <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center">
+            <div className="gap-card flex w-full flex-col">
+              <div className="gap-field flex flex-col">
+                <h1 className="text-h2 text-text-primary">{labels.title}</h1>
+                <p className="text-b2 text-text-secondary">{labels.description}</p>
+              </div>
+              <Form form={form} error={error} onSubmit={async (values) => onSubmit?.(values)}>
+                <TextField
+                  control={form.control}
+                  name="email"
+                  label={labels.email}
+                  type="email"
+                  autoComplete="username"
+                  required
+                />
+                <TextField
+                  control={form.control}
+                  name="password"
+                  label={labels.password}
+                  type="password"
+                  kind="latin"
+                  autoComplete="current-password"
+                  required
+                />
+                <div className="gap-field flex items-center justify-between">
+                  <label className="gap-field text-b2 text-text-primary flex items-center">
+                    <Checkbox
+                      checked={form.watch('remember')}
+                      onCheckedChange={(next) => form.setValue('remember', next)}
+                    />
+                    {labels.remember}
+                  </label>
+                  <a
+                    href={forgotPasswordHref}
+                    className="text-b2 text-primary-text underline-offset-4 hover:underline"
+                  >
+                    {labels.forgot}
+                  </a>
+                </div>
+                <Button type="submit" loading={isSubmitting} className="w-full">
+                  {labels.submit}
+                </Button>
+              </Form>
+              <p className="text-b2 text-text-secondary text-center">
+                {labels.noAccount}{' '}
+                <a
+                  href={signUpHref}
+                  className="text-primary-text underline-offset-4 hover:underline"
+                >
+                  {labels.signUp}
+                </a>
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

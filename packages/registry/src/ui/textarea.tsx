@@ -4,8 +4,8 @@ import { controlClasses, type controlSizeClasses } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 type TextareaProps = Omit<React.ComponentProps<'textarea'>, 'dir' | 'onChange'> & {
-  /** `lg` pairs with `Input size="lg"` in a form row: roomier padding, taller minimum. */
-  size?: keyof typeof controlSizeClasses;
+  /** `lg` pairs with `Input size="lg"` in a form row: a taller minimum. */
+  size?: Exclude<keyof typeof controlSizeClasses, 'sm'>;
   /** Follow the typed language once there is a value (default). `false` keeps the UI direction. */
   autoDirection?: boolean;
   /** Method syntax keeps handlers typed for `HTMLTextAreaElement` assignable. */
@@ -62,8 +62,9 @@ function Textarea({
           }}
           className={cn(
             controlClasses,
-            'field-sizing-content h-auto min-h-24 py-2',
-            size === 'lg' && 'min-h-28 py-3',
+            // The multi-line control grows with its content instead of holding the input height.
+            'field-sizing-content h-auto min-h-24 resize-y items-start py-3',
+            size === 'lg' && 'min-h-28',
             className,
           )}
         />

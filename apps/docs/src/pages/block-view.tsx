@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import type { ItemManifest } from '../../../../packages/registry/registry/schema';
-import { loadRegistrySource } from '../catalog';
+import { loadExamples, loadRegistrySource } from '../catalog';
 import { CodeBlock, CommandChip } from '../code-block';
 
 const WIDTHS = [
@@ -49,12 +49,31 @@ function SourceTabs({ files }: { files: string[] }) {
   );
 }
 
+/** Titles of a block's examples, so a block with several variants (LTR/RTL, presets) can offer a picker. */
+function useExampleTitles(name: string): string[] {
+  const [titles, setTitles] = useState<string[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    loadExamples(name).then((module) => {
+      if (!cancelled) {
+        setTitles((module?.examples ?? []).map((example) => example.title));
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [name]);
+  return titles;
+}
+
 /**
  * One block as shadcn shows it: a toolbar (Preview / Code, viewport sizes, the
  * install command) over a real iframe, so media queries react to the frame width.
  */
 export function BlockView({ block, height = 640 }: { block: ItemManifest; height?: number }) {
   const [width, setWidth] = useState<(typeof WIDTHS)[number]['id']>('desktop');
+  const titles = useExampleTitles(block.name);
+  const [variant, setVariant] = useState(1);
   const frame = WIDTHS.find((entry) => entry.id === width) ?? WIDTHS[0];
   return (
     <section id={block.name} className="gap-field flex scroll-mt-24 flex-col">
@@ -97,11 +116,26 @@ export function BlockView({ block, height = 640 }: { block: ItemManifest; height
           </div>
         </div>
         <p className="text-b2 text-text-secondary">{block.description}</p>
+        {titles.length > 1 ? (
+          <div className="gap-field flex flex-wrap" role="group" aria-label="Preview variant">
+            {titles.map((title, index) => (
+              <Button
+                key={title}
+                size="sm"
+                variant={variant === index + 1 ? 'secondary' : 'ghost'}
+                aria-pressed={variant === index + 1}
+                onClick={() => setVariant(index + 1)}
+              >
+                {title}
+              </Button>
+            ))}
+          </div>
+        ) : null}
         <TabsContent value="preview" className="mt-field">
           <div className="border-stroke bg-surface-dim overflow-x-auto rounded-xl border p-2">
             <iframe
               title={`${block.title} preview`}
-              src={`#/preview/${block.name}`}
+              src={`#/preview/${block.name}${variant > 1 ? `/${variant}` : ''}`}
               loading="lazy"
               style={{ width: frame.width, height }}
               className={cn(

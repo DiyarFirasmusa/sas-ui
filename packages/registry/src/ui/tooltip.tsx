@@ -41,9 +41,8 @@ interface TooltipContentProps extends TooltipPrimitive.Popup.Props {
   sideOffset?: number;
   alignOffset?: number;
   /**
-   * Show a small arrow pointing at the trigger. Off by default (the library
-   * tooltip is a plain dark label); turn it on per tooltip, or wrap
-   * `TooltipContent` once in your app with `showArrow` defaulted to true.
+   * Show a small arrow pointing at the trigger (the dashboards' tooltips have
+   * one). Pass `false` for a plain label.
    */
   showArrow?: boolean;
 }
@@ -55,7 +54,7 @@ function TooltipContent({
   align = 'center',
   alignOffset,
   sideOffset = 6,
-  showArrow = false,
+  showArrow = true,
   ...props
 }: TooltipContentProps) {
   // Base UI resolves `inline-start`/`inline-end` against its own direction
@@ -74,7 +73,7 @@ function TooltipContent({
           <TooltipPrimitive.Popup
             data-slot="tooltip-content"
             className={cn(
-              'max-w-xs origin-(--transform-origin) rounded-md bg-text-primary px-field py-1 text-b3 text-background shadow-mid',
+              'max-w-xs origin-(--transform-origin) rounded-md border border-stroke bg-popover px-inline py-1.5 text-b3 text-text-primary shadow-mid',
               'transition-[opacity,scale] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
               'data-[instant]:duration-0 motion-reduce:transition-none',
               className,
@@ -86,7 +85,7 @@ function TooltipContent({
               <TooltipPrimitive.Arrow
                 data-slot="tooltip-arrow"
                 className={cn(
-                  'size-2 rotate-45 bg-text-primary',
+                  'size-2 rotate-45 bg-popover',
                   'data-[side=top]:-bottom-1 data-[side=bottom]:-top-1',
                   'data-[side=inline-start]:-end-1 data-[side=inline-end]:-start-1',
                 )}

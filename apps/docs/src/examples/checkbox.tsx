@@ -4,7 +4,7 @@ import type { Example } from '../example-types';
 
 function Row({ children, ...props }: React.ComponentProps<typeof Checkbox> & { children: string }) {
   return (
-    <label className="gap-field text-b1 flex items-center">
+    <label className="gap-field text-control-input flex items-center">
       <Checkbox {...props} /> {children}
     </label>
   );
@@ -43,6 +43,8 @@ function Parent() {
 export const examples: Example[] = [
   {
     title: 'States',
+    description:
+      'A 16px box with a 4px radius; the unchecked border is the ink mixed 50% into the page (3:1 in both themes) and focus draws a 3px glow.',
     render: () => (
       <div className="gap-field flex flex-col">
         <Row>Unchecked</Row>
@@ -55,4 +57,9 @@ export const examples: Example[] = [
     ),
   },
   { title: 'Indeterminate parent', render: () => <Parent /> },
+  {
+    title: 'Invalid',
+    description: 'aria-invalid draws the danger border and a 20% danger glow.',
+    render: () => <Row aria-invalid>Accept the terms</Row>,
+  },
 ];

@@ -200,6 +200,14 @@ describe('MultiSelect (static options)', () => {
     expect(await screen.findByText('لا توجد نتائج')).toBeInTheDocument();
   });
 
+  it('grows from the preset input height as chips wrap', () => {
+    render(<MultiSelect aria-label="Tags" options={tags} defaultValue={['urgent']} />);
+    expect(document.querySelector('[data-slot="multi-select"]')).toHaveClass(
+      'h-auto',
+      'min-h-control-input',
+    );
+  });
+
   it('has no axe violations', async () => {
     const { container } = render(
       <Field label="Tags" description="Used for routing">

@@ -21,5 +21,15 @@ export const examples: Example[] = [
       />
     ),
   },
-  { title: 'Plain', render: () => <SectionTitle title="Summary" level={3} /> },
+  {
+    title: 'Accent bar',
+    description:
+      'Without an icon the title gets the dashboards’ 4px accent bar; `gold` swaps its colour.',
+    render: () => (
+      <div className="gap-row flex flex-col">
+        <SectionTitle title="Summary" />
+        <SectionTitle title="Highlights" accent="gold" />
+      </div>
+    ),
+  },
 ];

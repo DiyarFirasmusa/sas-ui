@@ -8,7 +8,9 @@ import {
   initialExpandedIds,
   matchLength,
   normalizePath,
+  splitPinned,
   toggleExpanded,
+  toNavSections,
   totalBadge,
   type NavItem,
 } from '@/lib/nav-utils';
@@ -163,5 +165,37 @@ describe('filterNavItems', () => {
     const before = flattenNavItems(items).length;
     filterNavItems(items, () => false);
     expect(flattenNavItems(items)).toHaveLength(before);
+  });
+});
+
+describe('splitPinned', () => {
+  it('moves pinned top-level entries to their own list, keeping order', () => {
+    const list: NavItem[] = [
+      { id: 'a', label: 'A', href: '/a' },
+      { id: 'help', label: 'Help', href: '/help', pinned: true },
+      { id: 'b', label: 'B', href: '/b' },
+    ];
+    const { main, pinned } = splitPinned(list);
+    expect(main.map((item) => item.id)).toEqual(['a', 'b']);
+    expect(pinned.map((item) => item.id)).toEqual(['help']);
+  });
+});
+
+describe('toNavSections', () => {
+  it('turns each group into a labelled section and gathers runs of links', () => {
+    const sections = toNavSections(items);
+    expect(sections.map((section) => section.label)).toEqual([undefined, 'Sales', 'Settings']);
+    expect(sections[0]?.items.map((item) => item.id)).toEqual(['home']);
+    expect(sections[1]?.items.map((item) => item.id)).toEqual(['orders', 'new-order', 'reports']);
+  });
+
+  it('keeps separate runs apart and returns nothing for an empty tree', () => {
+    const list: NavItem[] = [
+      { id: 'a', label: 'A', href: '/a' },
+      { id: 'g', label: 'G', children: [{ id: 'c', label: 'C', href: '/c' }] },
+      { id: 'b', label: 'B', href: '/b' },
+    ];
+    expect(toNavSections(list).map((section) => section.id)).toEqual(['links-a', 'g', 'links-b']);
+    expect(toNavSections([])).toEqual([]);
   });
 });

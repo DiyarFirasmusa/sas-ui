@@ -27,14 +27,18 @@ describe('Checkbox', () => {
     expect(screen.getByRole('checkbox')).toHaveAttribute('aria-checked', 'mixed');
   });
 
-  it('draws a dash when indeterminate and a check when checked', () => {
+  it('draws a dash bar when indeterminate and a check when checked', () => {
     const { rerender } = render(<Checkbox aria-label="All" indeterminate />);
-    expect(document.querySelector('[data-slot="checkbox-indicator"] svg')).not.toBeNull();
-    const dash = document.querySelector('[data-slot="checkbox-indicator"] svg')?.innerHTML;
+    const indicator = () => document.querySelector('[data-slot="checkbox-indicator"]');
+    expect(indicator()?.querySelector('svg')).toBeNull();
+    expect(indicator()?.firstElementChild).toHaveClass('h-0.5', 'w-2.5');
     rerender(<Checkbox aria-label="All" checked />);
-    expect(document.querySelector('[data-slot="checkbox-indicator"] svg')?.innerHTML).not.toBe(
-      dash,
-    );
+    expect(indicator()?.querySelector('svg')).not.toBeNull();
+  });
+
+  it('is the 16px box with the 4px radius', () => {
+    render(<Checkbox aria-label="Accept" />);
+    expect(screen.getByRole('checkbox')).toHaveClass('size-4', 'rounded-[4px]');
   });
 
   it('leaves the mixed state on click', async () => {

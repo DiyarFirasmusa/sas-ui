@@ -13,20 +13,21 @@ const tabsListVariants = variants(
       variant: {
         underline:
           'gap-row border-b border-stroke data-[orientation=vertical]:gap-0 data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-e',
-        pill: 'w-fit gap-1 rounded-lg bg-hover-row p-1',
+        // The dashboards' track: a pill on the surface with a 1px stroke.
+        pill: 'w-full gap-field rounded-pill border border-stroke bg-surface p-1 data-[orientation=vertical]:w-fit data-[orientation=vertical]:rounded-lg',
       },
     },
-    defaultVariants: { variant: 'underline' },
+    defaultVariants: { variant: 'pill' },
   },
 );
 
 const tabsTriggerVariants = variants(
   [
     'relative inline-flex min-h-11 shrink-0 items-center justify-center gap-field whitespace-nowrap text-button-1 text-text-secondary select-none sm:min-h-9',
-    'outline-none transition-colors motion-reduce:transition-none',
+    'transition-colors motion-reduce:transition-none',
     'hover:text-text-primary data-[active]:text-text-primary',
-    'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-    'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-highlight',
+    'data-[disabled]:pointer-events-none data-[disabled]:text-text-inactive',
     "[&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
   ],
   {
@@ -36,16 +37,16 @@ const tabsTriggerVariants = variants(
         // follows the tab in both directions and while the list scrolls.
         underline:
           '-mb-px border-b-2 border-transparent px-1 data-[active]:border-primary data-[active]:text-primary-text data-[orientation=vertical]:mb-0 data-[orientation=vertical]:-me-px data-[orientation=vertical]:justify-start data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-e-2 data-[orientation=vertical]:px-inline',
-        pill: 'rounded-md px-inline data-[active]:bg-surface data-[active]:shadow-small',
+        pill: 'h-11 flex-[1_0_auto] rounded-pill px-[18px] text-button-2 data-[active]:bg-primary-light data-[active]:text-primary-text sm:h-10',
       },
     },
-    defaultVariants: { variant: 'underline' },
+    defaultVariants: { variant: 'pill' },
   },
 );
 
 type TabsVariant = NonNullable<VariantProps<typeof tabsListVariants>['variant']>;
 
-const TabsVariantContext = createContext<TabsVariant>('underline');
+const TabsVariantContext = createContext<TabsVariant>('pill');
 
 interface TabsProps extends Omit<TabsPrimitive.Root.Props, 'dir'> {
   variant?: TabsVariant;
@@ -57,7 +58,7 @@ interface TabsProps extends Omit<TabsPrimitive.Root.Props, 'dir'> {
  * Tabs with roving focus: Left/Right (mirrored in RTL) move between tabs,
  * Home/End jump to the ends. The list scrolls horizontally when it overflows.
  */
-function Tabs({ className, variant = 'underline', dir, ...props }: TabsProps) {
+function Tabs({ className, variant = 'pill', dir, ...props }: TabsProps) {
   // Base UI reads direction from its own context, not <html dir>; without
   // this the arrow keys would not mirror in Arabic.
   const locale = useLocale();
@@ -104,7 +105,7 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
       data-slot="tabs-content"
       className={cn(
         'flex-1 rounded-md outline-none',
-        'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-highlight',
         className,
       )}
       {...props}

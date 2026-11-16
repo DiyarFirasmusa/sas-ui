@@ -17,8 +17,17 @@ import { DataBadge, type DataBadgeStatus } from '@/components/ui/data-badge';
 import { DataTable, type DataTableState } from '@/components/ui/data-table';
 import { actionsColumn, type RowAction } from '@/components/ui/data-table-row-actions';
 import { FilterBar } from '@/components/ui/filter-bar';
-import { ClockIcon, DownloadIcon, EyeIcon, PlusIcon } from '@/components/ui/icons';
+import {
+  AlertTriangleIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  DownloadIcon,
+  EyeIcon,
+  FileIcon,
+  PlusIcon,
+} from '@/components/ui/icons';
 import { PageHeader } from '@/components/ui/page-header';
+import { StatCard, StatGrid } from '@/components/ui/stat-card';
 import { formatDate, parseISODate } from '@/lib/date-utils';
 import { countActiveFilters, type FilterDefinition } from '@/lib/filter-state';
 import { fillTemplate, formatCount } from '@/lib/format-message';
@@ -31,6 +40,15 @@ const STATUS_TONES: Record<LicenceStatus, DataBadgeStatus['tone']> = {
   suspended: 'orange',
   expired: 'red',
 };
+
+/** One KPI tile above the table. */
+interface ListPage01Stat {
+  id: string;
+  label: string;
+  value: ReactNode;
+  icon?: ReactNode;
+  tone?: 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'purple';
+}
 
 type ListPage01Labels = Partial<Record<keyof (typeof messages)['en'], string>>;
 
@@ -58,12 +76,18 @@ interface ListPage01Props extends Omit<React.ComponentProps<'div'>, 'children' |
   onExport?: (licences: Licence[]) => void;
   /** Runs after the user confirms; a rejection keeps the dialog open with the error. */
   onSuspend?: (licences: Licence[]) => void | Promise<void>;
+  /**
+   * KPI tiles under the header. Leave it out to show counts of the built-in
+   * sample set (and none for server rows); pass `[]` to hide them.
+   */
+  stats?: readonly ListPage01Stat[];
   labels?: ListPage01Labels;
 }
 
 /**
- * Resource list page: header with a primary action, search and filters with
- * chips, and a server-driven table with sorting, paging, row selection and a
+ * Resource list page in the dashboards' layout: header with a primary action,
+ * a row of KPI tiles, and one panel holding search and filters with chips over
+ * a server-driven table with sorting, paging, row selection and a
  * bulk bar. Rows become cards below the sm breakpoint. State is a plain
  * `query` object, controlled or kept inside.
  */
@@ -82,6 +106,7 @@ function ListPage01({
   onRenew,
   onExport,
   onSuspend,
+  stats: statsProp,
   labels: overrides,
   className,
   ...props
@@ -140,6 +165,47 @@ function ListPage01({
   const pageRows = rows ?? local?.rows ?? [];
   const totalRows = total ?? local?.total ?? pageRows.length;
   const filtered = countActiveFilters(filters, query.filters) > 0 || hasSearch(query);
+
+  const stats = useMemo<readonly ListPage01Stat[]>(() => {
+    if (statsProp !== undefined) {
+      return statsProp;
+    }
+    if (rows !== undefined) {
+      return [];
+    }
+    const count = (value: LicenceStatus) =>
+      sampleLicences.filter((licence) => licence.status === value).length;
+    return [
+      {
+        id: 'total',
+        label: labels.statTotal,
+        value: formatCount(sampleLicences.length),
+        icon: <FileIcon />,
+        tone: 'primary',
+      },
+      {
+        id: 'active',
+        label: labels.statusActive,
+        value: formatCount(count('active')),
+        icon: <CheckCircleIcon />,
+        tone: 'success',
+      },
+      {
+        id: 'pending',
+        label: labels.statusPending,
+        value: formatCount(count('pending')),
+        icon: <ClockIcon />,
+        tone: 'warning',
+      },
+      {
+        id: 'expired',
+        label: labels.statusExpired,
+        value: formatCount(count('expired')),
+        icon: <AlertTriangleIcon />,
+        tone: 'danger',
+      },
+    ];
+  }, [labels, rows, statsProp]);
 
   const columns = useMemo<ColumnDef<Licence>[]>(() => {
     const date = (value: string) => {
@@ -241,8 +307,8 @@ function ListPage01({
         : { status: 'success', refetching };
 
   return (
-    <div className={cn('bg-background p-row sm:p-page min-h-svh', className)} {...props}>
-      <div className="gap-row mx-auto flex w-full max-w-6xl flex-col">
+    <div className={cn('bg-background p-4 md:p-page min-h-svh', className)} {...props}>
+      <div className="gap-card flex w-full flex-col">
         <PageHeader
           title={labels.title}
           subtitle={labels.description}
@@ -255,16 +321,33 @@ function ListPage01({
             ) : null
           }
         />
-        <FilterBar
-          filters={filters}
-          value={query.filters}
-          searchPlaceholder={labels.searchPlaceholder}
-          onChange={(next) => {
-            setSelection({});
-            updateQuery({ ...query, filters: next, page: 1 });
-          }}
-        />
+        {stats.length > 0 ? (
+          <section aria-label={labels.summary}>
+            <StatGrid>
+              {stats.map((stat) => (
+                <StatCard
+                  key={stat.id}
+                  label={stat.label}
+                  value={stat.value}
+                  icon={stat.icon}
+                  tone={stat.tone}
+                />
+              ))}
+            </StatGrid>
+          </section>
+        ) : null}
         <DataTable
+          toolbar={
+            <FilterBar
+              filters={filters}
+              value={query.filters}
+              searchPlaceholder={labels.searchPlaceholder}
+              onChange={(next) => {
+                setSelection({});
+                updateQuery({ ...query, filters: next, page: 1 });
+              }}
+            />
+          }
           caption={labels.caption}
           columns={columns}
           data={pageRows}
@@ -345,4 +428,4 @@ function hasSearch(query: ListPage01Query): boolean {
 }
 
 export { ListPage01 };
-export type { ListPage01Labels, ListPage01Props };
+export type { ListPage01Labels, ListPage01Props, ListPage01Stat };

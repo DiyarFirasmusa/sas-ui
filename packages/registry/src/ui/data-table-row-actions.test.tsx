@@ -95,3 +95,12 @@ describe('actionsColumn', () => {
     expect(actionsColumn<Person>(() => [], { sticky: true }).meta).toMatchObject({ sticky: 'end' });
   });
 });
+
+describe('RowActions look', () => {
+  it('draws the borderless 32px "…" trigger that tints while open', () => {
+    renderWithLocale(<RowActions actions={actions()} />);
+    const trigger = screen.getByRole('button', { name: 'Actions' });
+    expect(trigger).toHaveClass('size-control-sm', 'rounded-control', 'border-transparent');
+    expect(trigger.className).toContain('data-[popup-open]:bg-hover-row');
+  });
+});

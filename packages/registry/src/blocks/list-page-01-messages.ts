@@ -29,6 +29,8 @@ const messages: Messages<
   | 'noResultsTitle'
   | 'noResultsDescription'
   | 'loadError'
+  | 'summary'
+  | 'statTotal'
   | 'statusActive'
   | 'statusPending'
   | 'statusSuspended'
@@ -67,6 +69,8 @@ const messages: Messages<
     noResultsTitle: 'No licences match',
     noResultsDescription: 'Try a different search or clear the filters.',
     loadError: 'We could not load the licences.',
+    summary: 'Summary',
+    statTotal: 'All licences',
     statusActive: 'Active',
     statusPending: 'Pending review',
     statusSuspended: 'Suspended',
@@ -105,6 +109,8 @@ const messages: Messages<
     noResultsTitle: 'لا توجد تراخيص مطابقة',
     noResultsDescription: 'جرّب بحثًا مختلفًا أو أزل عوامل التصفية.',
     loadError: 'تعذّر تحميل التراخيص.',
+    summary: 'الملخص',
+    statTotal: 'كل التراخيص',
     statusActive: 'سارٍ',
     statusPending: 'قيد المراجعة',
     statusSuspended: 'معلّق',

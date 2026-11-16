@@ -67,3 +67,12 @@ describe('Alert', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('Alert look', () => {
+  it('is a borderless 12px-radius tint with the tone container', () => {
+    render(<Alert variant="danger" title="Failed" />);
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveClass('rounded-lg', 'p-inline', 'bg-tag-red-container');
+    expect(alert).not.toHaveClass('border');
+  });
+});

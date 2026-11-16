@@ -101,6 +101,20 @@ describe('NumberInput', () => {
     expect(screen.getByRole('button', { name: 'إنقاص' })).toBeInTheDocument();
   });
 
+  it('puts the 28px steppers together at the end edge, after the input', () => {
+    render(<NumberInput aria-label="Qty" />);
+    const input = screen.getByRole('textbox', { name: 'Qty' });
+    const decrease = screen.getByRole('button', { name: 'Decrease' });
+    const increase = screen.getByRole('button', { name: 'Increase' });
+    expect(input.compareDocumentPosition(decrease) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      decrease.compareDocumentPosition(increase) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(decrease).toHaveClass('size-7', 'rounded-control');
+    expect(increase).toHaveClass('size-7', 'rounded-control');
+    expect(input).toHaveClass('text-control-input', 'text-start');
+  });
+
   it('has no axe violations', async () => {
     const { container } = render(
       <Field label="Quantity" description="Pieces per box">

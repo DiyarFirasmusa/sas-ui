@@ -50,7 +50,38 @@ describe('ShellUserMenu', () => {
   it('shows the name and email in the sidebar variant', () => {
     renderWithLocale(<ShellUserMenu user={user} variant="sidebar" />);
     expect(screen.getByText('Layla Hassan')).toBeInTheDocument();
-    expect(screen.getByText('layla@example.com')).toHaveAttribute('dir', 'ltr');
+    expect(screen.getByText('layla@example.com')).toBeInTheDocument();
+  });
+
+  it('prefers the role over the email under the name', () => {
+    renderWithLocale(
+      <ShellUserMenu user={{ ...user, role: 'Operations manager' }} variant="sidebar" />,
+    );
+    expect(screen.getByText('Operations manager')).toBeInTheDocument();
+    expect(screen.queryByText('layla@example.com')).not.toBeInTheDocument();
+  });
+
+  it('is the account chip in the topbar variant and opens the same entries', async () => {
+    const onSignOut = vi.fn();
+    renderWithLocale(
+      <ShellUserMenu
+        user={{ ...user, role: 'Operations manager' }}
+        variant="topbar"
+        onProfile={() => {}}
+        onSignOut={onSignOut}
+      />,
+    );
+    const chip = screen.getByRole('button', { name: 'Account menu for Layla Hassan' });
+    expect(chip).toHaveAttribute('data-slot', 'topbar-account');
+    await userEvent.click(chip);
+    expect(await screen.findByRole('menuitem', { name: 'Profile' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Sign out' }));
+    expect(onSignOut).toHaveBeenCalledOnce();
+  });
+
+  it('renders nothing for the drawer-only sidebar block outside a drawer', () => {
+    renderWithLocale(<ShellUserMenu user={user} variant="sidebar" drawerOnly />);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
   it('renders Arabic labels', async () => {

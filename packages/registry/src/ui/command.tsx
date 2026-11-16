@@ -162,7 +162,7 @@ function CommandDialog({ title, commandProps, children, ...props }: CommandDialo
       <DialogPrimitive.Portal>
         <DialogPrimitive.Backdrop
           className={cn(
-            'fixed inset-0 z-50 bg-scrim transition-opacity duration-200',
+            'fixed inset-0 z-50 bg-scrim backdrop-blur-[12px] transition-opacity duration-200',
             'data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 motion-reduce:transition-none',
           )}
         />
@@ -170,7 +170,7 @@ function CommandDialog({ title, commandProps, children, ...props }: CommandDialo
           data-slot="command-dialog-content"
           className={cn(
             'fixed start-1/2 top-[10dvh] z-50 flex max-h-[80dvh] w-[calc(100vw-2rem)] max-w-xl ltr:-translate-x-1/2 rtl:translate-x-1/2',
-            'rounded-modal border border-stroke bg-popover text-popover-foreground shadow-xlarge outline-none',
+            'rounded-modal border border-stroke-strong bg-surface-elevated text-text-primary shadow-xlarge outline-none',
             'transition-[opacity,scale] duration-150 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0',
             'motion-reduce:transition-none',
           )}

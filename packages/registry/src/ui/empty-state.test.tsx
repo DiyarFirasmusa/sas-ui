@@ -54,3 +54,13 @@ describe('EmptyState', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('EmptyState tile', () => {
+  it('is the 64px rounded tile of the dashboards, red-tinted for errors', () => {
+    const { container, rerender } = render(<EmptyState />);
+    const tile = () => container.querySelector('[data-slot="empty-state-icon"]');
+    expect(tile()).toHaveClass('size-16', 'rounded-2xl');
+    rerender(<EmptyState tone="danger" />);
+    expect(tile()).toHaveClass('bg-danger/10', 'text-danger');
+  });
+});

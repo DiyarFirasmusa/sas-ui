@@ -77,6 +77,34 @@ describe('Login02', () => {
     expect(panel).toHaveTextContent('L');
   });
 
+  it('is one bordered, shadowed card split in two, with the form side as the only main region', () => {
+    renderWithLocale(<Login02 brand="SAS Suite" />);
+    const card = screen.getByRole('main').parentElement;
+    expect(card).toHaveClass(
+      'rounded-modal',
+      'border',
+      'border-stroke',
+      'bg-surface',
+      'shadow-large',
+      'lg:grid-cols-2',
+    );
+    expect(document.querySelector('[data-slot="login-brand-panel"]')).toHaveClass(
+      'from-auth-panel-from',
+      'to-auth-panel-to',
+      'hidden',
+      'lg:flex',
+    );
+    expect(screen.getAllByRole('main')).toHaveLength(1);
+  });
+
+  it('puts the switcher in the top corner of the form side', () => {
+    renderWithLocale(<Login02 switcher={<button type="button">Switch</button>} />);
+    expect(screen.getByRole('main')).toContainElement(
+      screen.getByRole('button', { name: 'Switch' }),
+    );
+    expect(document.querySelector('[data-slot="login-switcher"]')).toHaveClass('justify-end');
+  });
+
   it('renders Arabic labels with a left-to-right email', () => {
     renderWithLocale(<Login02 />, { locale: 'ar' });
     expect(screen.getByRole('heading', { name: 'أهلاً بعودتك' })).toBeInTheDocument();

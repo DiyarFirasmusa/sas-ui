@@ -17,16 +17,14 @@ const messages: Messages<'dismiss'> = {
 };
 
 const alertVariants = variants(
-  'relative flex w-full items-start gap-inline rounded-xl border p-row text-start text-text-primary',
+  'relative flex w-full items-start gap-field rounded-lg p-inline text-start text-text-primary',
   {
     variants: {
       variant: {
-        info: 'border-tag-cyan/30 bg-tag-cyan-container [&_[data-slot=alert-icon]]:text-tag-cyan',
-        success:
-          'border-tag-green/30 bg-tag-green-container [&_[data-slot=alert-icon]]:text-tag-green',
-        warning:
-          'border-tag-yellow/30 bg-tag-yellow-container [&_[data-slot=alert-icon]]:text-tag-yellow',
-        danger: 'border-tag-red/30 bg-tag-red-container [&_[data-slot=alert-icon]]:text-tag-red',
+        info: 'bg-tag-cyan-container [&_[data-slot=alert-icon]]:text-tag-cyan',
+        success: 'bg-tag-green-container [&_[data-slot=alert-icon]]:text-tag-green',
+        warning: 'bg-tag-yellow-container [&_[data-slot=alert-icon]]:text-tag-yellow',
+        danger: 'bg-tag-red-container [&_[data-slot=alert-icon]]:text-tag-red',
       },
     },
     defaultVariants: { variant: 'info' },
@@ -77,7 +75,7 @@ function Alert({
   const resolved: AlertVariant = variant ?? 'info';
   const Icon = ICONS[resolved];
   const urgent = resolved === 'danger' || resolved === 'warning';
-  const glyph = icon === undefined ? <Icon className="size-5" /> : icon;
+  const glyph = icon === undefined ? <Icon className="size-4" /> : icon;
 
   return (
     <div

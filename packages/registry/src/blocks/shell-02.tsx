@@ -16,6 +16,8 @@ import { Button } from '@/components/ui/button';
 import { BuildingIcon, MenuIcon } from '@/components/ui/icons';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { SidebarNav } from '@/components/ui/sidebar-nav';
+import { TopbarContext } from '@/components/ui/topbar';
+import { TopbarLanguageMenu, TopbarThemeSwitch } from '@/components/ui/topbar-actions';
 import { useLabels, useLocale, type Locale, type Messages } from '@/lib/locale';
 import type { NavItem } from '@/lib/nav-utils';
 import type { ColorMode } from '@/lib/theme';
@@ -37,7 +39,7 @@ const messages: Messages<'brand' | 'pages' | 'menu' | 'skip'> = {
   },
 };
 
-const containerVariants = variants('mx-auto w-full p-page max-sm:p-row', {
+const containerVariants = variants('mx-auto w-full p-4 md:p-page', {
   variants: {
     width: {
       md: 'max-w-3xl',
@@ -138,79 +140,85 @@ function Shell02({
       >
         {labels.skip}
       </a>
-      <header className="border-stroke bg-surface gap-row px-row sticky top-0 z-30 flex h-16 shrink-0 items-center border-b">
-        <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            aria-label={labels.menu}
-            aria-haspopup="dialog"
-            aria-expanded={menuOpen}
-            className="max-lg:size-11 lg:hidden"
-            onClick={() => setMenuOpen(true)}
-          >
-            <MenuIcon />
-          </Button>
-          <SheetContent
-            side="start"
-            className="border-sidebar-border bg-sidebar text-sidebar-foreground w-72 max-w-[85vw] p-0 lg:hidden"
-          >
-            <SheetTitle className="sr-only">{labels.brand}</SheetTitle>
-            <div className="border-sidebar-border px-inline flex h-16 shrink-0 items-center border-b pe-14">
-              <span dir="auto" className="text-h5 truncate">
-                {brand?.title ?? labels.brand}
-              </span>
-            </div>
-            <div className="p-field min-h-0 flex-1 overflow-y-auto">
-              <SidebarNav
-                items={navItems}
-                currentPath={currentPath}
-                accordion
-                onNavigate={navigate}
-                renderLink={renderLink}
-              />
-            </div>
-          </SheetContent>
-        </Sheet>
+      <TopbarContext value="surface">
+        <header
+          data-slot="topbar"
+          className="border-sidebar-border bg-surface sticky top-0 z-30 flex h-18 shrink-0 items-center gap-6 border-b px-4 md:px-6"
+        >
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label={labels.menu}
+              aria-haspopup="dialog"
+              aria-expanded={menuOpen}
+              className="max-lg:size-11 lg:hidden"
+              onClick={() => setMenuOpen(true)}
+            >
+              <MenuIcon />
+            </Button>
+            <SheetContent
+              side="start"
+              className="border-sidebar-border bg-sidebar text-sidebar-foreground w-61 max-w-[85vw] p-4 lg:hidden"
+            >
+              <SheetTitle className="sr-only">{labels.brand}</SheetTitle>
+              <div className="flex shrink-0 items-center gap-2 pe-10">
+                {brand?.logo ?? <BuildingIcon className="size-6" />}
+                <span dir="auto" className="text-h4 truncate">
+                  {brand?.title ?? labels.brand}
+                </span>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto">
+                <SidebarNav
+                  items={navItems}
+                  currentPath={currentPath}
+                  accordion
+                  onNavigate={navigate}
+                  renderLink={renderLink}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
 
-        <div className="gap-inline flex shrink-0 items-center">
-          {brand?.logo ?? (
-            <span className="bg-primary text-primary-foreground rounded-control flex size-9 items-center justify-center">
-              <BuildingIcon className="size-5" />
+          <div className="flex shrink-0 items-center gap-2">
+            {brand?.logo ?? <BuildingIcon className="size-6" />}
+            <span dir="auto" className="text-h4 max-sm:hidden">
+              {brand?.title ?? labels.brand}
             </span>
-          )}
-          <span dir="auto" className="text-h5 max-sm:hidden">
-            {brand?.title ?? labels.brand}
-          </span>
-        </div>
+          </div>
 
-        <ShellTopNav
-          items={navItems}
-          currentPath={currentPath}
-          onNavigate={onNavigate}
-          renderLink={renderLink}
-          className="min-w-0 flex-1 max-lg:hidden"
-        />
-        <div className="flex-1 lg:hidden" />
+          <ShellTopNav
+            items={navItems}
+            currentPath={currentPath}
+            onNavigate={onNavigate}
+            renderLink={renderLink}
+            className="min-w-0 flex-1 max-lg:hidden"
+          />
+          <div className="flex-1 lg:hidden" />
 
-        <div className="gap-field flex shrink-0 items-center">
-          <ShellSearch items={searchItems} onSelect={selectCommand} />
-          <ShellNotifications
-            notifications={notifications ?? sampleNotifications(locale)}
-            onSelect={onNotificationSelect}
-            onMarkAllRead={onMarkAllRead}
-          />
-          <ShellUserMenu
-            user={user ?? sampleUser(locale)}
-            onProfile={onProfile}
-            onSignOut={onSignOut}
-            onLocaleChange={onLocaleChange}
-            mode={mode}
-            onModeChange={onModeChange}
-          />
-        </div>
-      </header>
+          <div className="gap-inline flex shrink-0 items-center">
+            <ShellSearch items={searchItems} onSelect={selectCommand} />
+            {onModeChange ? (
+              <TopbarThemeSwitch mode={mode ?? 'system'} onModeChange={onModeChange} />
+            ) : null}
+            {onLocaleChange ? (
+              <TopbarLanguageMenu locale={locale} onLocaleChange={onLocaleChange} />
+            ) : null}
+            <ShellNotifications
+              notifications={notifications ?? sampleNotifications(locale)}
+              onSelect={onNotificationSelect}
+              onMarkAllRead={onMarkAllRead}
+            />
+            <ShellUserMenu
+              variant="topbar"
+              user={user ?? sampleUser(locale)}
+              onProfile={onProfile}
+              onSignOut={onSignOut}
+            />
+          </div>
+        </header>
+      </TopbarContext>
       <main
         id={mainId}
         tabIndex={-1}

@@ -3,6 +3,13 @@
   "type": "ui",
   "category": "layout",
   "title": "App shell",
-  "description": "Application frame: collapsible sidebar at the inline start, a topbar with a menu button, a main region with skip link, and a drawer on mobile.",
-  "files": ["ui/app-shell.tsx", "ui/topbar.tsx"]
+  "description": "The dashboards' application frame: 244px sidebar at the inline start (rail on desktop, drawer with a phone header below md), a top bar (sidebar, surface or hr look) with title, theme switch, language menu, notifications bell and account chip, a main region with skip link.",
+  "files": [
+    "ui/app-shell.tsx",
+    "ui/topbar.tsx",
+    "ui/topbar-actions.tsx",
+    "ui/topbar-account.tsx",
+    "ui/notifications-menu.tsx",
+    "ui/topbar-icons.tsx"
+  ]
 }

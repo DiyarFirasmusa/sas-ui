@@ -83,7 +83,7 @@ function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
 }
 
 const segmentClasses = cn(
-  'h-7 w-7 rounded-sm bg-transparent text-center text-b1 text-text-primary tabular-nums outline-none',
+  'h-7 w-7 rounded-sm bg-transparent text-center text-control-input text-text-primary tabular-nums outline-none',
   'caret-transparent placeholder:text-text-muted',
   'focus:bg-primary-light focus:text-primary-text',
   'disabled:cursor-not-allowed',
@@ -384,12 +384,12 @@ function TimePicker({
         }}
         className={cn(
           controlClasses,
-          'w-fit gap-0.5 focus-within:border-primary-highlight focus-within:ring-2 focus-within:ring-ring/40',
+          'w-fit gap-0.5',
           disabled && 'cursor-not-allowed bg-disabled-container text-text-inactive',
           className,
         )}
       >
-        <ClockIcon className="text-text-muted me-1" />
+        <ClockIcon className="text-text-secondary me-1 size-4 shrink-0" />
         <input {...segmentProps('hour')} />
         <span aria-hidden="true" className="text-text-muted">
           :

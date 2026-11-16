@@ -20,7 +20,7 @@ describe('Button', () => {
       </Button>,
     );
     const button = screen.getByRole('button', { name: 'Delete' });
-    expect(button).toHaveClass('h-8', 'text-danger-foreground', 'bg-info');
+    expect(button).toHaveClass('h-control-sm', 'text-danger-foreground', 'bg-info');
     expect(button).not.toHaveClass('bg-danger');
   });
 
@@ -89,6 +89,83 @@ describe('Button', () => {
     expect(pill).toHaveAttribute('data-size', 'pill');
   });
 
+  it('sizes every button from the geometry tokens, never from pixels', () => {
+    render(
+      <>
+        <Button>Default</Button>
+        <Button size="xs">Xs</Button>
+        <Button size="sm">Sm</Button>
+        <Button size="lg">Lg</Button>
+        <Button size="icon" aria-label="Icon" />
+        <Button size="icon-xs" aria-label="Icon xs" />
+        <Button size="icon-sm" aria-label="Icon sm" />
+        <Button size="icon-lg" aria-label="Icon lg" />
+      </>,
+    );
+    const get = (name: string) => screen.getByRole('button', { name });
+    expect(get('Default')).toHaveClass(
+      'h-control',
+      'px-control-x',
+      'rounded-control',
+      'text-control',
+    );
+    expect(get('Xs')).toHaveClass('h-control-xs', 'px-inline', 'text-label');
+    expect(get('Sm')).toHaveClass('h-control-sm', 'px-row', 'text-button-2');
+    expect(get('Lg')).toHaveClass('h-control-lg');
+    expect(get('Lg').className).toContain('px-[calc(var(--control-px,16px)+4px)]');
+    expect(get('Icon').className).toContain('size-[min(calc(var(--control-h,38px)+2px)');
+    expect(get('Icon xs')).toHaveClass('size-control-xs', 'px-0');
+    expect(get('Icon sm')).toHaveClass('size-control-sm', 'px-0');
+    expect(get('Icon lg')).toHaveClass('size-control-lg', 'px-0');
+  });
+
+  it("carries the app's states: 1px border, focus outline, 150ms transition, disabled fill", () => {
+    render(<Button>Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass(
+      'border',
+      'border-transparent',
+      'duration-150',
+      'focus-visible:outline-2',
+      'focus-visible:outline-offset-2',
+      'focus-visible:outline-primary-highlight',
+      'disabled:bg-disabled-container',
+      'disabled:text-text-inactive',
+      'disabled:shadow-none',
+      'aria-disabled:bg-disabled-container',
+      'shadow-primary',
+      'hover:bg-primary-hover',
+    );
+  });
+
+  it.each([
+    ['default', ['bg-primary', 'text-primary-foreground']],
+    ['navy', ['bg-primary-container', 'text-primary-foreground']],
+    ['outline', ['border-stroke', 'bg-text-primary/6', 'text-text-primary', 'hover:bg-hover-row']],
+    [
+      'outline-primary',
+      ['border-primary-highlight', 'bg-transparent', 'text-primary-text', 'hover:bg-primary-light'],
+    ],
+    ['secondary', ['bg-primary-light', 'text-primary-text']],
+    ['destructive', ['bg-danger', 'text-danger-foreground']],
+    ['destructive-soft', ['bg-tag-red-container', 'text-tag-red', 'hover:bg-tag-red/12']],
+    ['link', ['text-primary-text', 'hover:underline']],
+  ] as const)('keeps the %s variant on the app tones', (variant, classes) => {
+    render(<Button variant={variant}>Tone</Button>);
+    expect(screen.getByRole('button', { name: 'Tone' })).toHaveClass(...classes);
+  });
+
+  it('keeps a disabled link transparent instead of the grey chip', () => {
+    render(
+      <Button variant="link" disabled>
+        More
+      </Button>,
+    );
+    expect(screen.getByRole('button', { name: 'More' })).toHaveClass(
+      'disabled:bg-transparent',
+      'aria-disabled:bg-transparent',
+    );
+  });
+
   it('adds a navy variant and a 40px pill size', () => {
     render(
       <Button variant="navy" size="pill">
@@ -113,7 +190,13 @@ describe('Button', () => {
       );
       const link = screen.getByRole('button', { name: 'More' });
       expect(link).toHaveClass('h-auto', 'p-0');
-      expect(link).not.toHaveClass('h-10', 'h-11', 'h-9.5', 'h-8', 'h-7');
+      expect(link).not.toHaveClass(
+        'h-10',
+        'h-control',
+        'h-control-lg',
+        'h-control-sm',
+        'h-control-xs',
+      );
     },
   );
 

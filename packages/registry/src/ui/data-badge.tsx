@@ -18,14 +18,23 @@ interface DataBadgeProps extends Omit<BadgeProps, 'tone' | 'children'> {
 }
 
 /**
- * Turns a backend enum into a coloured badge. Values the map does not know
+ * Turns a backend enum into a status badge: a small dot and the status text
+ * in the tone colour, the way the dashboards' tables show it. Pass
+ * `dot={false}` for a tinted chip instead. Values the map does not know
  * render as a neutral badge with the raw value, so a new backend status is
  * visible (not blank) before the front end learns about it.
  */
-function DataBadge({ value, statusMap, emptyLabel = '—', ...props }: DataBadgeProps) {
+function DataBadge({
+  value,
+  statusMap,
+  emptyLabel = '—',
+  size = 'sm',
+  dot = true,
+  ...props
+}: DataBadgeProps) {
   if (value === null || value === undefined || value === '') {
     return (
-      <Badge data-slot="data-badge" tone="neutral" {...props}>
+      <Badge data-slot="data-badge" tone="neutral" size={size} dot={dot} {...props}>
         {emptyLabel}
       </Badge>
     );
@@ -34,7 +43,14 @@ function DataBadge({ value, statusMap, emptyLabel = '—', ...props }: DataBadge
   // hasOwn: a backend value such as "constructor" must not resolve to Object.prototype.
   const status = Object.hasOwn(statusMap, key) ? statusMap[key] : undefined;
   return (
-    <Badge data-slot="data-badge" data-value={key} tone={status?.tone ?? 'neutral'} {...props}>
+    <Badge
+      data-slot="data-badge"
+      data-value={key}
+      tone={status?.tone ?? 'neutral'}
+      size={size}
+      dot={dot}
+      {...props}
+    >
       {status?.label ?? key}
     </Badge>
   );

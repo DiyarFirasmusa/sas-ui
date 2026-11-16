@@ -20,22 +20,23 @@ const messages: Messages<'emptyTitle' | 'noResultsTitle' | 'noResultsDescription
 const emptyStateVariants = variants('flex flex-col items-center justify-center text-center', {
   variants: {
     size: {
-      compact: 'gap-field px-row py-panel',
-      page: 'min-h-80 gap-inline px-row py-page',
+      compact: 'gap-row px-row py-panel',
+      page: 'min-h-80 gap-row px-row py-page',
     },
   },
   defaultVariants: { size: 'compact' },
 });
 
+// The dashboards' table empty/error tile: 64px, 16px radius, a faint tint of the text colour.
 const iconTileVariants = variants(
-  'inline-flex items-center justify-center rounded-pill [&>svg]:size-1/2',
+  'inline-flex size-16 items-center justify-center rounded-2xl [&>svg]:size-7',
   {
     variants: {
-      size: { compact: 'size-12', page: 'size-16' },
+      size: { compact: '', page: '' },
       tone: {
-        neutral: 'bg-surface-dim text-text-muted',
+        neutral: 'bg-[color-mix(in_oklab,var(--text-primary)_3.5%,var(--surface))] text-text-muted',
         warning: 'bg-tag-yellow-container text-tag-yellow',
-        danger: 'bg-tag-red-container text-tag-red',
+        danger: 'bg-danger/10 text-danger',
       },
     },
     defaultVariants: { size: 'compact', tone: 'neutral' },
@@ -90,7 +91,7 @@ function EmptyState({
           {glyph}
         </span>
       )}
-      <TitleElement className={cn('text-text-primary', size === 'page' ? 'text-h3' : 'text-h5')}>
+      <TitleElement className={cn('text-text-primary', size === 'page' ? 'text-h3' : 'text-h4')}>
         {heading}
       </TitleElement>
       {body ? <p className="text-b2 text-text-secondary max-w-md">{body}</p> : null}

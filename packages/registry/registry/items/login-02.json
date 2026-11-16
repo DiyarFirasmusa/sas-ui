@@ -4,5 +4,5 @@
   "category": "blocks",
   "title": "Login 02 — split sign-in",
   "description": "Two-column sign-in: a brand panel on the preset's auth gradient beside a validated form, with a language/theme switch slot.",
-  "files": ["blocks/login-02.tsx"]
+  "files": ["blocks/login-02.tsx", "blocks/auth-switchers.tsx"]
 }

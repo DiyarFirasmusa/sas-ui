@@ -193,3 +193,30 @@ describe('ConfirmDialog', () => {
     await expectNoA11yViolations();
   });
 });
+
+describe('ConfirmDialog look', () => {
+  it('puts the confirm action first and uses the 420px dialog', async () => {
+    renderWithLocale(<ConfirmDialog open title="Delete trip" onConfirm={() => {}} />);
+    const dialog = await screen.findByRole('dialog', { name: 'Delete trip' });
+    expect(dialog).toHaveClass('max-w-[26.25rem]');
+    const buttons = screen.getAllByRole('button').map((button) => button.textContent);
+    expect(buttons).toEqual(['Confirm', 'Cancel']);
+  });
+
+  it('draws an optional glyph in the danger tone for destructive confirmations', async () => {
+    renderWithLocale(
+      <ConfirmDialog open destructive icon={<svg />} title="Delete trip" onConfirm={() => {}} />,
+    );
+    await screen.findByRole('dialog');
+    expect(document.querySelector('[data-slot="dialog-icon"]')).toHaveAttribute(
+      'data-tone',
+      'danger',
+    );
+  });
+
+  it('has no corner close button, as the footer already cancels', async () => {
+    renderWithLocale(<ConfirmDialog open title="Delete trip" onConfirm={() => {}} />);
+    await screen.findByRole('dialog');
+    expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+  });
+});

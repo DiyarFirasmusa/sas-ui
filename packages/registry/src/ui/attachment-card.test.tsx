@@ -51,3 +51,50 @@ describe('AttachmentCard', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('AttachmentCard with a preview', () => {
+  it('draws the grid card: preview, type tag, size and hover actions', async () => {
+    const onView = vi.fn();
+    const onRemove = vi.fn();
+    const { container } = renderWithLocale(
+      <AttachmentCard
+        name="id.jpg"
+        size={2048}
+        typeLabel="ID card"
+        preview={<img alt="" src="data:," />}
+        onView={onView}
+        onRemove={onRemove}
+      />,
+    );
+    const card = container.querySelector('[data-slot="attachment-card"]');
+    expect(card).toHaveAttribute('data-variant', 'preview');
+    expect(screen.getByText('ID card')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'View: id.jpg' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Remove: id.jpg' }));
+    expect(onView).toHaveBeenCalledOnce();
+    expect(onRemove).toHaveBeenCalledOnce();
+  });
+
+  it('makes the preview a pressed toggle when selectable', async () => {
+    const onSelect = vi.fn();
+    const { container } = renderWithLocale(
+      <AttachmentCard name="id.jpg" preview={<span />} selectable selected onSelect={onSelect} />,
+    );
+    const toggle = screen.getByRole('button', { name: 'id.jpg' });
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    expect(container.querySelector('[data-slot="attachment-card"]')).toHaveAttribute(
+      'data-selected',
+    );
+    await userEvent.click(toggle);
+    expect(onSelect).toHaveBeenCalledOnce();
+  });
+
+  it('labels the view action in Arabic and has no axe violations', async () => {
+    const { container } = renderWithLocale(
+      <AttachmentCard name="هوية.jpg" typeLabel="هوية" preview={<span />} onView={() => {}} />,
+      { locale: 'ar' },
+    );
+    expect(screen.getByRole('button', { name: 'عرض: هوية.jpg' })).toBeInTheDocument();
+    await expectNoA11yViolations(container);
+  });
+});

@@ -158,7 +158,7 @@ function Wizard01({
   if (submittedEmail !== null) {
     const [doneBefore, doneAfter] = labels.doneDescription.split('{email}');
     return (
-      <div className={cn('min-h-svh bg-background p-row sm:p-page', className)} {...props}>
+      <div className={cn('min-h-svh bg-background p-4 md:p-page', className)} {...props}>
         <div className="mx-auto flex w-full max-w-3xl flex-col">
           <EmptyState
             ref={confirmation}
@@ -188,7 +188,7 @@ function Wizard01({
 
   return (
     <div className={cn('min-h-svh bg-background', className)} {...props}>
-      <div className="gap-card p-row sm:p-page mx-auto flex w-full max-w-3xl flex-col">
+      <div className="gap-card md:p-page mx-auto flex w-full max-w-3xl flex-col p-4">
         <PageHeader title={labels.title} subtitle={labels.subtitle} />
         <Stepper
           steps={stepLabels.map((item, index) => ({

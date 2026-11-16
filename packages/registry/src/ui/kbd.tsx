@@ -6,7 +6,7 @@ interface KbdProps extends React.ComponentProps<'kbd'> {
 }
 
 const capClasses =
-  'inline-flex h-5 min-w-5 items-center justify-center rounded-sm bg-kbd px-1 text-label text-text-secondary select-none';
+  'inline-flex h-5 min-w-5 items-center justify-center rounded-[var(--radius-kbd,6px)] bg-kbd px-1 text-label text-text-secondary select-none';
 
 /**
  * Keyboard key cap. Key names are Latin symbols, so the cap is always

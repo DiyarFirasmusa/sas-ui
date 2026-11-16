@@ -166,3 +166,23 @@ describe('FormDialog', () => {
     await expectNoA11yViolations();
   });
 });
+
+describe('FormDialog look', () => {
+  it('submits from the first footer button and sizes through the dialog scale', async () => {
+    renderWithLocale(<Harness size="lg" />);
+    const dialog = await screen.findByRole('dialog', { name: 'New client' });
+    expect(dialog).toHaveClass('max-w-[56.25rem]');
+    const buttons = screen.getAllByRole('button').map((button) => button.textContent);
+    expect(buttons.slice(-2)).toEqual(['Save', 'Cancel']);
+    expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+  });
+
+  it('draws the optional heading glyph', async () => {
+    renderWithLocale(<Harness icon={<svg />} iconTone="info" />);
+    await screen.findByRole('dialog');
+    expect(document.querySelector('[data-slot="dialog-icon"]')).toHaveAttribute(
+      'data-tone',
+      'info',
+    );
+  });
+});

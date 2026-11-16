@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import type { Control, FieldPath, FieldValues } from 'react-hook-form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Combobox, type ComboboxProps } from '@/components/ui/combobox';
@@ -225,6 +225,10 @@ function NumberField<TFieldValues extends FieldValues, TName extends FieldPath<T
   );
 }
 
+/**
+ * A settings row: label and description at the start, the switch at the end
+ * (the dashboards' `SwitchField`). The text names and describes the switch.
+ */
 function SwitchField<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
   control,
   name,
@@ -233,22 +237,39 @@ function SwitchField<TFieldValues extends FieldValues, TName extends FieldPath<T
   disabled,
   className,
 }: BoundFieldProps<TFieldValues, TName>) {
+  const id = useId();
+  const labelId = `${id}-label`;
+  const descriptionId = `${id}-description`;
   return (
     <FormField
       control={control}
       name={name}
       className={className}
       render={({ field }) => (
-        <Switch
-          name={field.name}
-          ref={field.ref}
-          label={label}
-          description={description}
-          checked={field.value === true}
-          onCheckedChange={(next) => field.onChange(next)}
-          onBlur={field.onBlur}
-          disabled={disabled ?? field.disabled}
-        />
+        <div className="gap-inline flex w-full items-center justify-between">
+          <div className="min-w-0 flex-1 space-y-0.5">
+            {label ? (
+              <span id={labelId} className="text-label text-text-primary block">
+                {label}
+              </span>
+            ) : null}
+            {description ? (
+              <span id={descriptionId} className="text-b3 text-text-secondary block">
+                {description}
+              </span>
+            ) : null}
+          </div>
+          <Switch
+            name={field.name}
+            ref={field.ref}
+            aria-labelledby={label ? labelId : undefined}
+            aria-describedby={description ? descriptionId : undefined}
+            checked={field.value === true}
+            onCheckedChange={(next) => field.onChange(next)}
+            onBlur={field.onBlur}
+            disabled={disabled ?? field.disabled}
+          />
+        </div>
       )}
     />
   );
@@ -270,7 +291,7 @@ function CheckboxField<TFieldValues extends FieldValues, TName extends FieldPath
       description={description}
       className={className}
       render={({ field, fieldState }) => (
-        <label className="gap-field text-b1 text-text-primary flex items-center">
+        <label className="gap-field text-control-input text-text-primary flex items-center">
           <Checkbox
             name={field.name}
             ref={field.ref}

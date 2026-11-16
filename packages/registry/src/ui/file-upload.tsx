@@ -89,12 +89,12 @@ function syncInputFiles(input: HTMLInputElement | null, files: readonly File[]) 
 }
 
 const dropzoneClasses = cn(
-  'flex w-full cursor-pointer flex-col items-center justify-center gap-field rounded-control border border-dashed border-stroke-strong bg-surface p-panel text-center',
+  'flex w-full cursor-pointer flex-col items-center justify-center gap-field rounded-control border border-dashed border-stroke bg-surface p-panel text-center',
   'transition-colors outline-none motion-reduce:transition-none',
   'hover:bg-hover-row',
-  'focus-visible:border-primary-highlight focus-visible:ring-2 focus-visible:ring-ring/40',
+  'focus-visible:border-primary-highlight focus-visible:ring-3 focus-visible:ring-primary-highlight/20',
   'data-[dragging]:border-primary-highlight data-[dragging]:bg-primary-light',
-  'aria-invalid:border-danger aria-invalid:ring-danger/30 data-[invalid]:border-danger',
+  'aria-invalid:border-danger aria-invalid:focus-visible:border-danger aria-invalid:focus-visible:ring-danger/20 data-[invalid]:border-danger',
   'disabled:cursor-not-allowed disabled:bg-disabled-container disabled:text-text-inactive',
   'aria-disabled:cursor-default aria-disabled:hover:bg-surface',
 );
@@ -278,7 +278,7 @@ function FileUpload({
         className={dropzoneClasses}
       >
         <UploadIcon className="text-text-muted size-6" />
-        <span id={titleId} className="text-b1 text-text-primary block">
+        <span id={titleId} className="text-control-input text-text-primary block">
           {dragging ? labels.dropActive : multiple ? labels.dropMultiple : labels.dropSingle}
         </span>
         {hints.length > 0 ? (

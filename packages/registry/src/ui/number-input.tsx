@@ -34,8 +34,9 @@ interface NumberInputProps extends Omit<
 /**
  * Number field with stepper buttons, Arrow/Page/Home/End keys and min/max
  * clamping. The value is always shown with Latin digits, left-to-right and
- * tabular, whatever the UI language; the stepper buttons follow the UI
- * direction (decrease at the start edge).
+ * tabular, whatever the UI language, at the start edge of the control; the two
+ * 28px stepper buttons sit together at the end edge (the dashboards' number
+ * stepper), decrease first.
  */
 function NumberInput({
   className,
@@ -50,9 +51,9 @@ function NumberInput({
 }: NumberInputProps) {
   const labels = useLabels(messages, labelOverrides);
   const stepper = cn(
-    'inline-flex min-w-11 shrink-0 items-center justify-center self-stretch text-text-secondary outline-none sm:min-w-9.5',
-    'transition-colors hover:bg-hover-row focus-visible:bg-hover-row focus-visible:text-text-primary',
-    'disabled:cursor-not-allowed disabled:text-text-inactive disabled:hover:bg-transparent',
+    'inline-flex size-7 shrink-0 items-center justify-center rounded-control text-text-secondary outline-none',
+    'transition-colors duration-150 hover:bg-hover-row hover:text-text-primary focus-visible:bg-hover-row focus-visible:text-text-primary',
+    'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent',
     '[&_svg]:size-4',
   );
   return (
@@ -61,22 +62,13 @@ function NumberInput({
         data-slot="number-input-group"
         className={cn(
           controlClasses,
-          'gap-0 overflow-hidden px-0',
-          'focus-within:border-primary-highlight focus-within:ring-2 focus-within:ring-ring/40',
-          'has-[input[aria-invalid=true]]:border-danger has-[input[aria-invalid=true]]:ring-danger/30',
-          'data-[disabled]:cursor-not-allowed data-[disabled]:bg-disabled-container data-[disabled]:text-text-inactive',
+          'gap-0.5',
+          showSteppers && 'pe-1.5',
+          // The invalid flag sits on the inner input, so the group reads it with :has().
+          'has-[input[aria-invalid=true]]:border-danger has-[input[aria-invalid=true]]:focus-within:border-danger has-[input[aria-invalid=true]]:focus-within:ring-danger/20',
           className,
         )}
       >
-        {showSteppers ? (
-          <NumberFieldPrimitive.Decrement
-            data-slot="number-input-decrement"
-            aria-label={labels.decrease}
-            className={cn(stepper, 'border-e border-stroke')}
-          >
-            <MinusIcon />
-          </NumberFieldPrimitive.Decrement>
-        ) : null}
         <NumberFieldPrimitive.Input
           ref={ref}
           dir="ltr"
@@ -87,15 +79,24 @@ function NumberInput({
           aria-roledescription={labels.roleDescription}
           data-slot="number-input-field"
           className={cn(
-            'h-full min-w-0 flex-1 bg-transparent px-inline text-center text-b1 text-text-primary tabular-nums outline-none',
+            'h-full min-w-0 flex-1 bg-transparent text-start text-control-input text-text-primary tabular-nums outline-none rtl:text-end',
             'placeholder:text-text-muted disabled:cursor-not-allowed',
           )}
         />
         {showSteppers ? (
+          <NumberFieldPrimitive.Decrement
+            data-slot="number-input-decrement"
+            aria-label={labels.decrease}
+            className={stepper}
+          >
+            <MinusIcon />
+          </NumberFieldPrimitive.Decrement>
+        ) : null}
+        {showSteppers ? (
           <NumberFieldPrimitive.Increment
             data-slot="number-input-increment"
             aria-label={labels.increase}
-            className={cn(stepper, 'border-s border-stroke')}
+            className={stepper}
           >
             <PlusIcon />
           </NumberFieldPrimitive.Increment>
