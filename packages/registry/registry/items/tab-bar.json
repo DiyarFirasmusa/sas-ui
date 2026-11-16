@@ -1,0 +1,8 @@
+{
+  "name": "tab-bar",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Tab bar",
+  "description": "Items-based tabs (pill, plain, underline) with count badges, RTL-aware roving keyboard, and decoupled panels that can render anywhere.",
+  "files": ["ui/tab-bar.tsx", "lib/tab-bar.ts"]
+}

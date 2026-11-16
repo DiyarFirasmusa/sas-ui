@@ -39,6 +39,12 @@ interface TableProps extends ComponentProps<'table'> {
   containerRef?: Ref<HTMLDivElement>;
   /** Make the scroll container a tab stop so the keyboard can scroll it. Turn off when the cells are focusable themselves. Default true. */
   containerFocusable?: boolean;
+  /**
+   * Names the scroll container as a region (`role="region"`). Screen readers
+   * then announce what the focusable box is; without it a focusable `div` has
+   * no name. Only applied while the container is focusable.
+   */
+  containerLabel?: string;
 }
 
 /**
@@ -52,6 +58,7 @@ function Table({
   containerStyle,
   containerRef,
   containerFocusable = true,
+  containerLabel,
   stickyHeader = false,
   ...props
 }: TableProps) {
@@ -61,6 +68,8 @@ function Table({
       style={containerStyle}
       data-slot="table-container"
       tabIndex={containerFocusable ? 0 : undefined}
+      role={containerFocusable && containerLabel ? 'region' : undefined}
+      aria-label={containerFocusable ? containerLabel : undefined}
       className={cn(
         'relative w-full overflow-auto rounded-lg border border-stroke bg-surface',
         'outline-none focus-visible:ring-2 focus-visible:ring-ring',

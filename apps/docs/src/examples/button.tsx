@@ -14,6 +14,7 @@ export const examples: Example[] = [
         <Button variant="ghost">Ghost</Button>
         <Button variant="destructive">Delete</Button>
         <Button variant="destructive-soft">Soft delete</Button>
+        <Button variant="navy">Navy</Button>
         <Button variant="link">Link</Button>
       </>
     ),
@@ -28,6 +29,10 @@ export const examples: Example[] = [
           <PlusIcon /> Add item
         </Button>
         <Button size="lg">Large</Button>
+        <Button size="pill">Pill</Button>
+        <Button size="pill" variant="navy">
+          Navy pill
+        </Button>
         <Button size="icon" aria-label="Add" variant="outline">
           <PlusIcon />
         </Button>
@@ -52,13 +57,16 @@ export const examples: Example[] = [
   },
   {
     title: 'As a link',
+    description: 'asChild renders your own link (or a router Link) with the button styling.',
     render: () => (
-      <a
-        href="#/components/button"
-        className="rounded-control bg-primary px-row text-button-1 text-primary-foreground inline-flex h-9.5 items-center"
-      >
-        Link styled as a button
-      </a>
+      <>
+        <Button asChild variant="outline">
+          <a href="#/components/button">Anchor as a button</a>
+        </Button>
+        <Button asChild variant="link" size="lg">
+          <a href="#/components/button">Link variant (no box at any size)</a>
+        </Button>
+      </>
     ),
   },
 ];

@@ -122,6 +122,37 @@ describe('Table', () => {
     expect(ref.current).not.toHaveAttribute('tabindex');
   });
 
+  it('containerLabel turns the focusable container into a named region', async () => {
+    const { container, rerender } = render(
+      <Table containerLabel="Scrollable invoices">
+        <TableBody>
+          <TableRow>
+            <TableCell>One</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const region = screen.getByRole('region', { name: 'Scrollable invoices' });
+    expect(region).toBe(container.querySelector('[data-slot="table-container"]'));
+    expect(region).toHaveAttribute('tabindex', '0');
+    await expectNoA11yViolations(container);
+    rerender(
+      <Table containerLabel="Scrollable invoices" containerFocusable={false}>
+        <TableBody>
+          <TableRow>
+            <TableCell>One</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(screen.queryByRole('region')).not.toBeInTheDocument();
+  });
+
+  it('adds no region role without containerLabel (unchanged default)', () => {
+    render(<Example />);
+    expect(screen.queryByRole('region')).not.toBeInTheDocument();
+  });
+
   it('renders in Arabic without changes to the structure', () => {
     renderWithLocale(<Example />, { locale: 'ar' });
     expect(screen.getByRole('table', { name: 'Invoices' })).toBeInTheDocument();

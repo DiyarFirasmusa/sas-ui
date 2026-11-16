@@ -1,9 +1,13 @@
 import { Field as FieldPrimitive } from '@base-ui/react/field';
 import { useState, type ChangeEvent, type Ref } from 'react';
-import { controlClasses } from '@/components/ui/input';
+import { controlClasses, type controlSizeClasses } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 type TextareaProps = Omit<React.ComponentProps<'textarea'>, 'dir' | 'onChange'> & {
+  /** `lg` pairs with `Input size="lg"` in a form row: roomier padding, taller minimum. */
+  size?: keyof typeof controlSizeClasses;
+  /** Follow the typed language once there is a value (default). `false` keeps the UI direction. */
+  autoDirection?: boolean;
   /** Method syntax keeps handlers typed for `HTMLTextAreaElement` assignable. */
   onChange?(event: ChangeEvent<HTMLTextAreaElement>): void;
 };
@@ -21,7 +25,15 @@ function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
  * registered with the surrounding `Field` (label, description, error) through
  * Base UI's `Field.Control`, rendered as a textarea.
  */
-function Textarea({ className, value, defaultValue, onChange, ...props }: TextareaProps) {
+function Textarea({
+  className,
+  size = 'default',
+  autoDirection = true,
+  value,
+  defaultValue,
+  onChange,
+  ...props
+}: TextareaProps) {
   const [typedValue, setTypedValue] = useState(String(defaultValue ?? ''));
   const current = value === undefined ? typedValue : String(value);
 
@@ -39,7 +51,8 @@ function Textarea({ className, value, defaultValue, onChange, ...props }: Textar
           }}
           disabled={props.disabled}
           data-slot="textarea"
-          dir={current === '' ? undefined : 'auto'}
+          data-size={size}
+          dir={current === '' || !autoDirection ? undefined : 'auto'}
           value={value}
           defaultValue={defaultValue}
           onChange={(event) => {
@@ -47,7 +60,12 @@ function Textarea({ className, value, defaultValue, onChange, ...props }: Textar
             controlProps.onChange?.(event);
             onChange?.(event);
           }}
-          className={cn(controlClasses, 'field-sizing-content h-auto min-h-24 py-2', className)}
+          className={cn(
+            controlClasses,
+            'field-sizing-content h-auto min-h-24 py-2',
+            size === 'lg' && 'min-h-28 py-3',
+            className,
+          )}
         />
       )}
     />

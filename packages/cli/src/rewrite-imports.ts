@@ -31,3 +31,24 @@ export function rewriteImports(
   }
   return result;
 }
+
+/**
+ * The inverse of `rewriteImports`: turns a project's own aliases back into the
+ * registry's, so a file improved in a project can be contributed upstream.
+ */
+export function reverseImports(
+  source: string,
+  config: Pick<ProjectConfig, 'alias' | 'directories'>,
+): string {
+  let result = source;
+  for (const [registryPrefix, key] of SOURCE_ALIASES) {
+    const projectPrefix = `${config.alias}/${config.directories[key]}/`;
+    if (projectPrefix === registryPrefix) {
+      continue;
+    }
+    result = result
+      .replaceAll(`'${projectPrefix}`, `'${registryPrefix}`)
+      .replaceAll(`"${projectPrefix}`, `"${registryPrefix}`);
+  }
+  return result;
+}

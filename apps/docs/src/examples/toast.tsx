@@ -82,4 +82,17 @@ export const examples: Example[] = [
       </div>
     ),
   },
+  {
+    title: 'Physical corner',
+    description:
+      'A physical position such as bottom-right stays on that corner in both directions, unlike the logical end/start values.',
+    render: () => (
+      <div className="gap-field flex flex-wrap">
+        <Toaster position="bottom-right" />
+        <Button variant="outline" onClick={() => notify.info('Always bottom right')}>
+          Bottom right
+        </Button>
+      </div>
+    ),
+  },
 ];

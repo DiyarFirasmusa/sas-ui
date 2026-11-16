@@ -100,6 +100,20 @@ export const examples: Example[] = [
     ),
   },
   {
+    title: 'Named scroll container',
+    description:
+      'containerLabel makes the focusable scroll container a named region, so screen readers say what the tab stop is.',
+    wide: true,
+    render: () => (
+      <Table containerLabel="Scrollable invoices" containerClassName="max-w-md">
+        <Header />
+        <TableBody>
+          <InvoiceRows />
+        </TableBody>
+      </Table>
+    ),
+  },
+  {
     title: 'Sticky header and first column',
     description: 'The container scrolls, not the page: give it a height with containerClassName.',
     wide: true,

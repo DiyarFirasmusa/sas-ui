@@ -20,6 +20,24 @@ export const examples: Example[] = [
     ),
   },
   {
+    title: 'Scrollbars always visible',
+    description:
+      'The default fades the bars in on hover or scroll; scrollbars="always" keeps them shown for dense panels.',
+    render: () => (
+      <ScrollArea
+        scrollbars="always"
+        className="border-stroke h-40 w-64 rounded-lg border"
+        viewportProps={{ 'aria-label': 'Items (visible scrollbar)' }}
+      >
+        <ul className="gap-field p-row text-b1 flex flex-col">
+          {rows.map((row) => (
+            <li key={row}>{row}</li>
+          ))}
+        </ul>
+      </ScrollArea>
+    ),
+  },
+  {
     title: 'Horizontal',
     render: () => (
       <ScrollArea

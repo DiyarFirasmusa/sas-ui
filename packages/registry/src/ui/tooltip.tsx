@@ -39,7 +39,12 @@ interface TooltipContentProps extends TooltipPrimitive.Popup.Props {
   side?: TooltipPrimitive.Positioner.Props['side'];
   align?: TooltipPrimitive.Positioner.Props['align'];
   sideOffset?: number;
-  /** Show a small arrow pointing at the trigger. */
+  alignOffset?: number;
+  /**
+   * Show a small arrow pointing at the trigger. Off by default (the library
+   * tooltip is a plain dark label); turn it on per tooltip, or wrap
+   * `TooltipContent` once in your app with `showArrow` defaulted to true.
+   */
   showArrow?: boolean;
 }
 
@@ -48,6 +53,7 @@ function TooltipContent({
   children,
   side = 'top',
   align = 'center',
+  alignOffset,
   sideOffset = 6,
   showArrow = false,
   ...props
@@ -61,6 +67,7 @@ function TooltipContent({
         <TooltipPrimitive.Positioner
           side={side}
           align={align}
+          alignOffset={alignOffset}
           sideOffset={sideOffset}
           className="z-50 outline-none"
         >

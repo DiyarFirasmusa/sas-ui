@@ -68,6 +68,33 @@ function RevenueBars() {
   );
 }
 
+function LabelledByCard() {
+  return (
+    <section aria-labelledby="chart-card-title" className="max-w-xl">
+      <h3 id="chart-card-title" className="text-h5">
+        Revenue over time
+      </h3>
+      <ChartContainer
+        config={config}
+        image={false}
+        summary="Revenue rose from 18,600 in January to 31,400 in June."
+      >
+        <AreaChart data={monthly}>
+          <CartesianGrid vertical={false} />
+          <XAxis dataKey="month" tickLine={false} axisLine={false} />
+          <Area
+            dataKey="revenue"
+            type="monotone"
+            stroke="var(--color-revenue)"
+            fill="var(--color-revenue)"
+            fillOpacity={0.2}
+          />
+        </AreaChart>
+      </ChartContainer>
+    </section>
+  );
+}
+
 function TimeSeries() {
   // In RTL the time axis runs right to left and the value axis moves to the start edge.
   const axes = useChartAxes();
@@ -120,6 +147,13 @@ export const examples: Example[] = [
       'useChartAxes() reverses the X axis and moves the Y axis in right-to-left languages.',
     wide: true,
     render: () => <TimeSeries />,
+  },
+  {
+    title: 'Named by the surrounding card',
+    description:
+      'image={false} drops the role="img" wrapper (an image hides its children from assistive tech). The section names the chart instead; the summary stays as screen-reader text.',
+    wide: true,
+    render: () => <LabelledByCard />,
   },
   {
     title: 'Pie with legend',

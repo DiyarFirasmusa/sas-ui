@@ -12,6 +12,35 @@ describe('Skeleton', () => {
     expect(block).toHaveClass('animate-pulse', 'motion-reduce:animate-none', 'h-4', 'w-20');
   });
 
+  it('shimmer swaps the pulse for the sweeping highlight and still honours reduced motion', () => {
+    const { container } = render(<Skeleton shimmer className="h-4" />);
+    const block = container.querySelector('[data-slot="skeleton"]');
+    expect(block).toHaveAttribute('data-shimmer');
+    expect(block).toHaveClass('animate-skeleton-shimmer', 'motion-reduce:animate-none', 'h-4');
+    expect(block).not.toHaveClass('animate-pulse');
+  });
+
+  it('pulses by default (no shimmer marker)', () => {
+    const { container } = render(<Skeleton />);
+    const block = container.querySelector('[data-slot="skeleton"]');
+    expect(block).not.toHaveAttribute('data-shimmer');
+    expect(block).not.toHaveClass('animate-skeleton-shimmer');
+  });
+
+  it('SkeletonText and SkeletonTable pass shimmer to every block', () => {
+    const { container } = render(
+      <div>
+        <SkeletonText lines={2} shimmer />
+        <SkeletonTable rows={1} columns={2} shimmer />
+      </div>,
+    );
+    const blocks = container.querySelectorAll('[data-slot="skeleton"]');
+    expect(blocks).toHaveLength(2 + 4);
+    for (const block of blocks) {
+      expect(block).toHaveAttribute('data-shimmer');
+    }
+  });
+
   it('SkeletonText renders the requested lines with a shorter last line', () => {
     const { container } = render(<SkeletonText lines={4} />);
     const lines = container.querySelectorAll('[data-slot="skeleton"]');
@@ -48,7 +77,7 @@ describe('Skeleton', () => {
     const { container } = render(
       <div>
         <SkeletonText />
-        <SkeletonTable rows={2} columns={3} />
+        <SkeletonTable rows={2} columns={3} shimmer />
       </div>,
     );
     await expectNoA11yViolations(container);

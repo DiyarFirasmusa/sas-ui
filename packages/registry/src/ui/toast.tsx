@@ -14,8 +14,10 @@ const messages: Messages<'notifications' | 'close'> = {
   ar: { notifications: 'الإشعارات', close: 'إغلاق الإشعار' },
 };
 
+type PhysicalPosition = NonNullable<ToasterProps['position']>;
+
 /** Logical placement: `end` is the right edge in LTR and the left edge in RTL. */
-type ToastPosition =
+type LogicalPosition =
   | 'top-start'
   | 'top-center'
   | 'top-end'
@@ -23,11 +25,19 @@ type ToastPosition =
   | 'bottom-center'
   | 'bottom-end';
 
-type PhysicalPosition = NonNullable<ToasterProps['position']>;
+/** Logical, or physical (`top-left`, `bottom-right`…) when the app must pin a corner in both directions. */
+type ToastPosition = LogicalPosition | PhysicalPosition;
 
-/** sonner only knows physical sides, so the logical choice is resolved per direction. */
+function isPhysical(position: ToastPosition): position is PhysicalPosition {
+  return /-(?:left|right)$/.test(position) || position.endsWith('-center');
+}
+
+/**
+ * sonner only knows physical sides, so a logical choice is resolved per
+ * direction; a physical one is passed through untouched.
+ */
 function resolvePosition(position: ToastPosition, direction: 'ltr' | 'rtl'): PhysicalPosition {
-  if (position === 'top-center' || position === 'bottom-center') {
+  if (isPhysical(position)) {
     return position;
   }
   const vertical = position.startsWith('top') ? 'top' : 'bottom';
@@ -63,7 +73,10 @@ interface ToasterComponentProps extends Omit<
   ToasterProps,
   'position' | 'dir' | 'icons' | 'theme' | 'containerAriaLabel'
 > {
-  /** Default `bottom-end`: the bottom-right corner in LTR, bottom-left in RTL. */
+  /**
+   * Default `bottom-end`: the bottom-right corner in LTR, bottom-left in RTL.
+   * A physical value (`bottom-right`) stays on that corner in both directions.
+   */
   position?: ToastPosition;
   /** Accessible name of the notifications region. */
   label?: string;

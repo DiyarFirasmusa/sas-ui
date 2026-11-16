@@ -51,13 +51,13 @@ Other commands: `sas-ui list`, `sas-ui diff [component]`, `sas-ui theme set hr`,
 
 ## Repository
 
-| Path                | What                                                                                                                                            |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/tokens`   | presets → CSS, contrast checks, runtime switcher                                                                                                |
-| `packages/registry` | component sources, tests, manifests, registry builder                                                                                           |
-| `packages/cli`      | the `sas-ui` command                                                                                                                            |
-| `apps/docs`         | preview site: every component × preset × light/dark × RTL/LTR                                                                                   |
-| `docs/`             | [Architecture](docs/ARCHITECTURE.md) · [Theming](docs/THEMING.md) · [Component guide](docs/COMPONENT-GUIDE.md) · [Migration](docs/MIGRATION.md) |
+| Path                | What                                                                                                                                                                                                       |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/tokens`   | presets → CSS, contrast checks, runtime switcher                                                                                                                                                           |
+| `packages/registry` | component sources, tests, manifests, registry builder                                                                                                                                                      |
+| `packages/cli`      | the `sas-ui` command                                                                                                                                                                                       |
+| `apps/docs`         | preview site: every component × preset × light/dark × RTL/LTR                                                                                                                                              |
+| `docs/`             | [Architecture](docs/ARCHITECTURE.md) · [Theming](docs/THEMING.md) · [Component guide](docs/COMPONENT-GUIDE.md) · [Migration](docs/MIGRATION.md) · [Continuous improvement](docs/CONTINUOUS-IMPROVEMENT.md) |
 
 ## Develop
 

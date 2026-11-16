@@ -19,6 +19,22 @@ export const examples: Example[] = [
     render: () => <SkeletonText lines={4} />,
   },
   {
+    title: 'Shimmer',
+    description: 'Opt in with `shimmer`; reduced motion stops the sweep.',
+    render: () => (
+      <div className="gap-row flex w-full max-w-sm flex-col">
+        <div className="gap-inline flex items-center">
+          <Skeleton shimmer className="rounded-pill size-12" />
+          <div className="gap-field flex flex-col">
+            <Skeleton shimmer className="h-4 w-40" />
+            <Skeleton shimmer className="h-3 w-24" />
+          </div>
+        </div>
+        <SkeletonText lines={3} shimmer />
+      </div>
+    ),
+  },
+  {
     title: 'Table rows',
     wide: true,
     render: () => <SkeletonTable rows={4} columns={4} label="Loading invoices" />,

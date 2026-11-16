@@ -83,6 +83,48 @@ describe('Switch', () => {
     expect(toggle).toBeChecked();
   });
 
+  it('keeps the 44x24 default and offers an opt-in sm size', () => {
+    render(
+      <>
+        <Switch aria-label="Regular" />
+        <Switch aria-label="Small" size="sm" />
+      </>,
+    );
+    const regular = screen.getByRole('switch', { name: 'Regular' });
+    const small = screen.getByRole('switch', { name: 'Small' });
+    expect(regular).toHaveAttribute('data-size', 'default');
+    expect(regular).toHaveClass('h-6', 'w-11');
+    expect(small).toHaveAttribute('data-size', 'sm');
+    expect(small.className).toContain('data-[size=sm]:h-5');
+    expect(small.querySelector('[data-slot="switch-thumb"]')?.className).toContain(
+      'group-data-[size=sm]/switch:size-4',
+    );
+  });
+
+  it('mirror={false} pins the track to left-to-right in Arabic', async () => {
+    renderWithLocale(
+      <>
+        <Switch aria-label="مرآة" />
+        <Switch aria-label="ثابت" mirror={false} />
+      </>,
+      { locale: 'ar' },
+    );
+    expect(screen.getByRole('switch', { name: 'مرآة' })).not.toHaveAttribute('dir');
+    const pinned = screen.getByRole('switch', { name: 'ثابت' });
+    expect(pinned).toHaveAttribute('dir', 'ltr');
+    await userEvent.click(pinned);
+    expect(pinned).toBeChecked();
+  });
+
+  it('renders the label and description together with no axe violations', async () => {
+    const { container } = render(
+      <Switch size="sm" label="Alerts" description="Sent each morning" />,
+    );
+    expect(screen.getByRole('switch', { name: 'Alerts' })).toBeInTheDocument();
+    expect(screen.getByText('Sent each morning')).toBeInTheDocument();
+    await expectNoA11yViolations(container);
+  });
+
   it('has no axe violations', async () => {
     const { container } = render(
       <Field label="Terms" error="Required">

@@ -23,4 +23,28 @@ export const examples: Example[] = [
       </Popover>
     ),
   },
+  {
+    title: 'Positioning',
+    description:
+      'positionMethod, collisionPadding, collisionAvoidance, sticky and alignOffset pass to Base UI; positionerClassName styles the wrapper (here: as wide as the trigger).',
+    render: () => (
+      <Popover>
+        <PopoverTrigger render={<Button variant="outline" className="w-56" />}>
+          Anchored panel
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          alignOffset={0}
+          positionMethod="fixed"
+          collisionPadding={12}
+          sticky
+          positionerClassName="w-56"
+          className="w-full"
+        >
+          <PopoverTitle>As wide as the trigger</PopoverTitle>
+          <PopoverDescription>Fixed positioning, kept 12px inside the viewport.</PopoverDescription>
+        </PopoverContent>
+      </Popover>
+    ),
+  },
 ];

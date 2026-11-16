@@ -33,6 +33,20 @@ export const examples: Example[] = [
     ),
   },
   {
+    title: 'Small',
+    render: () => (
+      <>
+        <Switch size="sm" label="Compact row" />
+        <Switch size="sm" aria-label="Compact on" defaultChecked />
+      </>
+    ),
+  },
+  {
+    title: 'Pinned left-to-right (mirror={false})',
+    description: 'Keeps "on" at the physical right in Arabic, for designs that never mirror it.',
+    render: () => <Switch mirror={false} label="مفعّل" defaultChecked />,
+  },
+  {
     title: 'In a field, invalid',
     render: () => (
       <Field

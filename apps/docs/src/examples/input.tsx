@@ -16,4 +16,24 @@ export const examples: Example[] = [
       </div>
     ),
   },
+  {
+    title: 'Large (42px)',
+    description: 'Opt-in size="lg" for forms that use a taller control row.',
+    render: () => (
+      <div className="gap-row grid w-full max-w-md">
+        <Input aria-label="Default size" placeholder="Default (38px)" />
+        <Input aria-label="Large size" size="lg" placeholder="Large (42px)" />
+      </div>
+    ),
+  },
+  {
+    title: 'Fixed direction',
+    description:
+      'autoDirection={false} keeps the UI direction even when the typed language differs.',
+    render: () => (
+      <div className="gap-row grid w-full max-w-md">
+        <Input aria-label="Fixed direction" autoDirection={false} defaultValue="Fixed" />
+      </div>
+    ),
+  },
 ];

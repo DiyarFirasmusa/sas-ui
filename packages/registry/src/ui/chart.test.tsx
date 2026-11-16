@@ -116,6 +116,26 @@ describe('ChartContainer', () => {
     expect(within(table).getByRole('rowheader', { name: 'Feb' })).toBeInTheDocument();
   });
 
+  it('image={false} renders the plot without the role="img" wrapper (the caller names the container)', async () => {
+    const { container } = render(
+      <SalesChart
+        image={false}
+        aria-label="Revenue card"
+        summary="Sales grew."
+        dataTable={{ data, categoryKey: 'month' }}
+      />,
+    );
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(container.querySelector('svg.recharts-surface')).toBeInTheDocument();
+    expect(screen.getByText('Sales grew.')).toHaveClass('sr-only');
+    expect(screen.getByRole('table', { name: 'Chart data' })).toBeInTheDocument();
+    expect(container.querySelector('[data-slot="chart"]')).toHaveAttribute(
+      'aria-label',
+      'Revenue card',
+    );
+    await expectNoA11yViolations();
+  });
+
   it('shows a loading skeleton instead of the chart', () => {
     render(<SalesChart loading />);
     const status = screen.getByRole('status', { name: 'Loading chart' });

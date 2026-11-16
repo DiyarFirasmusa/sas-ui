@@ -11,7 +11,12 @@ import {
   ResponsiveContainer,
   Tooltip as RechartsTooltip,
 } from 'recharts';
-import { InboxIcon } from '@/components/ui/icons';
+import {
+  ChartDataTableView,
+  ChartEmpty,
+  ChartSkeleton,
+  type ChartDataTable,
+} from '@/components/ui/chart-parts';
 import {
   buildChartCss,
   chartAxisProps,
@@ -63,15 +68,6 @@ function useChartAxes(options?: { reverseTime?: boolean }): ChartAxisProps {
   return chartAxisProps(direction, options);
 }
 
-interface ChartDataTable {
-  /** The rows the chart plots. */
-  data: readonly Record<string, unknown>[];
-  /** Row property holding the category (x value, month, name…). */
-  categoryKey: string;
-  categoryLabel?: string;
-  caption?: string;
-}
-
 interface ChartContainerProps extends Omit<ComponentProps<'div'>, 'children'> {
   /** Series key to label and colour. Keys become `--color-<key>` for `fill="var(--color-<key>)"`. */
   config: ChartConfig;
@@ -79,6 +75,15 @@ interface ChartContainerProps extends Omit<ComponentProps<'div'>, 'children'> {
   children: ComponentProps<typeof ResponsiveContainer>['children'];
   /** Accessible name of the chart (`role="img"`). */
   label?: string;
+  /**
+   * Expose the plot as a single image (`role="img"`, default). An image's
+   * children are presentational, so turn it off (`false`) when the chart holds
+   * focusable or interactive parts, or when the surrounding card already names
+   * it: no wrapper is rendered and `label` is not announced, so name the
+   * container yourself (`aria-label`, or a heading with `aria-labelledby`).
+   * The `summary` and `dataTable` still render as screen-reader text.
+   */
+  image?: boolean;
   /** Longer plain-language description for screen readers, e.g. the trend in one sentence. */
   summary?: string;
   /** Renders the data as a visually hidden table for screen readers. */
@@ -90,82 +95,6 @@ interface ChartContainerProps extends Omit<ComponentProps<'div'>, 'children'> {
   emptyLabel?: string;
   /** Size to use before the container is measured (server render, tests). */
   initialDimension?: { width: number; height: number };
-}
-
-const SKELETON_BARS = ['h-2/5', 'h-3/5', 'h-4/5', 'h-1/2', 'h-full', 'h-3/5'];
-
-function ChartSkeleton({ label }: { label: string }) {
-  return (
-    <div
-      role="status"
-      aria-busy="true"
-      aria-label={label}
-      data-slot="chart-skeleton"
-      className="gap-inline px-inline flex size-full items-end"
-    >
-      {SKELETON_BARS.map((height, index) => (
-        <div
-          key={index}
-          aria-hidden="true"
-          className={cn(
-            'flex-1 animate-pulse rounded-md bg-hover-row motion-reduce:animate-none',
-            height,
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
-function ChartEmpty({ label }: { label: string }) {
-  return (
-    <div
-      data-slot="chart-empty"
-      className="gap-field text-b2 text-text-muted flex size-full flex-col items-center justify-center"
-    >
-      <InboxIcon className="size-6" />
-      <p>{label}</p>
-    </div>
-  );
-}
-
-function ChartDataTableView({
-  table,
-  config,
-  fallbackCaption,
-  fallbackCategory,
-}: {
-  table: ChartDataTable;
-  config: ChartConfig;
-  fallbackCaption: string;
-  fallbackCategory: string;
-}) {
-  const keys = Object.keys(config);
-  return (
-    <table className="sr-only" data-slot="chart-data-table">
-      <caption>{table.caption ?? fallbackCaption}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{table.categoryLabel ?? fallbackCategory}</th>
-          {keys.map((key) => (
-            <th key={key} scope="col">
-              {config[key]?.label}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {table.data.map((row, index) => (
-          <tr key={index}>
-            <th scope="row">{String(row[table.categoryKey] ?? '')}</th>
-            {keys.map((key) => (
-              <td key={key}>{formatChartNumber(row[key])}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
 }
 
 /**
@@ -180,6 +109,7 @@ function ChartContainer({
   children,
   config,
   label,
+  image = true,
   summary,
   dataTable,
   loading = false,
@@ -198,6 +128,11 @@ function ChartContainer({
   const chartId = `chart-${sanitizeChartToken(id ?? generated)}`;
   const summaryId = `${chartId}-summary`;
   const css = buildChartCss(chartId, config);
+  const plot = (
+    <ResponsiveContainer width="100%" height="100%" initialDimension={initialDimension}>
+      {children}
+    </ResponsiveContainer>
+  );
 
   return (
     <ChartConfigProvider config={config}>
@@ -226,16 +161,18 @@ function ChartContainer({
           <ChartEmpty label={labels.empty} />
         ) : (
           <>
-            <div
-              role="img"
-              aria-label={labels.chart}
-              aria-describedby={summary ? summaryId : undefined}
-              className="size-full"
-            >
-              <ResponsiveContainer width="100%" height="100%" initialDimension={initialDimension}>
-                {children}
-              </ResponsiveContainer>
-            </div>
+            {image ? (
+              <div
+                role="img"
+                aria-label={labels.chart}
+                aria-describedby={summary ? summaryId : undefined}
+                className="size-full"
+              >
+                {plot}
+              </div>
+            ) : (
+              plot
+            )}
             {summary ? (
               <p id={summaryId} className="sr-only">
                 {summary}

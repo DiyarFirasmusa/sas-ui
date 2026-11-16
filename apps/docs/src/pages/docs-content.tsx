@@ -233,6 +233,15 @@ applyDirection('rtl', 'ar'); // <html dir="rtl" lang="ar">`}
           Compares your copy with the registry (imports rewritten to your aliases first, so only
           real edits show) and exits with 1 when something differs.
         </P>
+        <H2 id="upstream">upstream</H2>
+        <CodeBlock
+          code={'sas-ui upstream <item...> --to <library>/packages/registry/src [--dry-run]'}
+        />
+        <P>
+          Sends a component you improved in your project back to a checkout of the library, with
+          your aliases turned back into the registry&apos;s, so the improvement can be reviewed and
+          committed there.
+        </P>
         <H2 id="list">list</H2>
         <CodeBlock code={'sas-ui list [--category <name>] [--installed] [--json]'} />
         <H2 id="theme">theme</H2>

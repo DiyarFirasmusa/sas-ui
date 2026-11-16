@@ -14,7 +14,22 @@ export const controlClasses = [
   'data-[invalid]:border-danger',
 ].join(' ');
 
-type InputProps = Omit<React.ComponentProps<'input'>, 'dir'> & {
+/** Opt-in control heights. `lg` is 42px; `default` keeps the 38px of `controlClasses`. */
+export const controlSizeClasses = {
+  default: '',
+  lg: 'h-10.5',
+} as const;
+
+type ControlSize = keyof typeof controlSizeClasses;
+
+type InputProps = Omit<React.ComponentProps<'input'>, 'dir' | 'size'> & {
+  /** `lg` makes the control 42px tall; the default is unchanged. */
+  size?: ControlSize;
+  /**
+   * Switch to `dir="auto"` once the field has a value so the typed language
+   * decides (default). Pass `false` to keep the UI direction at all times.
+   */
+  autoDirection?: boolean;
   /**
    * `text` follows what the user types (Arabic right-to-left, English
    * left-to-right). `latin` is for emails, codes, phone numbers and URLs: the
@@ -31,6 +46,8 @@ type InputProps = Omit<React.ComponentProps<'input'>, 'dir'> & {
 function Input({
   className,
   kind = 'text',
+  size = 'default',
+  autoDirection = true,
   type = 'text',
   value,
   defaultValue,
@@ -46,11 +63,12 @@ function Input({
     onChange?.(event);
   }
 
-  const direction = isLatin ? 'ltr' : current === '' ? undefined : 'auto';
+  const direction = isLatin ? 'ltr' : current === '' || !autoDirection ? undefined : 'auto';
 
   return (
     <InputPrimitive
       data-slot="input"
+      data-size={size}
       type={type}
       dir={direction}
       value={value}
@@ -58,6 +76,7 @@ function Input({
       onChange={handleChange}
       className={cn(
         controlClasses,
+        controlSizeClasses[size],
         'file:me-inline file:border-0 file:bg-transparent file:text-b2 file:font-medium',
         isLatin && 'rtl:placeholder-shown:[direction:rtl] rtl:placeholder-shown:text-end',
         className,

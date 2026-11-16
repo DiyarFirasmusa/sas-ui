@@ -1,0 +1,8 @@
+{
+  "name": "select-parts",
+  "type": "ui",
+  "category": "form",
+  "title": "Select (composable)",
+  "description": "Composable select parts: root, trigger (default/sm), value with a render function, content, items with titles, groups, labels, separators and an empty row.",
+  "files": ["ui/select-parts.tsx"]
+}

@@ -3,6 +3,6 @@
   "type": "ui",
   "category": "form",
   "title": "Button",
-  "description": "Buttons with variants, sizes, a loading (single-flight) state and link styling.",
+  "description": "Buttons with variants (incl. navy), sizes (incl. pill), asChild for links, a loading (single-flight) state and test hooks.",
   "files": ["ui/button.tsx"]
 }

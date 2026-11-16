@@ -21,7 +21,8 @@ export const examples: Example[] = [
   },
   {
     title: 'With arrow and shared delay',
-    description: 'Inside one provider the second tooltip opens instantly after the first.',
+    description:
+      'Inside one provider the second tooltip opens instantly after the first. showArrow is off by default; opt in per tooltip.',
     render: () => (
       <TooltipProvider delay={600}>
         <div className="gap-field flex">

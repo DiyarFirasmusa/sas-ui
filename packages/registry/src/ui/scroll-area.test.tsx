@@ -1,6 +1,7 @@
+import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
 import { render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { expectNoA11yViolations } from '@/test/a11y';
 import { renderWithLocale } from '@/test/render';
 
@@ -44,6 +45,46 @@ describe('ScrollArea', () => {
       'p-2',
       'size-full',
     );
+  });
+
+  // Base UI mounts a scrollbar only while the content overflows, which jsdom
+  // never reports; keepMounted lets us assert the classes the component adds.
+  it('fades a scrollbar in on hover by default', () => {
+    render(
+      <ScrollAreaPrimitive.Root>
+        <ScrollBar keepMounted />
+      </ScrollAreaPrimitive.Root>,
+    );
+    const bar = document.querySelector('[data-slot="scroll-area-scrollbar"]');
+    expect(bar).toHaveAttribute('data-visibility', 'hover');
+    expect(bar).toHaveClass('opacity-0', 'data-[hovering]:opacity-100');
+  });
+
+  it('alwaysVisible keeps the scrollbar visible', () => {
+    render(
+      <ScrollAreaPrimitive.Root>
+        <ScrollBar keepMounted alwaysVisible orientation="horizontal" />
+      </ScrollAreaPrimitive.Root>,
+    );
+    const bar = document.querySelector('[data-slot="scroll-area-scrollbar"]');
+    expect(bar).toHaveAttribute('data-visibility', 'always');
+    expect(bar).toHaveClass('opacity-100', 'h-2.5');
+    expect(bar).not.toHaveClass('opacity-0');
+  });
+
+  it('accepts scrollbars="always" and "hover" on the ScrollArea', () => {
+    const { rerender } = render(
+      <ScrollArea scrollbars="always" orientation="both" className="h-40">
+        <Content />
+      </ScrollArea>,
+    );
+    expect(screen.getByText('Row 3')).toBeInTheDocument();
+    rerender(
+      <ScrollArea scrollbars="hover" className="h-40">
+        <Content />
+      </ScrollArea>,
+    );
+    expect(screen.getByText('Row 3')).toBeInTheDocument();
   });
 
   it('follows the Arabic locale direction', () => {

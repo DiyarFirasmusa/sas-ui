@@ -3,6 +3,6 @@
   "type": "ui",
   "category": "overlay",
   "title": "Dropdown menu",
-  "description": "Action menu with items, checkbox/radio items, groups and submenus.",
+  "description": "Dropdown menu with items, groups, checkbox/radio items, submenus, shortcuts, inset and destructive actions.",
   "files": ["ui/dropdown-menu.tsx"]
 }

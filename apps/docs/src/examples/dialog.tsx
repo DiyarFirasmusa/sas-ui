@@ -38,4 +38,47 @@ export const examples: Example[] = [
       </Dialog>
     ),
   },
+  {
+    title: 'Sizes',
+    description:
+      'size is opt-in: sm 420, md 640, lg 900, xl 1100 px (always capped to the viewport).',
+    render: () => (
+      <>
+        {(['sm', 'md', 'lg', 'xl'] as const).map((size) => (
+          <Dialog key={size}>
+            <DialogTrigger render={<Button variant="outline" />}>{`Size ${size}`}</DialogTrigger>
+            <DialogContent size={size} closeLabel="Dismiss">
+              <DialogHeader>
+                <DialogTitle>{`Size ${size}`}</DialogTitle>
+                <DialogDescription>Width follows the size step.</DialogDescription>
+              </DialogHeader>
+              <DialogBody>Content</DialogBody>
+              <DialogFooter>
+                <DialogClose render={<Button variant="outline" />}>Close</DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        ))}
+      </>
+    ),
+  },
+  {
+    title: 'Without a close button',
+    description:
+      'reserveClose={false} gives the header its full width when showCloseButton is off.',
+    render: () => (
+      <Dialog>
+        <DialogTrigger render={<Button variant="outline" />}>No corner button</DialogTrigger>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader reserveClose={false}>
+            <DialogTitle>Confirm</DialogTitle>
+            <DialogDescription>Choose one of the actions below.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button />}>Done</DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    ),
+  },
 ];

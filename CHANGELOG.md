@@ -16,6 +16,13 @@ All notable changes are recorded here. The format follows
   gallery and a Themes gallery (light and dark side by side). Presets can now be scoped to a subtree with
   `data-preset-scope` / `data-mode`.
 
+- Improvements upstreamed from the ERP pilot: `Button` (`asChild`, `navy`, `pill`, compound `link`), `Input`/`Textarea`
+  `size` and `autoDirection`, `Switch` `size`/`mirror`, `select-parts` (composable Select), `Dialog` sizes, `Sheet` physical
+  sides, `Popover` positioner props, `DropdownMenu` sub-content/shortcut/inset, new `tab-bar` and `steps`, `Skeleton`
+  shimmer, `ScrollArea` `scrollbars`, `Table` `containerLabel`, `Toaster` physical positions, `Chart` `image`.
+- CLI: `sas-ui upstream` sends an improved component from a project back to a library checkout.
+- Docs: [Continuous improvement](docs/CONTINUOUS-IMPROVEMENT.md) workflow.
+
 ### Fixed
 
 - `Button loading` no longer lets a submit button submit its form a second time.

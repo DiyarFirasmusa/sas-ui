@@ -47,6 +47,35 @@ describe('Tooltip', () => {
     expect(document.querySelector('[data-slot="tooltip-arrow"]')).toBeInTheDocument();
   });
 
+  it('has no arrow by default', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Tooltip>
+          <TooltipTrigger aria-label="Plain">P</TooltipTrigger>
+          <TooltipContent>Plain tip</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+    await userEvent.hover(screen.getByRole('button', { name: 'Plain' }));
+    await screen.findByText('Plain tip');
+    expect(document.querySelector('[data-slot="tooltip-arrow"]')).not.toBeInTheDocument();
+  });
+
+  it('accepts an align offset', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Tooltip>
+          <TooltipTrigger aria-label="Offset">O</TooltipTrigger>
+          <TooltipContent alignOffset={6} align="start" showArrow>
+            Offset tip
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+    await userEvent.hover(screen.getByRole('button', { name: 'Offset' }));
+    expect(await screen.findByText('Offset tip')).toBeInTheDocument();
+  });
+
   it('works in Arabic with an inline-start placement', async () => {
     renderWithLocale(
       <TooltipProvider delay={0}>

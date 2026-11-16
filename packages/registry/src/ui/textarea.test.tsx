@@ -4,6 +4,7 @@ import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Textarea } from '@/components/ui/textarea';
 import { expectNoA11yViolations } from '@/test/a11y';
+import { renderWithLocale } from '@/test/render';
 
 describe('Textarea', () => {
   it('follows the typed language once it has content', async () => {
@@ -24,6 +25,34 @@ describe('Textarea', () => {
     const ref = createRef<HTMLTextAreaElement>();
     render(<Textarea aria-label="Notes" ref={ref} />);
     expect(ref.current).toBe(screen.getByLabelText('Notes'));
+  });
+
+  it('autoDirection={false} keeps the UI direction while typing', async () => {
+    render(<Textarea aria-label="Notes" autoDirection={false} />);
+    const area = screen.getByLabelText('Notes');
+    await userEvent.type(area, 'ملاحظة');
+    expect(area).not.toHaveAttribute('dir');
+  });
+
+  it('size="lg" is opt-in and leaves the default untouched', () => {
+    render(
+      <>
+        <Textarea aria-label="Plain" />
+        <Textarea aria-label="Large" size="lg" />
+      </>,
+    );
+    expect(screen.getByLabelText('Plain')).toHaveClass('min-h-24', 'py-2');
+    expect(screen.getByLabelText('Plain')).toHaveAttribute('data-size', 'default');
+    expect(screen.getByLabelText('Large')).toHaveClass('min-h-28', 'py-3');
+  });
+
+  it('works in Arabic with no axe violations', async () => {
+    const { container } = renderWithLocale(<Textarea aria-label="ملاحظات" size="lg" />, {
+      locale: 'ar',
+    });
+    await userEvent.type(screen.getByLabelText('ملاحظات'), 'نص');
+    expect(screen.getByLabelText('ملاحظات')).toHaveAttribute('dir', 'auto');
+    await expectNoA11yViolations(container);
   });
 
   it('has no axe violations', async () => {

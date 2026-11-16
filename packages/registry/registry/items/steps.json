@@ -1,0 +1,8 @@
+{
+  "name": "steps",
+  "type": "ui",
+  "category": "navigation",
+  "title": "Steps",
+  "description": "Chip-style wizard header: a scrollable row of complete, current and upcoming steps separated by chevrons.",
+  "files": ["ui/steps.tsx"]
+}

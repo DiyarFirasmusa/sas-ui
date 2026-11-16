@@ -18,6 +18,12 @@ describe('resolvePosition', () => {
     expect(resolvePosition('top-start', 'rtl')).toBe('top-right');
   });
 
+  it('keeps a physical corner in both directions', () => {
+    expect(resolvePosition('bottom-right', 'ltr')).toBe('bottom-right');
+    expect(resolvePosition('bottom-right', 'rtl')).toBe('bottom-right');
+    expect(resolvePosition('top-left', 'rtl')).toBe('top-left');
+  });
+
   it('leaves centred positions alone', () => {
     expect(resolvePosition('top-center', 'rtl')).toBe('top-center');
     expect(resolvePosition('bottom-center', 'ltr')).toBe('bottom-center');
@@ -81,6 +87,19 @@ describe('Toaster', () => {
       'top',
     );
     expect(screen.getByRole('region', { name: /Alerts/ })).toBeInTheDocument();
+  });
+
+  it('pins a physical position to the same corner in RTL', async () => {
+    const { container } = renderWithLocale(<Toaster position="bottom-right" />, {
+      locale: 'ar',
+    });
+    act(() => {
+      notify.info('Pinned');
+    });
+    await screen.findByText('Pinned');
+    const toaster = container.querySelector('[data-sonner-toaster]');
+    expect(toaster).toHaveAttribute('data-x-position', 'right');
+    expect(toaster).toHaveAttribute('data-y-position', 'bottom');
   });
 
   it('themes the toast surface with tokens', async () => {

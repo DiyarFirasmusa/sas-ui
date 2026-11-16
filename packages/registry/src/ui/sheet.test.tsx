@@ -10,12 +10,14 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  resolveSheetSide,
   type SheetSide,
+  type SheetSideInput,
 } from '@/components/ui/sheet';
 import { expectNoA11yViolations } from '@/test/a11y';
 import { renderWithLocale } from '@/test/render';
 
-function Example({ side, closeLabel }: { side?: SheetSide; closeLabel?: string }) {
+function Example({ side, closeLabel }: { side?: SheetSideInput; closeLabel?: string }) {
   return (
     <Sheet>
       <SheetTrigger>Open</SheetTrigger>
@@ -93,6 +95,40 @@ describe('Sheet', () => {
     render(<Example closeLabel="Dismiss" />);
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(await screen.findByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
+  });
+
+  it('resolves the physical left/right aliases against the direction', () => {
+    expect(resolveSheetSide('left', 'ltr')).toBe('start');
+    expect(resolveSheetSide('right', 'ltr')).toBe('end');
+    expect(resolveSheetSide('left', 'rtl')).toBe('end');
+    expect(resolveSheetSide('right', 'rtl')).toBe('start');
+    expect(resolveSheetSide('inline-start', 'rtl')).toBe('start');
+    expect(resolveSheetSide('inline-end', 'ltr')).toBe('end');
+    expect(resolveSheetSide('top', 'rtl')).toBe('top');
+  });
+
+  it('mirrors start/end and left/right in Arabic', async () => {
+    const cases: Array<[SheetSideInput, string, string]> = [
+      ['right', 'start-0', 'start'],
+      ['left', 'end-0', 'end'],
+      ['start', 'start-0', 'start'],
+      ['inline-end', 'end-0', 'end'],
+    ];
+    for (const [side, edgeClass, logical] of cases) {
+      const { unmount } = renderWithLocale(<Example side={side} />, { locale: 'ar' });
+      await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+      const dialog = await screen.findByRole('dialog');
+      expect(dialog).toHaveClass(edgeClass);
+      expect(dialog).toHaveAttribute('data-side', logical);
+      expect(dialog.className).not.toMatch(/(?:^|\s)(?:left|right)-/);
+      unmount();
+    }
+  });
+
+  it('puts physical right at the end edge in English', async () => {
+    renderWithLocale(<Example side="right" />, { locale: 'en' });
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(await screen.findByRole('dialog')).toHaveAttribute('data-side', 'end');
   });
 
   it('has no axe violations when open', async () => {

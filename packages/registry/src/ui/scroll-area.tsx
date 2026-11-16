@@ -6,6 +6,12 @@ import { cn } from '@/lib/utils';
 interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
   /** Which scrollbars to offer. Default `vertical`. */
   orientation?: 'vertical' | 'horizontal' | 'both';
+  /**
+   * When the scrollbars show: `hover` (default) fades them in while the
+   * pointer is over the area or it scrolls; `always` keeps them visible, for
+   * data-dense panels where users must see that more content exists.
+   */
+  scrollbars?: 'hover' | 'always';
   /** Text direction of the scrolled content; defaults to the active locale's. */
   dir?: Direction;
   /** Props for the scrolling element, e.g. `aria-label` to name the region. */
@@ -22,6 +28,7 @@ function ScrollArea({
   className,
   children,
   orientation = 'vertical',
+  scrollbars = 'hover',
   dir,
   viewportProps,
   ...props
@@ -47,27 +54,39 @@ function ScrollArea({
         >
           {children}
         </ScrollAreaPrimitive.Viewport>
-        {orientation !== 'horizontal' ? <ScrollBar orientation="vertical" /> : null}
-        {orientation !== 'vertical' ? <ScrollBar orientation="horizontal" /> : null}
+        {orientation !== 'horizontal' ? (
+          <ScrollBar orientation="vertical" alwaysVisible={scrollbars === 'always'} />
+        ) : null}
+        {orientation !== 'vertical' ? (
+          <ScrollBar orientation="horizontal" alwaysVisible={scrollbars === 'always'} />
+        ) : null}
         {orientation === 'both' ? <ScrollAreaPrimitive.Corner /> : null}
       </ScrollAreaPrimitive.Root>
     </DirectionProvider>
   );
 }
 
+interface ScrollBarProps extends ScrollAreaPrimitive.Scrollbar.Props {
+  /** Keep the bar visible instead of fading it in on hover or scroll. */
+  alwaysVisible?: boolean;
+}
+
 function ScrollBar({
   className,
   orientation = 'vertical',
+  alwaysVisible = false,
   ...props
-}: ScrollAreaPrimitive.Scrollbar.Props) {
+}: ScrollBarProps) {
   return (
     <ScrollAreaPrimitive.Scrollbar
       data-slot="scroll-area-scrollbar"
+      data-visibility={alwaysVisible ? 'always' : 'hover'}
       orientation={orientation}
       className={cn(
-        'flex touch-none p-0.5 opacity-0 transition-opacity select-none',
-        'data-[hovering]:opacity-100 data-[scrolling]:opacity-100',
-        'motion-reduce:transition-none',
+        'flex touch-none p-0.5 select-none',
+        alwaysVisible
+          ? 'opacity-100'
+          : 'opacity-0 transition-opacity data-[hovering]:opacity-100 data-[scrolling]:opacity-100 motion-reduce:transition-none',
         orientation === 'vertical' ? 'w-2.5' : 'h-2.5 flex-col',
         className,
       )}
@@ -82,4 +101,4 @@ function ScrollBar({
 }
 
 export { ScrollArea, ScrollBar };
-export type { ScrollAreaProps };
+export type { ScrollAreaProps, ScrollBarProps };

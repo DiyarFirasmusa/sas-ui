@@ -8,6 +8,7 @@ import { runDiff } from './commands/diff.ts';
 import { runInit } from './commands/init.ts';
 import { runList } from './commands/list.ts';
 import { runTheme } from './commands/theme.ts';
+import { runUpstream } from './commands/upstream.ts';
 import { ConfigError } from './config.ts';
 import { color, createLogger } from './logger.ts';
 
@@ -17,6 +18,7 @@ Usage
   sas-ui init   [--preset <name>] [--all-presets] [--css <file>] [--src-dir src] [--alias @] [--force] [--no-install] [--no-alias-setup]
   sas-ui add    <component...> [--all] [--overwrite] [--tests] [--dry-run] [--no-install]
   sas-ui diff   [component...] [--verbose]
+  sas-ui upstream <item...> --to <library>/packages/registry/src [--dry-run]
   sas-ui list   [--category <name>] [--installed] [--json]
   sas-ui theme  list | set <preset> [--all-presets]
 
@@ -76,6 +78,7 @@ export async function main(argv: string[]): Promise<number> {
       category: { type: 'string' },
       installed: { type: 'boolean' },
       json: { type: 'boolean' },
+      to: { type: 'string' },
     },
   });
   if (values.version === true) {
@@ -124,6 +127,9 @@ export async function main(argv: string[]): Promise<number> {
         });
         return results.some((result) => result.status === 'modified') ? 1 : 0;
       }
+      case 'upstream':
+        await runUpstream(context, { names: rest, to: values.to, dryRun: values['dry-run'] });
+        return 0;
       case 'list':
         await runList(context, {
           category: values.category,

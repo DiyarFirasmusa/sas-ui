@@ -38,6 +38,7 @@
 
   --animate-accordion-down: accordion-down 200ms ease-out;
   --animate-accordion-up: accordion-up 200ms ease-out;
+  --animate-skeleton-shimmer: skeleton-shimmer 1.6s ease-in-out infinite;
 
   @keyframes accordion-down {
     from {
@@ -53,6 +54,15 @@
     }
     to {
       height: 0;
+    }
+  }
+  /* A highlight band sweeping across a 200%-wide gradient (see Skeleton `shimmer`). */
+  @keyframes skeleton-shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
     }
   }
 }

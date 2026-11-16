@@ -12,6 +12,7 @@ function DropdownMenuTrigger(props: MenuPrimitive.Trigger.Props) {
 
 interface DropdownMenuContentProps extends MenuPrimitive.Popup.Props {
   align?: MenuPrimitive.Positioner.Props['align'];
+  alignOffset?: number;
   side?: MenuPrimitive.Positioner.Props['side'];
   sideOffset?: number;
 }
@@ -19,6 +20,7 @@ interface DropdownMenuContentProps extends MenuPrimitive.Popup.Props {
 function DropdownMenuContent({
   className,
   align = 'start',
+  alignOffset,
   side = 'bottom',
   sideOffset = 4,
   ...props
@@ -27,6 +29,7 @@ function DropdownMenuContent({
     <MenuPrimitive.Portal>
       <MenuPrimitive.Positioner
         align={align}
+        alignOffset={alignOffset}
         side={side}
         sideOffset={sideOffset}
         className="z-50 outline-none"
@@ -53,18 +56,35 @@ const itemClasses = [
   "[&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
 ].join(' ');
 
+/** Indents an item by the width of the check column, to align it with items that have a leading icon or check. */
+const insetClasses = 'data-[inset]:ps-8';
+
 interface DropdownMenuItemProps extends MenuPrimitive.Item.Props {
   /** Styles the item as a destructive action (delete, revoke…). */
   destructive?: boolean;
+  /** `variant="destructive"` is the same as `destructive`, for call sites that spell it as a variant. */
+  variant?: 'default' | 'destructive';
+  /** Indent to line up with items that carry a check or an icon. */
+  inset?: boolean;
 }
 
-function DropdownMenuItem({ className, destructive, ...props }: DropdownMenuItemProps) {
+function DropdownMenuItem({
+  className,
+  destructive,
+  variant = 'default',
+  inset,
+  ...props
+}: DropdownMenuItemProps) {
+  const isDestructive = destructive === true || variant === 'destructive';
   return (
     <MenuPrimitive.Item
       data-slot="dropdown-menu-item"
+      data-variant={isDestructive ? 'destructive' : 'default'}
+      data-inset={inset ? '' : undefined}
       className={cn(
         itemClasses,
-        destructive && 'text-danger data-[highlighted]:bg-tag-red-container',
+        insetClasses,
+        isDestructive && 'text-danger data-[highlighted]:bg-tag-red-container',
         className,
       )}
       {...props}
@@ -114,11 +134,19 @@ function DropdownMenuGroup(props: MenuPrimitive.Group.Props) {
   return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />;
 }
 
-function DropdownMenuLabel({ className, ...props }: MenuPrimitive.GroupLabel.Props) {
+function DropdownMenuLabel({
+  className,
+  inset,
+  ...props
+}: MenuPrimitive.GroupLabel.Props & {
+  /** Indent to line up with inset items. */
+  inset?: boolean;
+}) {
   return (
     <MenuPrimitive.GroupLabel
       data-slot="dropdown-menu-label"
-      className={cn('px-inline py-1.5 text-label text-text-muted', className)}
+      data-inset={inset ? '' : undefined}
+      className={cn('px-inline py-1.5 text-label text-text-muted', insetClasses, className)}
       {...props}
     />
   );
@@ -141,17 +169,64 @@ function DropdownMenuSub(props: MenuPrimitive.SubmenuRoot.Props) {
 function DropdownMenuSubTrigger({
   className,
   children,
+  inset,
   ...props
-}: MenuPrimitive.SubmenuTrigger.Props) {
+}: MenuPrimitive.SubmenuTrigger.Props & {
+  /** Indent to line up with inset items. */
+  inset?: boolean;
+}) {
   return (
     <MenuPrimitive.SubmenuTrigger
       data-slot="dropdown-menu-sub-trigger"
-      className={cn(itemClasses, 'justify-between data-[popup-open]:bg-hover-row', className)}
+      data-inset={inset ? '' : undefined}
+      className={cn(
+        itemClasses,
+        insetClasses,
+        'justify-between data-[popup-open]:bg-hover-row',
+        className,
+      )}
       {...props}
     >
       {children}
       <ChevronRightIcon className="text-text-muted size-4" />
     </MenuPrimitive.SubmenuTrigger>
+  );
+}
+
+/**
+ * The popup a `DropdownMenuSubTrigger` opens. It opens toward the end edge
+ * (the left in Arabic) and opens with the arrow key that points that way.
+ */
+function DropdownMenuSubContent({
+  className,
+  side = 'inline-end',
+  align = 'start',
+  alignOffset = -4,
+  sideOffset = 2,
+  ...props
+}: DropdownMenuContentProps) {
+  return (
+    <DropdownMenuContent
+      data-slot="dropdown-menu-sub-content"
+      side={side}
+      align={align}
+      alignOffset={alignOffset}
+      sideOffset={sideOffset}
+      className={cn('min-w-36', className)}
+      {...props}
+    />
+  );
+}
+
+/** Keyboard hint pushed to the end of an item, e.g. `⌘K`. Latin text stays left-to-right. */
+function DropdownMenuShortcut({ className, ...props }: React.ComponentProps<'span'>) {
+  return (
+    <span
+      data-slot="dropdown-menu-shortcut"
+      dir="ltr"
+      className={cn('ms-auto ps-field text-b3 text-text-muted', className)}
+      {...props}
+    />
   );
 }
 
@@ -165,7 +240,10 @@ export {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuSub,
+  DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 };
+export type { DropdownMenuContentProps, DropdownMenuItemProps };

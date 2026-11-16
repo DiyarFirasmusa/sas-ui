@@ -32,3 +32,21 @@ describe('rewriteImports', () => {
     expect(result).toContain(`from '~/pages/blocks/login-01'`);
   });
 });
+
+describe('reverseImports', () => {
+  it('turns project aliases back into registry aliases (round trip)', async () => {
+    const { reverseImports } = await import('./rewrite-imports.ts');
+    const config = {
+      alias: '~',
+      directories: {
+        ui: 'shared/ui',
+        lib: 'utils',
+        hooks: 'hooks',
+        test: 'testing',
+        blocks: 'pages/blocks',
+      },
+    };
+    const original = `import { cn } from '@/lib/utils';\nimport { Button } from "@/components/ui/button";\nimport { x } from '@base-ui/react/button';`;
+    expect(reverseImports(rewriteImports(original, config), config)).toBe(original);
+  });
+});

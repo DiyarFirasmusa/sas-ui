@@ -14,4 +14,13 @@ export const examples: Example[] = [
       </div>
     ),
   },
+  {
+    title: 'Large and fixed direction',
+    render: () => (
+      <div className="gap-row grid w-full max-w-md">
+        <Textarea aria-label="Large" size="lg" placeholder="Large (pairs with Input size=lg)" />
+        <Textarea aria-label="Fixed" autoDirection={false} placeholder="autoDirection off" />
+      </div>
+    ),
+  },
 ];

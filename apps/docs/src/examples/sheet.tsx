@@ -9,11 +9,11 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  type SheetSide,
+  type SheetSideInput,
 } from '@/components/ui/sheet';
 import type { Example } from '../example-types';
 
-function FilterSheet({ side, trigger }: { side: SheetSide; trigger: string }) {
+function FilterSheet({ side, trigger }: { side: SheetSideInput; trigger: string }) {
   return (
     <Sheet>
       <SheetTrigger render={<Button variant="outline" />}>{trigger}</SheetTrigger>
@@ -51,5 +51,16 @@ export const examples: Example[] = [
   {
     title: 'Bottom',
     render: () => <FilterSheet side="bottom" trigger="Open at bottom" />,
+  },
+  {
+    title: 'Physical right / left',
+    description:
+      'right and left are aliases resolved against the direction: right is the end edge in English and the start edge in Arabic.',
+    render: () => (
+      <>
+        <FilterSheet side="right" trigger="Open at right" />
+        <FilterSheet side="left" trigger="Open at left" />
+      </>
+    ),
   },
 ];
