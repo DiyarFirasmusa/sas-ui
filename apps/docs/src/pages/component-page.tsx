@@ -1,55 +1,32 @@
-import { Component, Suspense, useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { exampleSource, findItem, isComponent, loadExamples, loadRegistrySource } from '../catalog';
+import { ArrowLeftIcon, ArrowRightIcon } from '@/components/ui/icons';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  exampleSource,
+  findItem,
+  items,
+  isComponent,
+  loadExamples,
+  loadRegistrySource,
+} from '../catalog';
+import { CodeBlock } from '../code-block';
+import { ExampleCard } from '../example-card';
 import type { Example } from '../example-types';
 
-class ExampleBoundary extends Component<{ children: ReactNode }, { failed: Error | null }> {
-  state = { failed: null as Error | null };
+const CATEGORY_TITLES: Record<string, string> = {
+  foundation: 'Foundation',
+  form: 'Forms',
+  overlay: 'Overlays',
+  navigation: 'Navigation',
+  data: 'Data',
+  feedback: 'Feedback',
+  display: 'Display',
+  layout: 'Layout',
+};
 
-  static getDerivedStateFromError(error: Error) {
-    return { failed: error };
-  }
-
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('Example failed to render', error, info.componentStack);
-  }
-
-  render() {
-    if (this.state.failed) {
-      return (
-        <p role="alert" className="bg-tag-red-container p-inline text-b2 text-tag-red rounded-md">
-          This example crashed: {this.state.failed.message}
-        </p>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-function ExampleCard({ example }: { example: Example }) {
-  return (
-    <section className="gap-field flex flex-col">
-      <div>
-        <h3 className="text-h5 text-text-primary">{example.title}</h3>
-        {example.description ? (
-          <p className="text-b3 text-text-secondary">{example.description}</p>
-        ) : null}
-      </div>
-      <div
-        className={cn(
-          'rounded-lg border border-stroke bg-surface p-card',
-          example.wide ? 'overflow-x-auto' : 'flex flex-wrap items-start gap-inline',
-        )}
-      >
-        <ExampleBoundary>{example.render()}</ExampleBoundary>
-      </div>
-    </section>
-  );
-}
-
-function HelperSources({ files }: { files: string[] }) {
+function ManualFiles({ files }: { files: string[] }) {
   const [sources, setSources] = useState<Record<string, string>>({});
   useEffect(() => {
     let cancelled = false;
@@ -69,37 +46,28 @@ function HelperSources({ files }: { files: string[] }) {
     };
   }, [files]);
   return (
-    <section className="gap-field flex flex-col">
-      <h2 className="text-h4">Source</h2>
+    <div className="gap-field flex flex-col">
       <p className="text-b2 text-text-secondary">
-        This is a helper, not a visual component, so there is no live demo. It is copied
-        automatically when a component needs it.
+        Copy {files.length === 1 ? 'this file' : 'these files'} into your project and fix the
+        imports to match your aliases. The CLI does both for you, including the files this one
+        depends on.
       </p>
       {files.map((file) => (
-        <details
-          key={file}
-          className="border-stroke bg-surface rounded-lg border"
-          open={files.length === 1}
-        >
+        <details key={file} className="border-stroke bg-surface rounded-lg border">
           <summary dir="ltr" className="p-inline text-b2 cursor-pointer font-mono">
             {file}
           </summary>
-          <pre
-            dir="ltr"
-            className="border-stroke bg-surface-dim p-inline text-b3 max-h-128 overflow-auto border-t font-mono"
-          >
-            <code>{sources[file] ?? 'Loading…'}</code>
-          </pre>
+          <CodeBlock code={sources[file] ?? 'Loading…'} maxHeight className="p-1" />
         </details>
       ))}
-    </section>
+    </div>
   );
 }
 
+/** A component page in the shadcn layout: title + actions, install tabs, usage, examples. */
 export function ComponentPage({ name }: { name: string }) {
   const item = findItem(name);
   const [examples, setExamples] = useState<Example[] | null>(null);
-  const [showSource, setShowSource] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,63 +81,106 @@ export function ComponentPage({ name }: { name: string }) {
     };
   }, [name]);
 
+  const siblings = useMemo(
+    () => items.filter((entry) => (item ? isComponent(entry) === isComponent(item) : true)),
+    [item],
+  );
   if (!item) {
     return <p className="text-b1">No component called “{name}”.</p>;
   }
+  const index = siblings.findIndex((entry) => entry.name === item.name);
+  const previous = index > 0 ? siblings[index - 1] : undefined;
+  const next = index >= 0 ? siblings[index + 1] : undefined;
   const source = exampleSource(name);
+
   return (
-    <article className="gap-card mx-auto flex max-w-4xl flex-col">
+    <article className="gap-card flex min-w-0 flex-col">
       <header className="gap-field flex flex-col">
-        <div className="gap-field flex flex-wrap items-center">
-          <h1 dir="auto" className="text-h1 text-text-primary">
-            {item.title}
-          </h1>
-          <Badge tone="primary">{item.category}</Badge>
-          {item.tier === 'extra' ? <Badge tone="orange">extra</Badge> : null}
+        <p className="text-b3 text-text-muted">
+          <a href="#/components" className="hover:text-text-primary">
+            Components
+          </a>
+          {' / '}
+          {CATEGORY_TITLES[item.category] ?? item.category}
+        </p>
+        <div className="gap-field flex flex-wrap items-start justify-between">
+          <div className="gap-field flex flex-wrap items-center">
+            <h1 dir="auto" className="text-h1 text-text-primary">
+              {item.title}
+            </h1>
+            {item.tier === 'extra' ? <Badge tone="orange">extra dependencies</Badge> : null}
+          </div>
+          <div className="flex gap-1">
+            {previous ? (
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label={`Previous: ${previous.title}`}
+                render={<a href={`#/components/${previous.name}`} />}
+                nativeButton={false}
+              >
+                <ArrowLeftIcon />
+              </Button>
+            ) : null}
+            {next ? (
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label={`Next: ${next.title}`}
+                render={<a href={`#/components/${next.name}`} />}
+                nativeButton={false}
+              >
+                <ArrowRightIcon />
+              </Button>
+            ) : null}
+          </div>
         </div>
         <p className="text-b1 text-text-secondary">{item.description}</p>
-        <pre
-          dir="ltr"
-          className="border-stroke bg-surface-dim p-inline text-b2 overflow-x-auto rounded-lg border font-mono"
-        >
-          <code>{`npx sas-ui add ${item.name}`}</code>
-        </pre>
-        <p dir="ltr" className="text-b3 text-text-muted">
-          {item.files.join(' · ')}
-        </p>
       </header>
 
-      <Suspense fallback={null}>
-        {examples === null ? <p className="text-b2 text-text-muted">Loading examples…</p> : null}
-        {examples !== null && examples.length === 0 && !isComponent(item) ? (
-          <HelperSources files={item.files} />
-        ) : null}
-        {examples !== null && examples.length === 0 && isComponent(item) ? (
-          <p className="text-b2 text-text-muted">No live examples yet for this component.</p>
-        ) : null}
-        {examples?.map((example) => (
-          <ExampleCard key={example.title} example={example} />
-        ))}
-      </Suspense>
+      {examples !== null && examples[0] ? (
+        <ExampleCard example={examples[0]} source={source} />
+      ) : null}
 
-      {source ? (
+      <section className="gap-field flex flex-col">
+        <h2 id="installation" className="text-h3 scroll-mt-24">
+          Installation
+        </h2>
+        <Tabs defaultValue="cli" variant="underline">
+          <TabsList>
+            <TabsTrigger value="cli">CLI</TabsTrigger>
+            <TabsTrigger value="manual">Manual</TabsTrigger>
+          </TabsList>
+          <TabsContent value="cli" className="mt-field">
+            <CodeBlock code={`npx sas-ui add ${item.name}`} />
+          </TabsContent>
+          <TabsContent value="manual" className="mt-field">
+            <ManualFiles files={item.files} />
+          </TabsContent>
+        </Tabs>
+      </section>
+
+      {examples === null ? <p className="text-b2 text-text-muted">Loading examples…</p> : null}
+      {examples !== null && examples.length > 1 ? (
+        <section className="gap-card flex flex-col">
+          <h2 id="examples" className="text-h3 scroll-mt-24">
+            Examples
+          </h2>
+          {examples.slice(1).map((example) => (
+            <ExampleCard key={example.title} example={example} source={source} />
+          ))}
+        </section>
+      ) : null}
+      {examples !== null && examples.length === 0 && !isComponent(item) ? (
         <section className="gap-field flex flex-col">
-          <Button
-            variant="outline"
-            className="self-start"
-            aria-expanded={showSource}
-            onClick={() => setShowSource((open) => !open)}
-          >
-            {showSource ? 'Hide example source' : 'Show example source'}
-          </Button>
-          {showSource ? (
-            <pre
-              dir="ltr"
-              className="border-stroke bg-surface-dim p-inline text-b3 max-h-128 overflow-auto rounded-lg border font-mono"
-            >
-              <code>{source}</code>
-            </pre>
-          ) : null}
+          <h2 id="source" className="text-h3 scroll-mt-24">
+            Source
+          </h2>
+          <p className="text-b2 text-text-secondary">
+            This is a helper, not a visual component. It is copied automatically when a component
+            needs it.
+          </p>
+          <ManualFiles files={item.files} />
         </section>
       ) : null}
     </article>

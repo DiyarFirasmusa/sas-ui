@@ -20,7 +20,14 @@ function selectors(preset: Preset, scope: PresetScope) {
     return { light: ':root', dark: ':root.dark, .dark' };
   }
   const attribute = `:root[data-preset="${preset.name}"]`;
-  return { light: attribute, dark: `${attribute}.dark, .dark${attribute}` };
+  // `data-preset-scope` applies a preset to one subtree (previews, theme pickers)
+  // without touching <html>.
+  const subtree = `[data-preset-scope="${preset.name}"]`;
+  return {
+    // data-mode pins one subtree to a mode regardless of the page's mode.
+    light: `${attribute}, ${subtree}, .dark ${subtree}[data-mode="light"]`,
+    dark: `${attribute}.dark, .dark${attribute}, .dark ${subtree}, ${subtree}.dark, ${subtree}[data-mode="dark"]`,
+  };
 }
 
 /** CSS custom properties for one preset: a light block and a dark block. */

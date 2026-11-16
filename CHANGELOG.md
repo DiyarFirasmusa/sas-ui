@@ -11,6 +11,11 @@ All notable changes are recorded here. The format follows
 - Hijri calendar and month/year dropdowns; DataTable virtualisation, grid keyboard navigation, grouping, CSV export and
   saved views; `status-bar`, `filter-builder`, `arabic-normalize`.
 
+- Docs site redesigned after ui.shadcn.com: top navigation (Docs, Components, Blocks, Charts, Themes), grouped sidebar,
+  "On this page" column, ⌘K search, Preview/Code tabs per example, a Blocks gallery with responsive previews, a Charts
+  gallery and a Themes gallery (light and dark side by side). Presets can now be scoped to a subtree with
+  `data-preset-scope` / `data-mode`.
+
 ### Fixed
 
 - `Button loading` no longer lets a submit button submit its form a second time.

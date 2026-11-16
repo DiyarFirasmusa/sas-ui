@@ -26,7 +26,9 @@ describe('generate-css', () => {
   it('scopes switchable presets by data-preset and gives dark a higher specificity', () => {
     const css = presetsToSwitchableCss(PRESETS);
     for (const entry of PRESETS) {
-      expect(css).toContain(`:root[data-preset="${entry.name}"] {`);
+      expect(css).toContain(
+        `:root[data-preset="${entry.name}"], [data-preset-scope="${entry.name}"], .dark [data-preset-scope="${entry.name}"][data-mode="light"] {`,
+      );
       expect(css).toContain(`:root[data-preset="${entry.name}"].dark`);
     }
   });
