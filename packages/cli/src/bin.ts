@@ -17,7 +17,7 @@ const HELP = `${color.bold('sas-ui')} — own-the-code React components with RTL
 Usage
   sas-ui init   [--preset <name>] [--all-presets] [--css <file>] [--src-dir src] [--alias @] [--force] [--no-install] [--no-alias-setup]
   sas-ui add    <component...> [--all] [--overwrite] [--tests] [--dry-run] [--no-install]
-  sas-ui diff   [component...] [--verbose]
+  sas-ui diff   [component...] [--verbose] [--strict]
   sas-ui upstream <item...> --to <library>/packages/registry/src [--dry-run]
   sas-ui list   [--category <name>] [--installed] [--json]
   sas-ui theme  list | set <preset> [--all-presets]
@@ -79,6 +79,7 @@ export async function main(argv: string[]): Promise<number> {
       installed: { type: 'boolean' },
       json: { type: 'boolean' },
       to: { type: 'string' },
+      strict: { type: 'boolean' },
     },
   });
   if (values.version === true) {

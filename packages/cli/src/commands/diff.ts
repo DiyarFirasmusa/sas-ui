@@ -9,6 +9,13 @@ export interface DiffOptions {
   names: string[];
   /** Print the hunks, not just the file status. */
   verbose?: boolean;
+  /** Count whitespace and line wrapping as differences too (default: ignore them, so a different formatter width is not drift). */
+  strict?: boolean;
+}
+
+/** Whitespace and trailing commas carry no meaning here: formatters differ in both. */
+export function stripLayout(text: string): string {
+  return text.replace(/,(\s*[)\]}])/g, '$1').replace(/\s+/g, '');
 }
 
 export interface FileDiff {
@@ -59,7 +66,12 @@ export async function runDiff(context: CommandContext, options: DiffOptions): Pr
         });
         continue;
       }
-      const diff = unifiedDiff(local, renderedContent(config, file));
+      const expected = renderedContent(config, file);
+      const sameIgnoringLayout =
+        options.strict !== true && stripLayout(local) === stripLayout(expected);
+      const diff = sameIgnoringLayout
+        ? { changed: false, text: '', added: 0, removed: 0 }
+        : unifiedDiff(local, expected);
       results.push({
         item: item.name,
         path,

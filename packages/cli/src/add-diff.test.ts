@@ -189,3 +189,11 @@ describe('add and diff', () => {
     expect(missing).toBeInstanceOf(Error);
   });
 });
+
+describe('diff layout tolerance', () => {
+  it('ignores line wrapping and trailing commas unless --strict', async () => {
+    const { stripLayout } = await import('./commands/diff.ts');
+    expect(stripLayout('f(a,\n  b,\n);')).toBe(stripLayout('f(a, b);'));
+    expect(stripLayout('x = 1')).not.toBe(stripLayout('x = 2'));
+  });
+});
