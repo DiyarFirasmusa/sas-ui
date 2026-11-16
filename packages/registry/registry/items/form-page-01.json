@@ -1,0 +1,12 @@
+{
+  "name": "form-page-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Form page 01 — long create/edit form",
+  "description": "Long form page with identity, contact, address, dates, attachments and notes sections, a sticky action bar, draft saving, a discard guard and server error mapping.",
+  "files": [
+    "blocks/form-page-01.tsx",
+    "blocks/form-page-01-model.ts",
+    "blocks/form-page-01-sections.tsx"
+  ]
+}

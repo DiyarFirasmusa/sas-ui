@@ -6,7 +6,8 @@
       "@/components/ui/*": ["./src/ui/*"],
       "@/lib/*": ["./src/lib/*"],
       "@/hooks/*": ["./src/hooks/*"],
-      "@/test/*": ["./src/test/*"]
+      "@/test/*": ["./src/test/*"],
+      "@/components/blocks/*": ["./src/blocks/*"]
     }
   },
   "include": ["src", "scripts", "registry", "*.ts"]

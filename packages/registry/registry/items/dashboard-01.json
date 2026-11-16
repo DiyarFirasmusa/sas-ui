@@ -1,0 +1,13 @@
+{
+  "name": "dashboard-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Dashboard 01 — analytics dashboard",
+  "description": "Analytics dashboard: KPI stat cards with deltas, revenue area chart with a 7/30/90 day range, sales by category bars, recent activity timeline and a latest-records table, with loading, empty and error states.",
+  "files": [
+    "blocks/dashboard-01.tsx",
+    "blocks/dashboard-01-data.tsx",
+    "blocks/dashboard-01-panels.tsx"
+  ],
+  "tier": "extra"
+}

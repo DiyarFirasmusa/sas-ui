@@ -1,6 +1,6 @@
 /** Shapes shared by the registry builder, the CLI and the docs app. */
 
-export const ITEM_TYPES = ['ui', 'lib', 'hook', 'test'] as const;
+export const ITEM_TYPES = ['ui', 'lib', 'hook', 'test', 'block'] as const;
 export type ItemType = (typeof ITEM_TYPES)[number];
 
 export const CATEGORIES = [
@@ -12,6 +12,7 @@ export const CATEGORIES = [
   'feedback',
   'layout',
   'display',
+  'blocks',
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
 

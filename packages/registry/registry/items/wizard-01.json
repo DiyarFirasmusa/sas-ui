@@ -1,0 +1,8 @@
+{
+  "name": "wizard-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Wizard 01 — multi-step form",
+  "description": "Four-step form with a responsive stepper, per-step validation, a review summary, a single-flight submit and a confirmation screen.",
+  "files": ["blocks/wizard-01.tsx", "blocks/wizard-01-model.ts", "blocks/wizard-01-steps.tsx"]
+}

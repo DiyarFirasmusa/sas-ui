@@ -1,0 +1,14 @@
+{
+  "name": "chart-card",
+  "type": "lib",
+  "category": "blocks",
+  "title": "Chart card",
+  "description": "Shared frame of the chart blocks: card with title, description, action, error state and a trend footer, plus sample data, summaries and the cartesian data hook.",
+  "files": [
+    "blocks/chart-card.tsx",
+    "blocks/chart-data.ts",
+    "blocks/chart-samples.ts",
+    "blocks/chart-cartesian.ts"
+  ],
+  "tier": "extra"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "login-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Login 01 \u2014 simple sign-in",
+  "description": "Centred sign-in card with validated email and password, remember me, single-flight submit and a server error.",
+  "files": ["blocks/login-01.tsx"]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "chart-pie-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Chart pie 01 — donut chart card",
+  "description": "Donut chart card with the total in the centre and a legend list of values and shares, loading, empty and error states, and an accessible summary with data table.",
+  "files": ["blocks/chart-pie-01.tsx"],
+  "tier": "extra"
+}

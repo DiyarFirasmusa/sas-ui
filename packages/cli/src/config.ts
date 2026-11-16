@@ -9,7 +9,7 @@ export interface ProjectConfig {
   /** Import alias for srcDir, e.g. "@". */
   alias: string;
   /** Where each registry item type is copied, relative to srcDir. */
-  directories: { ui: string; lib: string; hooks: string; test: string };
+  directories: { ui: string; lib: string; hooks: string; test: string; blocks: string };
   /** CSS entry file that imports Tailwind (relative to the project). */
   css: string;
   /** Active preset; with `presets: "all"` it is the default one. */
@@ -27,6 +27,7 @@ export const DEFAULT_DIRECTORIES: ProjectConfig['directories'] = {
   lib: 'lib',
   hooks: 'hooks',
   test: 'test',
+  blocks: 'components/blocks',
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {

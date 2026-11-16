@@ -20,6 +20,7 @@ const ALIAS_PREFIXES: Record<string, ItemType> = {
   '@/lib/': 'lib',
   '@/hooks/': 'hook',
   '@/test/': 'test',
+  '@/components/blocks/': 'block',
 };
 
 /** The directory (under src/) each item type lives in. */
@@ -28,6 +29,7 @@ export const TYPE_DIRECTORY: Record<ItemType, string> = {
   lib: 'lib',
   hook: 'hooks',
   test: 'test',
+  block: 'blocks',
 };
 
 const KEBAB_FILE = /^[a-z0-9]+(-[a-z0-9]+)*\.(ts|tsx)$/;
@@ -97,7 +99,7 @@ function typeOfPath(path: string): ItemType {
   const directory = path.split('/')[0];
   const found = ITEM_TYPES.find((type) => TYPE_DIRECTORY[type] === directory);
   if (!found) {
-    throw new RegistryError(`${path}: must live under ui/, lib/, hooks/ or test/`);
+    throw new RegistryError(`${path}: must live under ui/, blocks/, lib/, hooks/ or test/`);
   }
   return found;
 }

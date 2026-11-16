@@ -8,6 +8,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: [
+      { find: /^@\/components\/blocks\//, replacement: `${src('blocks')}/` },
       { find: /^@\/components\/ui\//, replacement: `${src('ui')}/` },
       { find: /^@\/lib\//, replacement: `${src('lib')}/` },
       { find: /^@\/hooks\//, replacement: `${src('hooks')}/` },

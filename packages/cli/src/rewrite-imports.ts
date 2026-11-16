@@ -8,6 +8,7 @@ const SOURCE_ALIASES: readonly (readonly [string, keyof Directories])[] = [
   ['@/lib/', 'lib'],
   ['@/hooks/', 'hooks'],
   ['@/test/', 'test'],
+  ['@/components/blocks/', 'blocks'],
 ];
 
 /**

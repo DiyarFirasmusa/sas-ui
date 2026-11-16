@@ -1,0 +1,8 @@
+{
+  "name": "block-icons",
+  "type": "lib",
+  "category": "blocks",
+  "title": "Block icons",
+  "description": "Bell, log-out, languages and trend glyphs the blocks use that the icon set does not ship.",
+  "files": ["blocks/block-icons.tsx"]
+}

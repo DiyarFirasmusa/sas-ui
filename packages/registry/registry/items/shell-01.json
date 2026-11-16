@@ -1,0 +1,8 @@
+{
+  "name": "shell-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Shell 01 — sidebar application layout",
+  "description": "Application layout: collapsible sidebar with brand, grouped navigation and account menu, topbar with title slot, command palette (Ctrl+K), notification bell, and a drawer on phones.",
+  "files": ["blocks/shell-01.tsx"]
+}

@@ -1,4 +1,4 @@
-export type ItemType = 'ui' | 'lib' | 'hook' | 'test';
+export type ItemType = 'ui' | 'lib' | 'hook' | 'test' | 'block';
 
 export interface RegistryFile {
   /** Path relative to the registry's src/, e.g. "ui/button.tsx". */
@@ -62,7 +62,13 @@ function stringList(value: unknown): string[] {
 }
 
 function itemType(value: unknown): ItemType {
-  if (value === 'ui' || value === 'lib' || value === 'hook' || value === 'test') {
+  if (
+    value === 'ui' ||
+    value === 'lib' ||
+    value === 'hook' ||
+    value === 'test' ||
+    value === 'block'
+  ) {
     return value;
   }
   throw new RegistryReadError(`Unknown item type "${String(value)}"`);

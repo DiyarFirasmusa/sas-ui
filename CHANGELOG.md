@@ -6,6 +6,10 @@ All notable changes are recorded here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- `Button loading` no longer lets a submit button submit its form a second time.
+
 ### Added
 
 - `@sas-ui/tokens`: colour token contract, four data-driven presets (`neutral`,
@@ -16,5 +20,7 @@ All notable changes are recorded here. The format follows
 - `@sas-ui/cli`: `init`, `add`, `diff`, `list`, `theme`.
 - 87 registry items covering forms, overlays, navigation, data (DataTable, FilterBar, Tree), feedback,
   charts, rich text, app shell and theming UI.
+- Blocks: a `block` registry item type (installed to `components/blocks`) and 16 blocks — sign-in, dashboard,
+  shells, list/detail/approval/form/wizard/settings pages, error pages and chart cards.
 - Docs/preview app: every component with live examples across presets, light/dark,
   Arabic/English and RTL/LTR.

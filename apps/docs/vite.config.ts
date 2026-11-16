@@ -13,6 +13,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: [
+      { find: /^@\/components\/blocks\//, replacement: `${registrySrc('blocks')}/` },
       { find: /^@\/components\/ui\//, replacement: `${registrySrc('ui')}/` },
       { find: /^@\/lib\//, replacement: `${registrySrc('lib')}/` },
       { find: /^@\/hooks\//, replacement: `${registrySrc('hooks')}/` },

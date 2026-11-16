@@ -72,7 +72,8 @@ function Button({
       disabled={disabled}
       focusableWhenDisabled={loading}
       className={cn(buttonVariants({ variant, size }), className)}
-      onClick={loading ? undefined : onClick}
+      // preventDefault stops a submit button from submitting its form a second time.
+      onClick={loading ? (event) => event.preventDefault() : onClick}
       {...props}
     >
       {loading ? <LoaderIcon className="animate-spin motion-reduce:animate-none" /> : null}

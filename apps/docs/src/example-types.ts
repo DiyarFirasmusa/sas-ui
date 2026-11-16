@@ -7,6 +7,8 @@ export interface Example {
   render: () => ReactElement;
   /** Make the preview wider than the default column (tables, shells). */
   wide?: boolean;
+  /** Blocks only: the block owns the whole viewport (sign-in, shells, error pages), so the preview adds no padding. */
+  fullBleed?: boolean;
 }
 
 /** Every file in src/examples exports `examples` — one entry per demo. */

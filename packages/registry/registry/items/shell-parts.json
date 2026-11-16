@@ -1,0 +1,13 @@
+{
+  "name": "shell-parts",
+  "type": "lib",
+  "category": "blocks",
+  "title": "Shell parts",
+  "description": "Shared parts of the shell blocks: account menu with language and theme, notification bell, command-palette search with the Ctrl+K shortcut, and bilingual sample navigation data.",
+  "files": [
+    "blocks/shell-user-menu.tsx",
+    "blocks/shell-notifications.tsx",
+    "blocks/shell-search.tsx",
+    "blocks/shell-sample.tsx"
+  ]
+}

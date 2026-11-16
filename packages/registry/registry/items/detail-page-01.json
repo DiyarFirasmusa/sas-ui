@@ -1,0 +1,13 @@
+{
+  "name": "detail-page-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Detail page 01 — record detail",
+  "description": "Record detail page: breadcrumb header with status and actions, a workflow stepper, and tabs for overview, documents (list and upload) and activity timeline, with loading and error states.",
+  "files": [
+    "blocks/detail-page-01.tsx",
+    "blocks/detail-page-01-data.ts",
+    "blocks/detail-page-01-messages.ts",
+    "blocks/detail-page-01-panels.tsx"
+  ]
+}

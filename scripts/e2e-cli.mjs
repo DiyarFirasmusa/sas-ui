@@ -131,6 +131,36 @@ export default defineConfig({
     'extra dependencies installed',
   );
 
+  // Blocks: whole pages that pull in dozens of components, charts and forms.
+  console.log(
+    run('node', [
+      cli,
+      'add',
+      'dashboard-01',
+      'list-page-01',
+      'detail-page-01',
+      'shell-01',
+      'wizard-01',
+      'login-02',
+      'error-page-01',
+    ]),
+  );
+  for (const file of [
+    'dashboard-01',
+    'list-page-01',
+    'detail-page-01',
+    'shell-01',
+    'wizard-01',
+    'login-02',
+    'error-page-01',
+    'chart-area-01',
+  ]) {
+    check(
+      existsSync(join(app, `src/components/blocks/${file}.tsx`)),
+      `components/blocks/${file}.tsx copied`,
+    );
+  }
+
   const diffClean = run('node', [cli, 'diff']);
   check(diffClean.includes('matches the registry'), 'diff is clean right after add');
   writeFileSync(
@@ -155,6 +185,7 @@ export default defineConfig({
     join(app, 'src', 'App.tsx'),
     `import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
+import { Dashboard01 } from '@/components/blocks/dashboard-01';
 
 export default function App() {
   return (
@@ -165,6 +196,7 @@ export default function App() {
         <Button variant="outline">Cancel</Button>
         <Select aria-label="Status" placeholder="Status" options={[{ value: 'a', label: 'A' }]} />
       </div>
+      <Dashboard01 />
     </main>
   );
 }

@@ -1,0 +1,14 @@
+{
+  "name": "settings-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Settings 01 — settings page",
+  "description": "Settings page with a section list and Profile, Preferences (language, theme, mode), Notifications and a Danger zone behind confirmations.",
+  "files": [
+    "blocks/settings-01.tsx",
+    "blocks/settings-01-profile.tsx",
+    "blocks/settings-01-preferences.tsx",
+    "blocks/settings-01-notifications.tsx",
+    "blocks/settings-01-danger.tsx"
+  ]
+}

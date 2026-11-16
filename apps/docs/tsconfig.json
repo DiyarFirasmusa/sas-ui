@@ -6,7 +6,8 @@
       "@/components/ui/*": ["../../packages/registry/src/ui/*"],
       "@/lib/*": ["../../packages/registry/src/lib/*"],
       "@/hooks/*": ["../../packages/registry/src/hooks/*"],
-      "@/test/*": ["../../packages/registry/src/test/*"]
+      "@/test/*": ["../../packages/registry/src/test/*"],
+      "@/components/blocks/*": ["../../packages/registry/src/blocks/*"]
     }
   },
   "include": ["src", "vite.config.ts"]

@@ -1,0 +1,9 @@
+{
+  "name": "chart-bar-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Chart bar 01 — bar chart card",
+  "description": "Grouped or stacked bar chart card with tooltip, legend, trend footer, loading, empty and error states, an accessible summary with data table, and RTL-aware axes.",
+  "files": ["blocks/chart-bar-01.tsx"],
+  "tier": "extra"
+}

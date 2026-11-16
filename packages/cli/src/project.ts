@@ -18,6 +18,7 @@ const DIRECTORY_KEY: Record<ItemType, keyof ProjectConfig['directories']> = {
   lib: 'lib',
   hook: 'hooks',
   test: 'test',
+  block: 'blocks',
 };
 
 /** Project-relative destination of a registry file. */

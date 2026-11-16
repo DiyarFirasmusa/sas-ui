@@ -1,0 +1,12 @@
+{
+  "name": "list-page-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "List page 01 — resource list",
+  "description": "Resource list page: header with a primary action, search and filters with chips, a server-driven table with sorting, paging, selection, bulk actions, row menu and mobile cards.",
+  "files": [
+    "blocks/list-page-01.tsx",
+    "blocks/list-page-01-data.ts",
+    "blocks/list-page-01-messages.ts"
+  ]
+}

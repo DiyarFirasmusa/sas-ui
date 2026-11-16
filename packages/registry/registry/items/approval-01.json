@@ -1,0 +1,13 @@
+{
+  "name": "approval-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Approval 01 — approval timeline",
+  "description": "Approval and audit timeline: workflow stages with approver, decision, time and comment, plus an action panel to approve, reject or return with a required comment.",
+  "files": [
+    "blocks/approval-01.tsx",
+    "blocks/approval-01-data.ts",
+    "blocks/approval-01-dialog.tsx",
+    "blocks/approval-01-messages.ts"
+  ]
+}

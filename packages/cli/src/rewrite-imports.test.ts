@@ -6,7 +6,8 @@ const source = `import { cn } from '@/lib/utils';
 import { Button } from "@/components/ui/button";
 import { useX } from '@/hooks/use-x';
 import { expectNoA11yViolations } from '@/test/a11y';
-import { Base } from '@base-ui/react/button';`;
+import { Base } from '@base-ui/react/button';
+import { Login01 } from '@/components/blocks/login-01';`;
 
 describe('rewriteImports', () => {
   it('is the identity with the default layout', () => {
@@ -21,11 +22,13 @@ describe('rewriteImports', () => {
         lib: 'utils',
         hooks: 'hooks',
         test: 'testing',
+        blocks: 'pages/blocks',
       },
     });
     expect(result).toContain(`from '~/utils/utils'`);
     expect(result).toContain(`from "~/shared/ui/button"`);
     expect(result).toContain(`from '~/testing/a11y'`);
     expect(result).toContain(`from '@base-ui/react/button'`);
+    expect(result).toContain(`from '~/pages/blocks/login-01'`);
   });
 });

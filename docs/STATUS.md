@@ -24,12 +24,23 @@ Chart, RichTextEditor, PdfViewer, AppShell (Sidebar, Topbar), ThemeProvider, The
 ## Verified
 
 - `pnpm typecheck`, `pnpm lint`, `pnpm fmt:check`: clean.
-- 1,565 unit/component tests: tokens 21, CLI 19, registry 1,436 (Testing Library + user-event + axe,
-  Arabic/RTL cases), docs 89 (every example renders in English and Arabic).
+- 1,963 unit/component tests: tokens 21, CLI 19, registry 1,815 (Testing Library + user-event + axe,
+  Arabic/RTL cases), docs 108 (every example and block renders in English and Arabic).
 - `pnpm build` (tokens, registry JSON, CLI, docs) and `pnpm e2e:cli`: init → add (incl. data-table, forms,
-  shell, command palette, tests) → diff → theme set → typecheck → production build in a fresh Vite app.
+  shell, command palette, tests) → blocks (dashboard, list, detail, shell, wizard, login, errors) → diff → theme set → typecheck →
+  production build in a fresh Vite app.
 - Docs app opened in the browser in light/dark, RTL/LTR, several presets: button, data table,
-  calendar, app shell, tokens page.
+  calendar, app shell, tokens page, dashboard-01 and list-page-01 blocks (Arabic RTL) and shell-01 at
+  mobile width. The other blocks were checked in jsdom only.
+
+## Next (from the deep-research report, ranked)
+
+1. Calendar: Hijri (Umm al-Qura) + calendar-system prop + month/year dropdowns.
+2. DataTable v2: virtualisation, RTL arrow-key mapping, grouping, export, saved views.
+3. StatusBar / stage pipeline component and an advanced filter builder.
+4. Input family: PhoneInput (+964), CurrencyInput (IQD), mask, tags, OTP.
+5. Blocks: import wizard, printable RTL documents, kanban, scheduler.
+6. Publish the CLI and host a registry URL.
 
 ## Not verified / known gaps
 

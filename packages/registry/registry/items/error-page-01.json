@@ -1,0 +1,8 @@
+{
+  "name": "error-page-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Error page 01 — 403, 404, 500, offline, maintenance",
+  "description": "Full-page failure screen with a large status code, localized wording, a home action and go-back or retry.",
+  "files": ["blocks/error-page-01.tsx"]
+}

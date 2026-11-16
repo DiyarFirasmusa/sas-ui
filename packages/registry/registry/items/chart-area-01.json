@@ -1,0 +1,9 @@
+{
+  "name": "chart-area-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Chart area 01 — area chart card",
+  "description": "Area chart card with tooltip, legend, trend footer, loading, empty and error states, an accessible summary with data table, and RTL-aware axes.",
+  "files": ["blocks/chart-area-01.tsx"],
+  "tier": "extra"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "shell-02",
+  "type": "block",
+  "category": "blocks",
+  "title": "Shell 02 — top navigation layout",
+  "description": "Top-navigation layout with no sidebar: brand, horizontal menu with dropdown submenus, search, notifications, account menu, a mobile hamburger sheet and a width-limited page container.",
+  "files": ["blocks/shell-02.tsx", "blocks/shell-top-nav.tsx"]
+}

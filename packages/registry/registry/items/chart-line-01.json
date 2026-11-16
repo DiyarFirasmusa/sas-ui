@@ -1,0 +1,9 @@
+{
+  "name": "chart-line-01",
+  "type": "block",
+  "category": "blocks",
+  "title": "Chart line 01 — line chart card",
+  "description": "Line chart card with tooltip, legend, trend footer, loading, empty and error states, an accessible summary with data table, and RTL-aware axes.",
+  "files": ["blocks/chart-line-01.tsx"],
+  "tier": "extra"
+}

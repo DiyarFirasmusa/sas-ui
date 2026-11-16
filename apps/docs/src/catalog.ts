@@ -52,6 +52,12 @@ export const CATEGORY_ORDER = [
   'layout',
 ] as const;
 
+export function isBlock(item: ItemManifest): boolean {
+  return item.type === 'block';
+}
+
+export const blocks: ItemManifest[] = items.filter((item) => item.type === 'block');
+
 /** Components people use directly; helpers (lib, hooks, test utilities) are listed apart. */
 export function isComponent(item: ItemManifest): boolean {
   return item.type === 'ui';
@@ -62,7 +68,7 @@ export function itemsByCategory(): { category: string; items: ItemManifest[] }[]
     category,
     items: items.filter((item) => isComponent(item) && item.category === category),
   })).filter((group) => group.items.length > 0);
-  const helpers = items.filter((item) => !isComponent(item));
+  const helpers = items.filter((item) => !isComponent(item) && !isBlock(item));
   return helpers.length > 0 ? [...groups, { category: 'helpers', items: helpers }] : groups;
 }
 

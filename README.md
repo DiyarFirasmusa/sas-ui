@@ -43,6 +43,9 @@ export function Save() {
 <html lang="ar" dir="rtl" data-preset="wine-lapis">
 ```
 
+Whole pages come as **blocks**: `sas-ui add dashboard-01 list-page-01 shell-01 login-02` (see the Blocks section
+of the docs app, with desktop/tablet/mobile previews).
+
 Other commands: `sas-ui list`, `sas-ui diff [component]`, `sas-ui theme set hr`,
 `sas-ui add --all`. See [`packages/cli`](packages/cli) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 

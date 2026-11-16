@@ -80,6 +80,27 @@ export function DocsSettingsProvider({ children }: { children: ReactNode }) {
     writeStored('sas-ui:dir', direction);
   }, [direction, locale]);
 
+  // Block previews run in iframes of this same app; the toolbar in the parent
+  // writes localStorage and the `storage` event carries the change to them.
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === 'sas-ui:preset' && event.newValue) {
+        setPreset(event.newValue);
+      } else if (event.key === 'sas-ui:mode') {
+        setMode(getStoredMode());
+      } else if (event.key === 'sas-ui:lang') {
+        setLocale(event.newValue === 'ar' ? 'ar' : 'en');
+      } else if (
+        event.key === 'sas-ui:dir' &&
+        (event.newValue === 'rtl' || event.newValue === 'ltr')
+      ) {
+        setDirection(event.newValue);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   const value = useMemo<DocsSettings>(
     () => ({
       preset,

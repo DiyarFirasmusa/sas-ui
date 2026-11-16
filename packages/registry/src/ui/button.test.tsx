@@ -36,6 +36,19 @@ describe('Button', () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
+  it('does not submit its form again while loading', async () => {
+    const onSubmit = vi.fn((event: React.FormEvent) => event.preventDefault());
+    render(
+      <form onSubmit={onSubmit}>
+        <Button type="submit" loading>
+          Send
+        </Button>
+      </form>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Send' }));
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
   it('does not fire when disabled', async () => {
     const onClick = vi.fn();
     render(
