@@ -4,15 +4,17 @@ import { Kbd } from '@/components/ui/kbd';
 import { Select } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { PRESET_OPTIONS, useDocsSettings } from '../docs-settings';
+import type { MessageKey } from '../i18n/messages';
+import { useT } from '../i18n/use-t';
 import type { Route } from '../use-hash-route';
 
 const NAV = [
-  { label: 'Docs', hash: '#/docs/introduction', pages: ['docs'] },
-  { label: 'Components', hash: '#/components', pages: ['components', 'component'] },
-  { label: 'Blocks', hash: '#/blocks', pages: ['blocks', 'block'] },
-  { label: 'Charts', hash: '#/charts', pages: ['charts'] },
-  { label: 'Themes', hash: '#/themes', pages: ['themes', 'tokens'] },
-] as const;
+  { label: 'nav.docs', hash: '#/docs/introduction', pages: ['docs'] },
+  { label: 'nav.components', hash: '#/components', pages: ['components', 'component'] },
+  { label: 'nav.blocks', hash: '#/blocks', pages: ['blocks', 'block'] },
+  { label: 'nav.charts', hash: '#/charts', pages: ['charts'] },
+  { label: 'nav.themes', hash: '#/themes', pages: ['themes', 'tokens'] },
+] as const satisfies readonly { label: MessageKey; hash: string; pages: readonly string[] }[];
 
 /** Top bar: brand, five sections, search, and the controls every component must survive. */
 export function SiteHeader({
@@ -26,6 +28,7 @@ export function SiteHeader({
 }) {
   const { preset, setPreset, mode, setMode, locale, setLocale, direction, setDirection } =
     useDocsSettings();
+  const t = useT();
   const isDark =
     mode === 'dark' || (mode === 'system' && document.documentElement.classList.contains('dark'));
   return (
@@ -35,7 +38,7 @@ export function SiteHeader({
           variant="ghost"
           size="icon"
           className="lg:hidden"
-          aria-label="Menu"
+          aria-label={t('header.menu')}
           onClick={onMenu}
         >
           <MenuIcon />
@@ -49,7 +52,7 @@ export function SiteHeader({
           </span>
           <span className="max-sm:hidden">SAS UI</span>
         </a>
-        <nav aria-label="Main" className="flex items-center gap-1 max-md:hidden">
+        <nav aria-label={t('header.main')} className="flex items-center gap-1 max-md:hidden">
           {NAV.map((entry) => {
             const active = (entry.pages as readonly string[]).includes(route.page);
             return (
@@ -62,7 +65,7 @@ export function SiteHeader({
                   active && 'font-semibold text-text-primary',
                 )}
               >
-                {entry.label}
+                {t(entry.label)}
               </a>
             );
           })}
@@ -73,14 +76,14 @@ export function SiteHeader({
             type="button"
             onClick={onSearch}
             className="rounded-control border-stroke bg-surface text-b2 text-text-muted hover:bg-hover-row flex h-9 w-9 shrink-0 items-center gap-2 border px-2 xl:w-64"
-            aria-label="Search documentation"
+            aria-label={t('header.search')}
           >
             <SearchIcon />
-            <span className="flex-1 text-start max-xl:hidden">Search documentation…</span>
+            <span className="flex-1 text-start max-xl:hidden">{t('header.searchPlaceholder')}</span>
             <Kbd className="max-xl:hidden" keys={['⌘', 'K']} />
           </button>
           <Select
-            aria-label="Preset"
+            aria-label={t('header.preset')}
             className="w-36 max-xl:hidden"
             value={preset}
             onValueChange={(value) => value && setPreset(value)}
@@ -89,7 +92,7 @@ export function SiteHeader({
           <Button
             variant="outline"
             size="icon"
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={isDark ? t('header.toLight') : t('header.toDark')}
             onClick={() => setMode(isDark ? 'light' : 'dark')}
           >
             {isDark ? <SunIcon /> : <MoonIcon />}

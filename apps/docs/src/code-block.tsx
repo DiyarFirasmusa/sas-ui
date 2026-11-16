@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CheckIcon, CopyIcon } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
+import { useT } from './i18n/use-t';
 
 async function copy(text: string): Promise<boolean> {
   try {
@@ -23,6 +24,7 @@ export function CodeBlock({
   maxHeight?: boolean;
 }) {
   const [copied, setCopied] = useState(false);
+  const t = useT();
   return (
     <div dir="ltr" className={cn('group relative', className)}>
       <pre
@@ -38,7 +40,7 @@ export function CodeBlock({
         variant="ghost"
         size="icon-sm"
         className="absolute end-2 top-2"
-        aria-label={copied ? 'Copied' : 'Copy code'}
+        aria-label={copied ? t('code.copied') : t('code.copy')}
         onClick={async () => {
           setCopied(await copy(code));
           setTimeout(() => setCopied(false), 1500);
@@ -53,6 +55,7 @@ export function CodeBlock({
 /** One-line install command chip (the shadcn "npx shadcn add …" pill). */
 export function CommandChip({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);
+  const t = useT();
   return (
     <button
       type="button"
@@ -62,7 +65,7 @@ export function CommandChip({ command }: { command: string }) {
         setCopied(await copy(command));
         setTimeout(() => setCopied(false), 1500);
       }}
-      aria-label={`Copy command ${command}`}
+      aria-label={t('code.copyCommand', { command })}
     >
       <span className="text-text-muted">$</span>
       <span className="truncate">{command}</span>

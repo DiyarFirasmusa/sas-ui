@@ -3,6 +3,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { CodeBlock } from './code-block';
 import type { Example } from './example-types';
+import { useT } from './i18n/use-t';
+
+function Crashed({ message }: { message: string }) {
+  const t = useT();
+  return (
+    <p role="alert" className="bg-tag-red-container p-inline text-b2 text-tag-red rounded-md">
+      {t('example.crashed', { message })}
+    </p>
+  );
+}
 
 class ExampleBoundary extends Component<{ children: ReactNode }, { failed: Error | null }> {
   state = { failed: null as Error | null };
@@ -17,11 +27,7 @@ class ExampleBoundary extends Component<{ children: ReactNode }, { failed: Error
 
   render() {
     if (this.state.failed) {
-      return (
-        <p role="alert" className="bg-tag-red-container p-inline text-b2 text-tag-red rounded-md">
-          This example crashed: {this.state.failed.message}
-        </p>
-      );
+      return <Crashed message={this.state.failed.message} />;
     }
     return this.props.children;
   }
@@ -59,6 +65,7 @@ export function exampleSnippet(source: string | undefined, title: string): strin
 /** shadcn-style example: a bordered preview with Preview / Code tabs underneath its title. */
 export function ExampleCard({ example, source }: { example: Example; source?: string }) {
   const id = useId();
+  const t = useT();
   const slug = example.title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -76,9 +83,9 @@ export function ExampleCard({ example, source }: { example: Example; source?: st
       </div>
       <Tabs defaultValue="preview" variant="pill">
         <TabsList>
-          <TabsTrigger value="preview">Preview</TabsTrigger>
+          <TabsTrigger value="preview">{t('example.preview')}</TabsTrigger>
           <TabsTrigger value="code" disabled={!snippet}>
-            Code
+            {t('example.code')}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="preview" className="mt-field">

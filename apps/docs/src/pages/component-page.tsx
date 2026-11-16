@@ -12,21 +12,14 @@ import {
   loadRegistrySource,
 } from '../catalog';
 import { CodeBlock } from '../code-block';
+import { useDocsSettings } from '../docs-settings';
 import { ExampleCard } from '../example-card';
 import type { Example } from '../example-types';
-
-const CATEGORY_TITLES: Record<string, string> = {
-  foundation: 'Foundation',
-  form: 'Forms',
-  overlay: 'Overlays',
-  navigation: 'Navigation',
-  data: 'Data',
-  feedback: 'Feedback',
-  display: 'Display',
-  layout: 'Layout',
-};
+import { localizeItem } from '../i18n/localize-item';
+import { categoryTitle, useT } from '../i18n/use-t';
 
 function ManualFiles({ files }: { files: string[] }) {
+  const t = useT();
   const [sources, setSources] = useState<Record<string, string>>({});
   useEffect(() => {
     let cancelled = false;
@@ -48,16 +41,14 @@ function ManualFiles({ files }: { files: string[] }) {
   return (
     <div className="gap-field flex flex-col">
       <p className="text-b2 text-text-secondary">
-        Copy {files.length === 1 ? 'this file' : 'these files'} into your project and fix the
-        imports to match your aliases. The CLI does both for you, including the files this one
-        depends on.
+        {files.length === 1 ? t('component.manualOne') : t('component.manualMany')}
       </p>
       {files.map((file) => (
         <details key={file} className="border-stroke bg-surface rounded-lg border">
           <summary dir="ltr" className="p-inline text-b2 cursor-pointer font-mono">
             {file}
           </summary>
-          <CodeBlock code={sources[file] ?? 'Loading…'} maxHeight className="p-1" />
+          <CodeBlock code={sources[file] ?? t('common.loading')} maxHeight className="p-1" />
         </details>
       ))}
     </div>
@@ -66,7 +57,10 @@ function ManualFiles({ files }: { files: string[] }) {
 
 /** A component page in the shadcn layout: title + actions, install tabs, usage, examples. */
 export function ComponentPage({ name }: { name: string }) {
-  const item = findItem(name);
+  const { locale } = useDocsSettings();
+  const t = useT();
+  const found = findItem(name);
+  const item = found ? localizeItem(found, locale) : undefined;
   const [examples, setExamples] = useState<Example[] | null>(null);
 
   useEffect(() => {
@@ -82,11 +76,14 @@ export function ComponentPage({ name }: { name: string }) {
   }, [name]);
 
   const siblings = useMemo(
-    () => items.filter((entry) => (item ? isComponent(entry) === isComponent(item) : true)),
-    [item],
+    () =>
+      items
+        .filter((entry) => (found ? isComponent(entry) === isComponent(found) : true))
+        .map((entry) => localizeItem(entry, locale)),
+    [found, locale],
   );
   if (!item) {
-    return <p className="text-b1">No component called “{name}”.</p>;
+    return <p className="text-b1">{t('component.notFound', { name })}</p>;
   }
   const index = siblings.findIndex((entry) => entry.name === item.name);
   const previous = index > 0 ? siblings[index - 1] : undefined;
@@ -98,24 +95,24 @@ export function ComponentPage({ name }: { name: string }) {
       <header className="gap-field flex flex-col">
         <p className="text-b3 text-text-muted">
           <a href="#/components" className="hover:text-text-primary">
-            Components
+            {t('nav.components')}
           </a>
           {' / '}
-          {CATEGORY_TITLES[item.category] ?? item.category}
+          {categoryTitle(t, item.category)}
         </p>
         <div className="gap-field flex flex-wrap items-start justify-between">
           <div className="gap-field flex flex-wrap items-center">
             <h1 dir="auto" className="text-h1 text-text-primary">
               {item.title}
             </h1>
-            {item.tier === 'extra' ? <Badge tone="orange">extra dependencies</Badge> : null}
+            {item.tier === 'extra' ? <Badge tone="orange">{t('component.extraDeps')}</Badge> : null}
           </div>
           <div className="flex gap-1">
             {previous ? (
               <Button
                 variant="outline"
                 size="icon"
-                aria-label={`Previous: ${previous.title}`}
+                aria-label={t('component.previous', { title: previous.title })}
                 render={<a href={`#/components/${previous.name}`} />}
                 nativeButton={false}
               >
@@ -126,7 +123,7 @@ export function ComponentPage({ name }: { name: string }) {
               <Button
                 variant="outline"
                 size="icon"
-                aria-label={`Next: ${next.title}`}
+                aria-label={t('component.next', { title: next.title })}
                 render={<a href={`#/components/${next.name}`} />}
                 nativeButton={false}
               >
@@ -144,12 +141,12 @@ export function ComponentPage({ name }: { name: string }) {
 
       <section className="gap-field flex flex-col">
         <h2 id="installation" className="text-h3 scroll-mt-24">
-          Installation
+          {t('component.installation')}
         </h2>
         <Tabs defaultValue="cli" variant="underline">
           <TabsList>
             <TabsTrigger value="cli">CLI</TabsTrigger>
-            <TabsTrigger value="manual">Manual</TabsTrigger>
+            <TabsTrigger value="manual">{t('component.manual')}</TabsTrigger>
           </TabsList>
           <TabsContent value="cli" className="mt-field">
             <CodeBlock code={`npx sas-ui add ${item.name}`} />
@@ -160,11 +157,13 @@ export function ComponentPage({ name }: { name: string }) {
         </Tabs>
       </section>
 
-      {examples === null ? <p className="text-b2 text-text-muted">Loading examples…</p> : null}
+      {examples === null ? (
+        <p className="text-b2 text-text-muted">{t('component.loadingExamples')}</p>
+      ) : null}
       {examples !== null && examples.length > 1 ? (
         <section className="gap-card flex flex-col">
           <h2 id="examples" className="text-h3 scroll-mt-24">
-            Examples
+            {t('component.examples')}
           </h2>
           {examples.slice(1).map((example) => (
             <ExampleCard key={example.title} example={example} source={source} />
@@ -174,12 +173,9 @@ export function ComponentPage({ name }: { name: string }) {
       {examples !== null && examples.length === 0 && !isComponent(item) ? (
         <section className="gap-field flex flex-col">
           <h2 id="source" className="text-h3 scroll-mt-24">
-            Source
+            {t('component.source')}
           </h2>
-          <p className="text-b2 text-text-secondary">
-            This is a helper, not a visual component. It is copied automatically when a component
-            needs it.
-          </p>
+          <p className="text-b2 text-text-secondary">{t('component.helperNote')}</p>
           <ManualFiles files={item.files} />
         </section>
       ) : null}

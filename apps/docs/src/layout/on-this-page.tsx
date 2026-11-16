@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useT } from '../i18n/use-t';
 
 interface Heading {
   id: string;
@@ -14,6 +15,7 @@ interface Heading {
 export function OnThisPage({ watch }: { watch: string }) {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [active, setActive] = useState('');
+  const t = useT();
 
   useEffect(() => {
     const collect = () => {
@@ -67,8 +69,8 @@ export function OnThisPage({ watch }: { watch: string }) {
     return null;
   }
   return (
-    <nav aria-label="On this page" className="text-start">
-      <h2 className="text-label text-text-primary mb-2">On this page</h2>
+    <nav aria-label={t('onThisPage.title')} className="text-start">
+      <h2 className="text-label text-text-primary mb-2">{t('onThisPage.title')}</h2>
       <ul className="border-stroke flex flex-col gap-1.5 border-s">
         {headings.map((heading) => (
           <li key={heading.id}>

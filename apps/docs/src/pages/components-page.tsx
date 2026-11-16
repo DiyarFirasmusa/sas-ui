@@ -1,29 +1,27 @@
 import { CATEGORY_ORDER, items } from '../catalog';
-
-const CATEGORY_TITLES: Record<string, string> = {
-  foundation: 'Foundation',
-  form: 'Forms',
-  overlay: 'Overlays',
-  navigation: 'Navigation',
-  data: 'Data',
-  feedback: 'Feedback',
-  display: 'Display',
-  layout: 'Layout',
-};
+import { useDocsSettings } from '../docs-settings';
+import { localizeItem } from '../i18n/localize-item';
+import { categoryTitle, renderRich, useT } from '../i18n/use-t';
 
 /** Index of every component, grouped, like shadcn's /docs/components. */
 export function ComponentsPage() {
-  const components = items.filter((item) => item.type === 'ui');
+  const { locale } = useDocsSettings();
+  const t = useT();
+  const components = items
+    .filter((item) => item.type === 'ui')
+    .map((item) => localizeItem(item, locale));
   return (
     <div className="gap-card mx-auto flex max-w-5xl flex-col">
       <header className="gap-field flex flex-col">
-        <h1 className="text-h1 text-text-primary">Components</h1>
+        <h1 className="text-h1 text-text-primary">{t('components.title')}</h1>
         <p className="text-b1 text-text-secondary">
-          {components.length} components, each readable source you copy into your project with{' '}
-          <code dir="ltr" className="bg-kbd text-b2 rounded px-1 font-mono">
-            npx sas-ui add &lt;name&gt;
-          </code>
-          . Built on Base UI, tested with axe, right-to-left first.
+          {renderRich(t('components.intro', { count: components.length }), {
+            command: (
+              <code dir="ltr" className="bg-kbd text-b2 rounded px-1 font-mono">
+                npx sas-ui add &lt;name&gt;
+              </code>
+            ),
+          })}
         </p>
       </header>
       {CATEGORY_ORDER.map((category) => {
@@ -34,7 +32,7 @@ export function ComponentsPage() {
         return (
           <section key={category} className="gap-field flex flex-col">
             <h2 id={category} className="text-h3 scroll-mt-24">
-              {CATEGORY_TITLES[category] ?? category}
+              {categoryTitle(t, category)}
             </h2>
             <ul className="gap-field grid sm:grid-cols-2 lg:grid-cols-3">
               {group.map((item) => (

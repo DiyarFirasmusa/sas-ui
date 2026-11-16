@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { CodeBlock } from '../code-block';
 import type { DocSlug } from '../use-hash-route';
 
-function H2({ id, children }: { id: string; children: ReactNode }) {
+export function H2({ id, children }: { id: string; children: ReactNode }) {
   return (
     <h2
       id={id}
@@ -13,11 +13,11 @@ function H2({ id, children }: { id: string; children: ReactNode }) {
   );
 }
 
-function P({ children }: { children: ReactNode }) {
+export function P({ children }: { children: ReactNode }) {
   return <p className="text-b1 text-text-secondary leading-7">{children}</p>;
 }
 
-function Code({ children }: { children: ReactNode }) {
+export function Code({ children }: { children: ReactNode }) {
   return (
     <code dir="ltr" className="bg-kbd text-b2 text-text-primary rounded px-1.5 py-0.5 font-mono">
       {children}
@@ -25,7 +25,7 @@ function Code({ children }: { children: ReactNode }) {
   );
 }
 
-function Ul({ children }: { children: ReactNode }) {
+export function Ul({ children }: { children: ReactNode }) {
   return (
     <ul className="text-b1 text-text-secondary flex list-disc flex-col gap-1.5 ps-6">{children}</ul>
   );

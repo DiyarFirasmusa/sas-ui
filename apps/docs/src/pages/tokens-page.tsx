@@ -5,6 +5,7 @@ import { CORE_TOKEN_GROUPS, type CoreTokenName } from '@sas-ui/tokens/token-name
 import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { useDocsSettings } from '../docs-settings';
+import { renderRich, useT } from '../i18n/use-t';
 
 function Swatch({ name, value }: { name: CoreTokenName; value: string }) {
   return (
@@ -48,10 +49,12 @@ const RADII = [
 ];
 
 export function TokensPage() {
-  const { preset, mode } = useDocsSettings();
+  const { preset, mode, locale } = useDocsSettings();
+  const t = useT();
   const active = findPreset(preset) ?? PRESETS[0];
   const isDark =
     mode === 'dark' || (mode === 'system' && document.documentElement.classList.contains('dark'));
+  const modeLabel = isDark ? t('tokens.modeDark') : t('tokens.modeLight');
   const theme = active ? (isDark ? active.dark : active.light) : undefined;
   const violations = useMemo(() => (active ? checkPreset(active) : []), [active]);
   const rows = useMemo(() => {
@@ -80,18 +83,19 @@ export function TokensPage() {
   return (
     <article className="gap-card mx-auto flex max-w-5xl flex-col">
       <header className="gap-field flex flex-col">
-        <h1 className="text-h1">Tokens & presets</h1>
+        <h1 className="text-h1">{t('tokens.title')}</h1>
         <p className="text-b1 text-text-secondary">
-          Showing <strong>{active.label.en}</strong> in {isDark ? 'dark' : 'light'}. Every value
-          below is a CSS variable; components never contain colours.
+          {renderRich(t('tokens.showing', { mode: modeLabel }), {
+            preset: <strong>{active.label[locale]}</strong>,
+          })}
         </p>
         <div className="gap-field flex flex-wrap items-center">
           <Badge tone={violations.length === 0 ? 'green' : 'red'}>
             {violations.length === 0
-              ? 'WCAG AA: all pairs pass (light + dark)'
-              : `${violations.length} contrast failures`}
+              ? t('tokens.allPass')
+              : t('tokens.failures', { count: violations.length })}
           </Badge>
-          <Badge tone="neutral">radius {active.radius}</Badge>
+          <Badge tone="neutral">{t('tokens.radius', { radius: active.radius })}</Badge>
         </div>
       </header>
 
@@ -107,7 +111,7 @@ export function TokensPage() {
       ))}
 
       <section className="gap-field flex flex-col">
-        <h2 className="text-h4">Type ramp</h2>
+        <h2 className="text-h4">{t('tokens.typeRamp')}</h2>
         <div className="border-stroke bg-surface p-row flex flex-col gap-2 rounded-lg border">
           {RAMP.map((className) => (
             <p key={className} className={className}>
@@ -124,7 +128,7 @@ export function TokensPage() {
       </section>
 
       <section className="gap-field flex flex-col">
-        <h2 className="text-h4">Radii & elevation</h2>
+        <h2 className="text-h4">{t('tokens.radii')}</h2>
         <div className="gap-row border-stroke bg-surface p-row flex flex-wrap rounded-lg border">
           {RADII.map((className) => (
             <div
@@ -146,15 +150,15 @@ export function TokensPage() {
       </section>
 
       <section className="gap-field flex flex-col">
-        <h2 className="text-h4">Contrast ({isDark ? 'dark' : 'light'})</h2>
+        <h2 className="text-h4">{t('tokens.contrast', { mode: modeLabel })}</h2>
         <div className="border-stroke bg-surface overflow-x-auto rounded-lg border">
           <table className="text-b2 w-full">
             <thead>
               <tr className="border-stroke text-text-muted border-b text-start">
-                <th className="p-2">Text</th>
-                <th className="p-2">On</th>
-                <th className="p-2">Ratio</th>
-                <th className="p-2">Needs</th>
+                <th className="p-2">{t('tokens.colText')}</th>
+                <th className="p-2">{t('tokens.colOn')}</th>
+                <th className="p-2">{t('tokens.colRatio')}</th>
+                <th className="p-2">{t('tokens.colNeeds')}</th>
               </tr>
             </thead>
             <tbody>

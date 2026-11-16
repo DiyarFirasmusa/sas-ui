@@ -3,9 +3,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CommandChip } from '../code-block';
 import { useDocsSettings } from '../docs-settings';
+import { presetDescription, useT } from '../i18n/use-t';
 
 /** A miniature dashboard painted with one preset, pinned to one mode, independent of the page theme. */
 function PresetPreview({ preset, mode }: { preset: string; mode: 'light' | 'dark' }) {
+  const t = useT();
   return (
     <div
       data-preset-scope={preset}
@@ -13,7 +15,7 @@ function PresetPreview({ preset, mode }: { preset: string; mode: 'light' | 'dark
       className="gap-field border-stroke bg-background p-row text-foreground flex flex-1 flex-col rounded-xl border"
     >
       <div className="gap-field flex items-center justify-between">
-        <span className="text-h5">Revenue</span>
+        <span className="text-h5">{t('themes.sampleRevenue')}</span>
         <Badge tone="green">+12.5%</Badge>
       </div>
       <p className="text-kpi text-text-primary">$48,250</p>
@@ -27,11 +29,11 @@ function PresetPreview({ preset, mode }: { preset: string; mode: 'light' | 'dark
         ))}
       </div>
       <div className="gap-field flex flex-wrap">
-        <Button size="sm">Save</Button>
+        <Button size="sm">{t('themes.sampleSave')}</Button>
         <Button size="sm" variant="outline">
-          Cancel
+          {t('themes.sampleCancel')}
         </Button>
-        <Badge tone="primary">Active</Badge>
+        <Badge tone="primary">{t('themes.sampleActive')}</Badge>
       </div>
     </div>
   );
@@ -39,20 +41,17 @@ function PresetPreview({ preset, mode }: { preset: string; mode: 'light' | 'dark
 
 /** Themes gallery: every preset in light and dark, a pick button and its CLI command. */
 export function ThemesPage() {
-  const { preset, setPreset } = useDocsSettings();
+  const { preset, setPreset, locale } = useDocsSettings();
+  const t = useT();
   return (
     <div className="gap-card mx-auto flex max-w-6xl flex-col">
       <header className="gap-field py-card flex flex-col items-center text-center">
         <h1 className="text-h1 text-text-primary text-balance md:text-[2.75rem] md:leading-tight">
-          Pick a theme
+          {t('themes.title')}
         </h1>
-        <p className="text-b1 text-text-secondary max-w-2xl">
-          Each preset is a full token set — surfaces, text, brand, status, tags, sidebar and charts
-          — contrast-checked to WCAG AA in light and dark. Switch at runtime or install one with the
-          CLI.
-        </p>
+        <p className="text-b1 text-text-secondary max-w-2xl">{t('themes.subtitle')}</p>
         <Button variant="outline" render={<a href="#/tokens" />} nativeButton={false}>
-          Browse every token
+          {t('themes.browseTokens')}
         </Button>
       </header>
       <ul className="gap-card grid">
@@ -64,9 +63,12 @@ export function ThemesPage() {
             <div className="gap-field flex flex-wrap items-start justify-between">
               <div>
                 <h2 id={entry.name} className="text-h3 scroll-mt-24">
-                  {entry.label.en} <span className="text-text-muted">· {entry.label.ar}</span>
+                  {entry.label[locale]}{' '}
+                  <span className="text-text-muted">
+                    · {entry.label[locale === 'ar' ? 'en' : 'ar']}
+                  </span>
                 </h2>
-                <p className="text-b2 text-text-secondary">{entry.description}</p>
+                <p className="text-b2 text-text-secondary">{presetDescription(t, entry)}</p>
               </div>
               <div className="gap-field flex flex-wrap items-center">
                 <CommandChip command={`npx sas-ui init --preset ${entry.name}`} />
@@ -76,7 +78,7 @@ export function ThemesPage() {
                   aria-pressed={preset === entry.name}
                   onClick={() => setPreset(entry.name)}
                 >
-                  {preset === entry.name ? 'Applied to this site' : 'Try it here'}
+                  {preset === entry.name ? t('themes.applied') : t('themes.tryIt')}
                 </Button>
               </div>
             </div>

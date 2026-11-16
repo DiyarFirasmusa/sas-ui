@@ -1,26 +1,10 @@
 import { cn } from '@/lib/utils';
 import { CATEGORY_ORDER, items } from '../catalog';
+import { useDocsSettings } from '../docs-settings';
+import { localizeItem } from '../i18n/localize-item';
+import { DOC_TITLE_KEYS, type MessageKey } from '../i18n/messages';
+import { categoryTitle, useT } from '../i18n/use-t';
 import { DOC_SLUGS, type Route } from '../use-hash-route';
-
-const DOC_TITLES: Record<(typeof DOC_SLUGS)[number], string> = {
-  introduction: 'Introduction',
-  installation: 'Installation',
-  theming: 'Theming',
-  cli: 'CLI',
-  rtl: 'RTL & Arabic',
-  migration: 'Migration',
-};
-
-const CATEGORY_TITLES: Record<string, string> = {
-  foundation: 'Foundation',
-  form: 'Forms',
-  overlay: 'Overlays',
-  navigation: 'Navigation',
-  data: 'Data',
-  feedback: 'Feedback',
-  display: 'Display',
-  layout: 'Layout',
-};
 
 function itemClass(active: boolean) {
   return cn(
@@ -44,11 +28,24 @@ function GroupTitle({ children, first = false }: { children: string; first?: boo
 
 /** The docs/components tree: clearly separated groups with a divider and a heading each. */
 export function DocsSidebar({ route, onNavigate }: { route: Route; onNavigate: () => void }) {
-  const components = items.filter((item) => item.type === 'ui');
-  const helpers = items.filter((item) => item.type !== 'ui' && item.type !== 'block');
+  const { locale } = useDocsSettings();
+  const t = useT();
+  const components = items
+    .filter((item) => item.type === 'ui')
+    .map((item) => localizeItem(item, locale));
+  const helpers = items
+    .filter((item) => item.type !== 'ui' && item.type !== 'block')
+    .map((item) => localizeItem(item, locale));
+  const browse: [MessageKey, string, boolean][] = [
+    ['nav.allComponents', '#/components', route.page === 'components'],
+    ['nav.blocks', '#/blocks', route.page === 'blocks' || route.page === 'block'],
+    ['nav.charts', '#/charts', route.page === 'charts'],
+    ['nav.themes', '#/themes', route.page === 'themes'],
+    ['nav.tokens', '#/tokens', route.page === 'tokens'],
+  ];
   return (
-    <nav aria-label="Documentation" className="p-row flex flex-col gap-0.5 text-start">
-      <GroupTitle first>Get started</GroupTitle>
+    <nav aria-label={t('sidebar.label')} className="p-row flex flex-col gap-0.5 text-start">
+      <GroupTitle first>{t('sidebar.getStarted')}</GroupTitle>
       {DOC_SLUGS.map((slug) => {
         const active = route.page === 'docs' && route.slug === slug;
         return (
@@ -59,27 +56,21 @@ export function DocsSidebar({ route, onNavigate }: { route: Route; onNavigate: (
             className={itemClass(active)}
             aria-current={active ? 'page' : undefined}
           >
-            {DOC_TITLES[slug]}
+            {t(DOC_TITLE_KEYS[slug])}
           </a>
         );
       })}
 
-      <GroupTitle>Browse</GroupTitle>
-      {[
-        ['All components', '#/components', route.page === 'components'],
-        ['Blocks', '#/blocks', route.page === 'blocks' || route.page === 'block'],
-        ['Charts', '#/charts', route.page === 'charts'],
-        ['Themes', '#/themes', route.page === 'themes'],
-        ['Tokens', '#/tokens', route.page === 'tokens'],
-      ].map(([label, hash, active]) => (
+      <GroupTitle>{t('sidebar.browse')}</GroupTitle>
+      {browse.map(([label, hash, active]) => (
         <a
-          key={String(hash)}
-          href={String(hash)}
+          key={hash}
+          href={hash}
           onClick={onNavigate}
-          className={itemClass(active === true)}
-          aria-current={active === true ? 'page' : undefined}
+          className={itemClass(active)}
+          aria-current={active ? 'page' : undefined}
         >
-          {String(label)}
+          {t(label)}
         </a>
       ))}
 
@@ -90,7 +81,7 @@ export function DocsSidebar({ route, onNavigate }: { route: Route; onNavigate: (
         }
         return (
           <div key={category} className="flex flex-col gap-0.5">
-            <GroupTitle>{CATEGORY_TITLES[category] ?? category}</GroupTitle>
+            <GroupTitle>{categoryTitle(t, category)}</GroupTitle>
             {group.map((item) => {
               const active = route.page === 'component' && route.name === item.name;
               return (
@@ -110,7 +101,7 @@ export function DocsSidebar({ route, onNavigate }: { route: Route; onNavigate: (
         );
       })}
 
-      <GroupTitle>Helpers</GroupTitle>
+      <GroupTitle>{t('sidebar.helpers')}</GroupTitle>
       {helpers.map((item) => {
         const active = route.page === 'component' && route.name === item.name;
         return (

@@ -5,14 +5,19 @@ import { cn } from '@/lib/utils';
 import type { ItemManifest } from '../../../../packages/registry/registry/schema';
 import { loadExamples, loadRegistrySource } from '../catalog';
 import { CodeBlock, CommandChip } from '../code-block';
+import { useDocsSettings } from '../docs-settings';
+import { localizeItem } from '../i18n/localize-item';
+import type { MessageKey } from '../i18n/messages';
+import { useT } from '../i18n/use-t';
 
 const WIDTHS = [
-  { id: 'desktop', label: 'Desktop', width: '100%' },
-  { id: 'tablet', label: 'Tablet', width: '768px' },
-  { id: 'mobile', label: 'Mobile', width: '390px' },
-] as const;
+  { id: 'desktop', label: 'block.width.desktop', width: '100%' },
+  { id: 'tablet', label: 'block.width.tablet', width: '768px' },
+  { id: 'mobile', label: 'block.width.mobile', width: '390px' },
+] as const satisfies readonly { id: string; label: MessageKey; width: string }[];
 
 function SourceTabs({ files }: { files: string[] }) {
+  const t = useT();
   const [sources, setSources] = useState<Record<string, string>>({});
   useEffect(() => {
     let cancelled = false;
@@ -42,7 +47,7 @@ function SourceTabs({ files }: { files: string[] }) {
           <summary dir="ltr" className="p-inline text-b2 cursor-pointer font-mono">
             {file}
           </summary>
-          <CodeBlock code={sources[file] ?? 'Loading…'} maxHeight className="p-1" />
+          <CodeBlock code={sources[file] ?? t('common.loading')} maxHeight className="p-1" />
         </details>
       ))}
     </div>
@@ -70,7 +75,16 @@ function useExampleTitles(name: string): string[] {
  * One block as shadcn shows it: a toolbar (Preview / Code, viewport sizes, the
  * install command) over a real iframe, so media queries react to the frame width.
  */
-export function BlockView({ block, height = 640 }: { block: ItemManifest; height?: number }) {
+export function BlockView({
+  block: source,
+  height = 640,
+}: {
+  block: ItemManifest;
+  height?: number;
+}) {
+  const { locale } = useDocsSettings();
+  const t = useT();
+  const block = localizeItem(source, locale);
   const [width, setWidth] = useState<(typeof WIDTHS)[number]['id']>('desktop');
   const titles = useExampleTitles(block.name);
   const [variant, setVariant] = useState(1);
@@ -80,8 +94,8 @@ export function BlockView({ block, height = 640 }: { block: ItemManifest; height
       <Tabs defaultValue="preview" variant="pill">
         <div className="gap-field flex flex-wrap items-center">
           <TabsList>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="code">Code</TabsTrigger>
+            <TabsTrigger value="preview">{t('example.preview')}</TabsTrigger>
+            <TabsTrigger value="code">{t('example.code')}</TabsTrigger>
           </TabsList>
           <a
             href={`#/blocks/${block.name}`}
@@ -91,7 +105,11 @@ export function BlockView({ block, height = 640 }: { block: ItemManifest; height
             {block.title}
           </a>
           <div className="gap-field ms-auto flex flex-wrap items-center">
-            <div className="flex gap-1 max-md:hidden" role="group" aria-label="Preview width">
+            <div
+              className="flex gap-1 max-md:hidden"
+              role="group"
+              aria-label={t('block.widthLabel')}
+            >
               {WIDTHS.map((entry) => (
                 <Button
                   key={entry.id}
@@ -100,7 +118,7 @@ export function BlockView({ block, height = 640 }: { block: ItemManifest; height
                   aria-pressed={width === entry.id}
                   onClick={() => setWidth(entry.id)}
                 >
-                  {entry.label}
+                  {t(entry.label)}
                 </Button>
               ))}
             </div>
@@ -111,13 +129,17 @@ export function BlockView({ block, height = 640 }: { block: ItemManifest; height
               rel="noreferrer"
               className="text-b2 text-primary-text underline-offset-4 hover:underline"
             >
-              Open
+              {t('block.open')}
             </a>
           </div>
         </div>
         <p className="text-b2 text-text-secondary">{block.description}</p>
         {titles.length > 1 ? (
-          <div className="gap-field flex flex-wrap" role="group" aria-label="Preview variant">
+          <div
+            className="gap-field flex flex-wrap"
+            role="group"
+            aria-label={t('block.variantLabel')}
+          >
             {titles.map((title, index) => (
               <Button
                 key={title}
@@ -134,7 +156,7 @@ export function BlockView({ block, height = 640 }: { block: ItemManifest; height
         <TabsContent value="preview" className="mt-field">
           <div className="border-stroke bg-surface-dim overflow-x-auto rounded-xl border p-2">
             <iframe
-              title={`${block.title} preview`}
+              title={t('block.previewTitle', { title: block.title })}
               src={`#/preview/${block.name}${variant > 1 ? `/${variant}` : ''}`}
               loading="lazy"
               style={{ width: frame.width, height }}

@@ -28,6 +28,9 @@ All notable changes are recorded here. The format follows
   comfortable for HR), the dashboards' sidebar, topbar and shell (with an `hr` variant), buttons, fields, tabs, tables,
   dialogs, badges and page blocks. See [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md).
 
+- Docs site translates to Arabic (and back) with the language button: chrome, sidebar, pages, search, and Arabic titles and
+  descriptions for every registry item and the six prose docs pages.
+
 ### Fixed
 
 - `Button loading` no longer lets a submit button submit its form a second time.

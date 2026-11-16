@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useT } from './i18n/use-t';
 import { DocsSidebar } from './layout/docs-sidebar';
 import { OnThisPage } from './layout/on-this-page';
 import { SearchDialog } from './layout/search-dialog';
@@ -31,6 +32,10 @@ function routeKey(route: Route): string {
 
 export function App() {
   const route = useHashRoute();
+  const t = useT();
+  useEffect(() => {
+    document.title = t('meta.title');
+  }, [t]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   if (route.page === 'preview') {
