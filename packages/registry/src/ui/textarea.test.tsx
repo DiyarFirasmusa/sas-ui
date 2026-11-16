@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Textarea } from '@/components/ui/textarea';
 import { expectNoA11yViolations } from '@/test/a11y';
@@ -17,6 +18,12 @@ describe('Textarea', () => {
   it('respects the disabled and placeholder props', () => {
     render(<Textarea aria-label="Notes" placeholder="Write…" disabled />);
     expect(screen.getByPlaceholderText('Write…')).toBeDisabled();
+  });
+
+  it('forwards the caller ref to the textarea (so a form can focus it)', () => {
+    const ref = createRef<HTMLTextAreaElement>();
+    render(<Textarea aria-label="Notes" ref={ref} />);
+    expect(ref.current).toBe(screen.getByLabelText('Notes'));
   });
 
   it('has no axe violations', async () => {

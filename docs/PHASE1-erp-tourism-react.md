@@ -69,3 +69,29 @@ typecheck, lint, fmt, build and the 1,872 unit tests pass, same as the baseline.
 Lesson for the next batches: a clean `add --overwrite` changes visuals (label colour, scrollbar visibility, shimmer), so each
 swap is "add, then restore the app's look in the copy, then `sas-ui diff` documents what is left". Next candidates:
 `tooltip`, `avatar`, `skeleton` (needs the shimmer), then the form controls with their CSS sheets.
+
+## Step 3 — all primitives on the library (2026-11-16)
+
+Every file in the app's `src/components/ui/` is now a tailored copy of the library component, and **no file outside
+`src/components/ui` and `src/lib/locale.tsx` imports `@base-ui/react`** (enforced by a new `no-restricted-imports` rule in
+`oxlint.config.ts`). Base UI remains the engine inside the library components.
+
+| App primitive                                       | Source                                                                                                                                                                   |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| button, input, textarea, checkbox, switch, label    | library, tailored to the app's look (app variant names kept: `navy`, `outlinePrimary`, `destructive` = soft, `destructiveSolid`; `asChild` kept; opt-in `loading` added) |
+| select                                              | library visuals/behaviour; the app's composable `Select*` API kept (call sites need custom value renderers)                                                              |
+| dialog, sheet, tooltip, dropdown-menu               | library, same look and exports; sheet gains logical `start`/`end` sides                                                                                                  |
+| popover (new)                                       | library Popover with the extra Positioner props the app needs; replaces 5 direct Base UI imports (combobox, date, time, tree picker, notifications)                      |
+| tabs, steps                                         | app's own items-based API kept (no Base UI), restyled as utilities (`tabs.css`, `steps.css` deleted)                                                                     |
+| avatar, skeleton, table, chart, sonner, scroll-area | library, app look kept (skeleton keeps its look; chart gets `lib/chart.ts`)                                                                                              |
+| `LocaleProvider`                                    | mounted at the app root through `I18nLocaleProvider`, so Base UI popups, sliders and arrow keys follow ar/en direction                                                   |
+
+CSS removed: `button.css`, `tabs.css`, `steps.css`, the `.cn-toast` block, and most of `input.css` and `datepicker.css`.
+Still there until the remaining users migrate: `.control` (`input.css`), `select.css`, `.number-control` (`datepicker.css`).
+
+Checks in the app: `typecheck`, `lint:check` (0 errors), `fmt:check`, **1,929 unit tests** (was 1,872), `npm run build`,
+and the Playwright suite: **83 functional/mobile tests and the axe WCAG 2.1 AA pages in ar/en × light/dark all pass**.
+Not checked: a pixel-for-pixel comparison against the Figma (no visual regression tooling here).
+
+Library fix found during this step: `Textarea` overwrote the caller's `ref` (react-hook-form could not focus an invalid
+field); it now forwards both refs.
